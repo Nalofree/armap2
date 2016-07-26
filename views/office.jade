@@ -1,0 +1,278 @@
+extends layout
+block content
+  #content
+    // Карточка объекта
+    #object.container
+      article#obj-description
+        #breadcrumbs
+          a(href='#') Поиск
+          span >
+          a(href='#') Результаты поиска
+          span >
+          a.active(href='#') Офис №233, 25м2
+        section#obj-header
+          section
+            h2= office.office_dascription
+            p ТЦ “Рублёв” ул. Чехова д. 19
+          section
+            a(href='#') Добавить в закладки
+        // Слайдер
+        section#obj-slider.slider-pro
+          .sp-slides
+            - for (var i = 0; i < office.office_images.length; i++)
+              .sp-slide
+                img(src=office.office_images[i].image_name)
+          .sp-thumbnails
+            - for (var i = 0; i < office.office_images.length; i++)
+              .sp-thumbnail
+                img(src=office.office_images[i].image_name)
+        // Информация о цене, площади и заказать звонок
+        section#obj-info
+          section
+            .info-tel
+              p
+                | Телефон собственника:
+                br
+                span= office.office_phone
+            .info-price
+              p
+                | Цена за м
+                sup 2
+                | :
+                br
+                span= office.office_subprice+' р.'
+            .info-square
+              p
+                | Площадь:
+                br
+                span= office.office_area+' м'
+                  sup 2
+            .info-social
+              p Поделиться:
+              a(href='#')
+              a(href='#')
+              a(href='#')
+          section
+            button.btn(type='button', data-toggle='modal', data-target='#call-me') Заказать звонок
+        // Общая стоимость и прочие характеристики с ебучими точками)
+        section#obj-summ
+          p
+            span Общая стоимость
+            span= office.office_totalprice+' р.'
+          p
+            span Высота потолков
+            span= office.office_height+'м'
+        section.obj-service
+          div
+            h3 В арендную плану входит:
+            ul
+              li Электроэнергия
+              li Охрана здания
+              li Вывоз ТБО
+          div
+            h3 Доступные провайдеры:
+            ul.providers
+              div
+                li - Ростелеком
+                li - Таксофон
+                li - МТС
+              div
+                li - Теле2
+                li - Сетевое ателье
+                li - Деловая сеть
+        section.obj-service
+          div
+            h3 Дополнительные услуги:
+            ul
+              li Уборка площадей общего пользования
+              li Лифт
+              li Эскалатор
+              li Коммунальные услуги
+        section
+          p
+            | Вернуться в 
+            a(href='#') ПОИСК
+      // Рекомендуемые
+      article#recomended
+        section#best-offer
+          h2 Лучшее предложение
+          article
+            a(href='#')
+              .result-img
+                img(src='images/search/result-img.png')
+              .result-desc
+                h4 Офис № 241
+                p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                section
+                  .result-price
+                    p
+                      | Цена за м
+                      sup 2
+                      | : 
+                      br
+                      span 2000 р.
+                  .result-square
+                    p
+                      | Площадь: 
+                      br
+                      span
+                        | 50 м
+                        sup 2
+        section#recomended-items
+          h2 Рекомендуемые
+          section
+            article
+              a(href='#')
+                .result-img
+                  img(src='images/search/result-img.png')
+                .result-desc
+                  h4 Офис № 241
+                  p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                  section
+                    .result-price
+                      p
+                        | Цена за м
+                        sup 2
+                        | : 
+                        br
+                        span 2000 р.
+                    .result-square
+                      p
+                        | Площадь: 
+                        br
+                        span
+                          | 50 м
+                          sup 2
+            article
+              a(href='#')
+                .result-img
+                  img(src='images/search/result-img.png')
+                .result-desc
+                  h4 Офис № 241 Офис № 241 Офис № 241
+                  p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                  section
+                    .result-price
+                      p
+                        | Цена за м
+                        sup 2
+                        | : 
+                        br
+                        span 2000 р.
+                    .result-square
+                      p
+                        | Площадь: 
+                        br
+                        span
+                          | 50 м
+                          sup 2
+            article
+              a(href='#')
+                .result-img
+                  img(src='images/search/result-img.png')
+                .result-desc
+                  h4 Офис № 241
+                  p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                  section
+                    .result-price
+                      p
+                        | Цена за м
+                        sup 2
+                        | : 
+                        br
+                        span 2000 р.
+                    .result-square
+                      p
+                        | Площадь: 
+                        br
+                        span
+                          | 50 м
+                          sup 2
+            article
+              a(href='#')
+                .result-img
+                  img(src='images/search/result-img.png')
+                .result-desc
+                  h4 Офис № 241
+                  p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                  section
+                    .result-price
+                      p
+                        | Цена за м
+                        sup 2
+                        | : 
+                        br
+                        span 2000 р.
+                    .result-square
+                      p
+                        | Площадь: 
+                        br
+                        span
+                          | 50 м
+                          sup 2
+            article
+              a(href='#')
+                .result-img
+                  img(src='images/search/result-img.png')
+                .result-desc
+                  h4 Офис № 241
+                  p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                  section
+                    .result-price
+                      p
+                        | Цена за м
+                        sup 2
+                        | : 
+                        br
+                        span 2000 р.
+                    .result-square
+                      p
+                        | Площадь: 
+                        br
+                        span
+                          | 50 м
+                          sup 2
+            article
+              a(href='#')
+                .result-img
+                  img(src='images/search/result-img.png')
+                .result-desc
+                  h4 Офис № 241
+                  p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                  section
+                    .result-price
+                      p
+                        | Цена за м
+                        sup 2
+                        | : 
+                        br
+                        span 2000 р.
+                    .result-square
+                      p
+                        | Площадь: 
+                        br
+                        span
+                          | 50 м
+                          sup 2
+            article
+              a(href='#')
+                .result-img
+                  img(src='images/search/result-img.png')
+                .result-desc
+                  h4 Офис № 241
+                  p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                  section
+                    .result-price
+                      p
+                        | Цена за м
+                        sup 2
+                        | : 
+                        br
+                        span 2000 р.
+                    .result-square
+                      p
+                        | Площадь: 
+                        br
+                        span
+                          | 50 м
+                          sup 2
+          a.more(href='#') Больше рекомендаций

@@ -1,0 +1,110 @@
+extends layout
+block content
+  #content
+    // Результаты поиска
+    #search.container
+      // Сворачивание фильтра для мобилы на кнопку show-search
+      article
+        a.show-search(href='#') Показать фильтр
+        // Фильтр
+        article#filter.tab-pane.fade.active.in(role='tabpanel')
+          h3 Назначение:
+          p Для чего вы ищите помещение?
+          .filter-object-type
+            .checkbox
+              label
+                input(type='checkbox')
+                | Торговый павильон
+            .checkbox
+              label
+                input(type='checkbox')
+                | Свободного назначения
+            .checkbox
+              label
+                input(type='checkbox')
+                | Склад
+            .checkbox
+              label
+                input(type='checkbox')
+                | Кафе
+            .checkbox
+              label
+                input(type='checkbox')
+                | Магазин
+            .checkbox
+              label
+                input(type='checkbox')
+                | Офис
+          section.filter-object-square
+            h3 Площадь:
+            p Какая площадь вам необходима?
+            .ui-slider
+              section
+                input.min(type='text', value='20м')
+                input.max(type='text', value='20м')
+              #square-slider
+          section
+            h3 Цена:
+            p
+              | Какая цена за 1м
+              sup 2
+              |  вас интересует?
+            .ui-slider
+              section
+                input.min(type='text', value='20м')
+                input.max(type='text', value='20м')
+              #price-slider
+              p.price-desc
+                | Цена за всю площадь:
+                span.min-price  10000р
+                |  -
+                span.max-price  150000р
+          section
+            button.btn Применить
+      article#search-result-block
+        // Сортировка и стили элементов
+        #search-sorting
+          #sorting
+            .sorting-one
+              p
+                | Сортировать по
+                a.active(href='#') Цена
+                a(href='#') Площадь
+            .sorting-two
+              p
+                | Показывать по
+                a.active(href='#') 10
+                a(href='#') 50
+                a(href='#') Все
+          .item-style
+            a.item-block.active(href='#')
+            a.item-line(href='#')
+        article#search-results.block-style.style-block
+          - for (var i = 0; i < objects[0].object_offices.length; i++)
+            .result
+              .result-img
+                a(href='/office'+objects[0].object_offices[i].office_id)
+                  img(src='images/search/result-big.png')
+              .result-desc
+                a(href='/office'+objects[0].object_offices[i].office_id)
+                  h3.nowrap-text= objects[0].object_offices[i].office_dascription
+                p.nowrap-text= objects[0].object_addres
+                section
+                  .result-price
+                    p
+                      | Цена за м
+                      sup 2
+                      | : 
+                      span= objects[0].object_offices[i].office_subprice +'р.'
+                  .result-square
+                    p
+                      | Площадь: 
+                      span= objects[0].object_offices[i].office_area+'м'
+                        sup 2
+        #search-pagination
+          a.left(href='#')
+          a(href='#') 1
+          a.active(href='#') 2
+          a(href='#') 3
+          a.last(href='#') 6
+          a.right(href='#')

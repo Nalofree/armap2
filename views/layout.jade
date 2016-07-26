@@ -1,0 +1,510 @@
+doctype html
+html(lang='ru')
+  head
+    meta(charset='UTF-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1.0; user-scalable=0;')
+    title Irkutsk-arenda.ru
+    link(rel='stylesheet', href='css/main.css')
+    link(rel='stylesheet', href='css/slider-pro.min.css')
+    link(rel='stylesheet', href='css/animsition.min.css')
+    link(href='css/nouislider.min.css', rel='stylesheet')
+    link(href='https://fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto:500,700&subset=latin,cyrillic,cyrillic-ext', rel='stylesheet', type='text/css')
+  body
+    #wrapper.animsition
+      // Header
+      header#header
+        // Меню в самом верху
+        article#head-top-line
+          nav.top-line.container
+            ul#head-top-menu
+              li
+                a.show-footer.href(href='#footer') Контакты
+              li
+                a(href='#') Арендодателям
+              li
+                a(href='#') Помощь
+            ul#head-log-in
+              li
+                button(type='button', data-toggle='modal', data-target='#header-register') Регистрация
+              li
+                button(type='button', data-toggle='modal', data-target='#end-visit') Войти
+        // Главное меню
+        article#head-main-menu
+          section.container
+            div
+              h1
+                a(href='index.html') Аренда в Иркутске
+              p Коммерческая недвижимость от собственников
+            nav#main-menu
+              ul
+                li
+                  a(href='/home') Карта
+                li
+                  a(href='/objects') Объекты
+                li
+                  a(href='/bookmarks')
+                    | Закладки
+                    // Количестов закладок в меню (появляется с классом active)
+                    span.active 6
+            //
+              Главное меню для мобилыli с классом active должен соответствовать страницам
+            nav#mobile-menu
+              a.show-menu(href='#')
+                | Меню
+                span
+              ul.menu-items
+                li.active
+                  a(href='/home') Карта
+                li
+                  a(href='/objects') Объекты
+                li
+                  a(href='/bookmarks')
+                    | Закладки
+                    // Количестов закладок в меню (появляется с классом active)
+                    // span.active 6
+                li
+                  a.show-footer(href='#') Контакты
+                li
+                  a(href='#') Арендодателям
+                li
+                  button(type='button', data-toggle='modal', data-target='#header-register') Войти
+      // main content
+      main
+        block content
+        // footer
+      footer#footer
+        article
+          #footer-info.container
+            section
+              h2 Аренда в иркутске
+              p коммерческая недвижимость от собственников
+              address
+                h3 +7 950 105 33 33
+                p Россия, г. Иркутск, ул. Чехова 19
+                p arenda.38@yandex.ru
+            section
+              p.footer-help
+                b Нужна помощь?
+              a.footer-form-show(href='javasript: void(0);')
+              .footer-form
+                p
+                  | Оставьте ваши контакты и мы поможем вам найти
+                  br
+                  | подходящее помещение.
+                form#footer-form
+                  .form-groups
+                    input(type='tel', required='required', placeholder='Введите телефон')
+                    input(type='email', required='required', placeholder='Введите email')
+                  textarea(placeholder='Какое помещение вы ищите?')
+                  button.btn(type='submit') Отправить
+        article
+          #footer-bottom.container
+            section
+              h3 Хотите разместить своё объявление на сайте?
+              p Количество бесплатных мест ограничено!
+              a(href='#') Зарегистрироваться
+      // modals
+      // Окно входа в систему
+      #header-login.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+        .modal-dialog
+          .modal-content
+            // Контент окна
+            .modal-form
+              .modal-header
+                button.close(data-dismiss='modal', aria-label='close')
+                  span(aria-hidden='true')
+                h4 Войти
+                p Вход в систему
+              .modal-body
+                form#login-form
+                  .input-group
+                    label
+                      | Почта
+                      input(type='email', required='')
+                  .input-group
+                    label
+                      | Пароль
+                      input(type='password', required='')
+                  button.btn-submit(type='submit') Отправить
+              .modal-footer
+                span или
+                .modal-social
+                  a.vk(href='#')
+                  a.fb(href='#')
+                  a.ok(href='#')
+                button(type='button', data-toggle='modal', data-target='#header-register') Регистрация
+            // Появляется при успешком заполнении формы
+            .modal-thanks
+              .modal-thanks-header
+                button.close(data-dismiss='modal', aria-label='close')
+                  span(aria-hidden='true')
+                h4 Спасибо!
+                p Заявка отправлена
+              .modal-thanks-recomended
+                article
+                  a(href='#')
+                    .result-img
+                      img(src='images/search/result-img.png')
+                    .result-desc
+                      h4 Офис № 241
+                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                      section
+                        .result-price
+                          p
+                            | Цена за м
+                            sup 2
+                            | : 
+                            br
+                            span 2000 р.
+                        .result-square
+                          p
+                            | Площадь: 
+                            br
+                            span
+                              | 50 м
+                              sup 2
+                article
+                  a(href='#')
+                    .result-img
+                      img(src='images/search/result-img.png')
+                    .result-desc
+                      h4 Офис № 241 Офис № 241 Офис № 241
+                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                      section
+                        .result-price
+                          p
+                            | Цена за м
+                            sup 2
+                            | : 
+                            br
+                            span 2000 р.
+                        .result-square
+                          p
+                            | Площадь: 
+                            br
+                            span
+                              | 50 м
+                              sup 2
+                article
+                  a(href='#')
+                    .result-img
+                      img(src='images/search/result-img.png')
+                    .result-desc
+                      h4 Офис № 241
+                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                      section
+                        .result-price
+                          p
+                            | Цена за м
+                            sup 2
+                            | : 
+                            br
+                            span 2000 р.
+                        .result-square
+                          p
+                            | Площадь: 
+                            br
+                            span
+                              | 50 м
+                              sup 2
+      // Окно регистрации (Поля на твое усмотрение)
+      #header-register.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+        .modal-dialog
+          .modal-content
+            // Контент окна
+            .modal-form
+              .modal-header
+                button.close(data-dismiss='modal', aria-label='close')
+                  span(aria-hidden='true')
+                h4 Регистрация
+                p Зарегистрируйтесь чтобы разместить объявление
+              .modal-body
+                form#login-register
+                  .input-group
+                    label
+                      | ФИО
+                      input(type='text', required='')
+                  .input-group
+                    label
+                      | Почта
+                      input(type='email', required='')
+                  .input-group
+                    label
+                      | Пароль
+                      input(type='password', required='')
+                  button.btn-submit(type='submit') Отправить
+              .modal-footer
+                span или
+                .modal-social
+                  a.vk(href='#')
+                  a.fb(href='#')
+                  a.ok(href='#')
+                button(type='button', data-toggle='modal', data-target='#modal-object') Уже зарегистрированы?
+            // Появляется при успешком заполнении формы
+            .modal-thanks
+              .modal-thanks-header
+                button.close(data-dismiss='modal', aria-label='close')
+                  span(aria-hidden='true')
+                h4 Спасибо!
+                p Заявка отправлена
+              .modal-thanks-recomended
+                article
+                  a(href='#')
+                    .result-img
+                      img(src='images/search/result-img.png')
+                    .result-desc
+                      h4 Офис № 241
+                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                      section
+                        .result-price
+                          p
+                            | Цена за м
+                            sup 2
+                            | : 
+                            br
+                            span 2000 р.
+                        .result-square
+                          p
+                            | Площадь: 
+                            br
+                            span
+                              | 50 м
+                              sup 2
+                article
+                  a(href='#')
+                    .result-img
+                      img(src='images/search/result-img.png')
+                    .result-desc
+                      h4 Офис № 241 Офис № 241 Офис № 241
+                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                      section
+                        .result-price
+                          p
+                            | Цена за м
+                            sup 2
+                            | : 
+                            br
+                            span 2000 р.
+                        .result-square
+                          p
+                            | Площадь: 
+                            br
+                            span
+                              | 50 м
+                              sup 2
+                article
+                  a(href='#')
+                    .result-img
+                      img(src='images/search/result-img.png')
+                    .result-desc
+                      h4 Офис № 241
+                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                      section
+                        .result-price
+                          p
+                            | Цена за м
+                            sup 2
+                            | : 
+                            br
+                            span 2000 р.
+                        .result-square
+                          p
+                            | Площадь: 
+                            br
+                            span
+                              | 50 м
+                              sup 2
+      // Окно обратного звонка в карточке объекта
+      #call-me.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+        .modal-dialog
+          .modal-content
+            // Контент окна
+            .modal-form
+              .modal-header
+                button.close(data-dismiss='modal', aria-label='close')
+                  span(aria-hidden='true')
+                h4 Заказать звонок
+                p Оставьте ваши контакты и мы поможем вам найти  подходящее помещ
+              .modal-body
+                form#form-call-me
+                  .input-group
+                    label
+                      | ФИО
+                      input(type='text', required='')
+                  .input-group
+                    label
+                      | Телефон
+                      input(type='tel', required='')
+                  button.btn-submit(type='submit') Отправить
+            // Появляется при успешком заполнении формы
+            .modal-thanks
+              .modal-thanks-header
+                button.close(data-dismiss='modal', aria-label='close')
+                  span(aria-hidden='true')
+                h4 Спасибо!
+                p Заявка отправлена
+              .modal-thanks-recomended
+                article
+                  a(href='#')
+                    .result-img
+                      img(src='images/search/result-img.png')
+                    .result-desc
+                      h4 Офис № 241
+                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                      section
+                        .result-price
+                          p
+                            | Цена за м
+                            sup 2
+                            | : 
+                            br
+                            span 2000 р.
+                        .result-square
+                          p
+                            | Площадь: 
+                            br
+                            span
+                              | 50 м
+                              sup 2
+                article
+                  a(href='#')
+                    .result-img
+                      img(src='images/search/result-img.png')
+                    .result-desc
+                      h4 Офис № 241 Офис № 241 Офис № 241
+                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                      section
+                        .result-price
+                          p
+                            | Цена за м
+                            sup 2
+                            | : 
+                            br
+                            span 2000 р.
+                        .result-square
+                          p
+                            | Площадь: 
+                            br
+                            span
+                              | 50 м
+                              sup 2
+                article
+                  a(href='#')
+                    .result-img
+                      img(src='images/search/result-img.png')
+                    .result-desc
+                      h4 Офис № 241
+                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                      section
+                        .result-price
+                          p
+                            | Цена за м
+                            sup 2
+                            | : 
+                            br
+                            span 2000 р.
+                        .result-square
+                          p
+                            | Площадь: 
+                            br
+                            span
+                              | 50 м
+                              sup 2
+      // Окно появляется при уходе со страницы
+      #end-visit.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+        .modal-dialog
+          .modal-content
+            .modal-header
+              button.close(data-dismiss='modal', aria-label='close')
+                span(aria-hidden='true')
+              h4 Спасибо за посещение!
+              p Рекомендуем к просмотру
+            .modal-body
+              section.bm-item
+                .bm-item-img
+                  a(href='object.html')
+                    img(src='images/search/result-big.png')
+                .bm-item-desc
+                  h3
+                    a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
+                  section
+                    .bm-item-price
+                      p
+                        | Цена за м
+                        sup 2
+                        | : 
+                        span 2000 р.
+                    .bm-item-square
+                      p
+                        | Площадь: 
+                        span
+                          | 50 м
+                          sup 2
+              section.bm-item
+                .bm-item-img
+                  a(href='object.html')
+                    img(src='images/search/result-big.png')
+                .bm-item-desc
+                  h3
+                    a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
+                  section
+                    .bm-item-price
+                      p
+                        | Цена за м
+                        sup 2
+                        | : 
+                        span 2000 р.
+                    .bm-item-square
+                      p
+                        | Площадь: 
+                        span
+                          | 50 м
+                          sup 2
+              section.bm-item
+                .bm-item-img
+                  a(href='object.html')
+                    img(src='images/search/result-big.png')
+                .bm-item-desc
+                  h3
+                    a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
+                  section
+                    .bm-item-price
+                      p
+                        | Цена за м
+                        sup 2
+                        | : 
+                        span 2000 р.
+                    .bm-item-square
+                      p
+                        | Площадь: 
+                        span
+                          | 50 м
+                          sup 2
+              section.bm-item
+                .bm-item-img
+                  a(href='object.html')
+                    img(src='images/search/result-big.png')
+                .bm-item-desc
+                  h3
+                    a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
+                  section
+                    .bm-item-price
+                      p
+                        | Цена за м
+                        sup 2
+                        | : 
+                        span 2000 р.
+                    .bm-item-square
+                      p
+                        | Площадь: 
+                        span
+                          | 50 м
+                          sup 2
+      script(src='js/jquery-1.11.0.min.js')
+      script(src='js/animsition.min.js')
+      script(src='js/bootstrap.min.js')
+      script(src='js/jquery.sliderPro.min.js')
+      script(src='js/wNumb.js')
+      script(src='js/nouislider.min.js')
+      script(src='js/main.js')

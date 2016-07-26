@@ -1,0 +1,248 @@
+extends layout
+block content
+  #content
+    // Вкладки для мобильной версии
+    ul.mobile-filter-show-btn(role='tablist')
+      li.mobile-filter-btn.active(role='presentation')
+        a.show-filter(href='#filter', aria-controls='filter', role='tab', data-toggle='tab') Фильтр
+      li.mobile-filter-result-btn(role='presentation')
+        a.show-filter(href='#filter-result', aria-controls='filter-result', role='tab', data-toggle='tab') Результаты
+    // Вкладки фильтра
+    article#search-filter
+      a.close-filter.nowrap-text(href='#') показать результаты на карте
+      ul(role='tablist')
+        li.active.filter-btn(role='presentation')
+          a(href='#filter', aria-controls='filter', role='tab', data-toggle='tab') Фильтр
+        li.filter-result-btn(role='presentation')
+          a(href='#filter-result', aria-controls='filter-result', role='tab', data-toggle='tab') Результаты
+      // Контент во вкладках
+      .tab-content
+        a.close-filter(href='#')
+        // Фильтр
+        article#filter.tab-pane.fade.active.in(role='tabpanel')
+          h3 Назначение:
+          p Для чего вы ищите помещение?
+          .filter-object-type
+            .checkbox
+              label
+                input(type='checkbox')
+                | Торговый павильон
+            .checkbox
+              label
+                input(type='checkbox')
+                | Свободного назначения
+            .checkbox
+              label
+                input(type='checkbox')
+                | Склад
+            .checkbox
+              label
+                input(type='checkbox')
+                | Кафе
+            .checkbox
+              label
+                input(type='checkbox')
+                | Магазин
+            .checkbox
+              label
+                input(type='checkbox')
+                | Офис
+          section.filter-object-square
+            h3 Площадь:
+            p Какая площадь вам необходима?
+            .ui-slider
+              section
+                input.min(type='text', value='20м')
+                input.max(type='text', value='20м')
+              #square-slider
+          section
+            h3 Цена:
+            p
+              | Какая цена за 1м
+              sup 2
+              |  вас интересует?
+            .ui-slider
+              section
+                input.min(type='text', value='20м')
+                input.max(type='text', value='20м')
+              #price-slider
+              p.price-desc
+                | Цена за всю площадь:
+                span.min-price  10000р
+                |  -
+                span.max-price  150000р
+          section
+            button.btn Применить
+        // Результаты поиска в фильтре
+        article#filter-result.tab-pane.fade(role='tabpanel')
+          article
+            a(href='#')
+              .result-img
+                img(src='images/search/result-img.png')
+              .result-desc
+                h4 Офис № 241
+                p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                section
+                  .result-price
+                    p
+                      | Цена за м
+                      sup 2
+                      | : 
+                      br
+                      span 2000 р.
+                  .result-square
+                    p
+                      | Площадь: 
+                      br
+                      span
+                        | 50 м
+                        sup 2
+          article
+            a(href='#')
+              .result-img
+                img(src='images/search/result-img.png')
+              .result-desc
+                h4 Офис № 241 Офис № 241 Офис № 241
+                p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                section
+                  .result-price
+                    p
+                      | Цена за м
+                      sup 2
+                      | : 
+                      br
+                      span 2000 р.
+                  .result-square
+                    p
+                      | Площадь: 
+                      br
+                      span
+                        | 50 м
+                        sup 2
+          article
+            a(href='#')
+              .result-img
+                img(src='images/search/result-img.png')
+              .result-desc
+                h4 Офис № 241
+                p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                section
+                  .result-price
+                    p
+                      | Цена за м
+                      sup 2
+                      | : 
+                      br
+                      span 2000 р.
+                  .result-square
+                    p
+                      | Площадь: 
+                      br
+                      span
+                        | 50 м
+                        sup 2
+          article
+            a(href='#')
+              .result-img
+                img(src='images/search/result-img.png')
+              .result-desc
+                h4 Офис № 241
+                p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                section
+                  .result-price
+                    p
+                      | Цена за м
+                      sup 2
+                      | : 
+                      br
+                      span 2000 р.
+                  .result-square
+                    p
+                      | Площадь: 
+                      br
+                      span
+                        | 50 м
+                        sup 2
+          article
+            a(href='#')
+              .result-img
+                img(src='images/search/result-img.png')
+              .result-desc
+                h4 Офис № 241
+                p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                section
+                  .result-price
+                    p
+                      | Цена за м
+                      sup 2
+                      | : 
+                      br
+                      span 2000 р.
+                  .result-square
+                    p
+                      | Площадь: 
+                      br
+                      span
+                        | 50 м
+                        sup 2
+          article
+            a(href='#')
+              .result-img
+                img(src='images/search/result-img.png')
+              .result-desc
+                h4 Офис № 241
+                p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                section
+                  .result-price
+                    p
+                      | Цена за м
+                      sup 2
+                      | : 
+                      br
+                      span 2000 р.
+                  .result-square
+                    p
+                      | Площадь: 
+                      br
+                      span
+                        | 50 м
+                        sup 2
+          article
+            a(href='#')
+              .result-img
+                img(src='images/search/result-img.png')
+              .result-desc
+                h4 Офис № 241
+                p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+                section
+                  .result-price
+                    p
+                      | Цена за м
+                      sup 2
+                      | : 
+                      br
+                      span 2000 р.
+                  .result-square
+                    p
+                      | Площадь: 
+                      br
+                      span
+                        | 50 м
+                        sup 2
+    // Блок появляется при наведении на маркет объека
+    .map-marker-info-hover
+      h3.nowrap-text
+        a(href='#') ТЦ “Рублёв”
+      p.nowrap-text г. Иркутск, ул. Чехова 19
+    // Блок появляется при клике на маркет объека
+    .map-marker-info-click
+      a.map-marker-info-close(href='#')
+      h3.nowrap-text
+        a(href='#') ТЦ “Рублёв”
+      p.nowrap-text г. Иркутск, ул. Чехова 19
+      section
+        a.map-marker-find(href='#')
+          | Найдено 
+          span 432
+          |  помещения
+        a.map-marker-more(href='#') Подробнее

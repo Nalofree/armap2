@@ -1,0 +1,63 @@
+extends layout
+block content
+  #content
+    // Объекты
+    #objects.container
+      article#objects-items
+        section#breadcrumbs
+          a(href='#') Поиск
+          span >
+          a(href='#') Результаты поиска
+          span >
+          a.active(href='#') Объекты
+        section#objects-header
+          div
+            h2 Объекты недвижимости
+          // Стили объектов в линюю или блоками
+          .item-style
+            a.item-block.active(href='#')
+            a.item-line(href='#')
+        // Объекты
+        section#obj-items.block-style.style-block
+          -for (var i = 0; i < objects.length; i++)
+            section.item
+              .item-img
+                a(href='/object'+objects[i].object_id)
+                  img(src='images/search/result-big.png')
+              section
+                .item-desc
+                  h3.nowrap-text
+                    a(href='/object'+objects[i].object_id)= objects[i].object_name
+                  p
+                    span= objects[i].object_addres
+                .item-rooms
+                  -for (var j = 0; j < objects[i].object_offices.length; j++)
+                    a.item-object(href='#')
+                      .item-object-img
+                        img(src='images/search/result-img.png')
+                      .item-object-desc
+                        h4= objects[i].object_offices[j].office_dascription
+                        p= objects[i].object_addres
+                        section
+                          .item-object-price
+                            p
+                              | Цена за м
+                              sup 2
+                              | : 
+                              br
+                              span= objects[i].object_offices[j].office_subprice+' р.'
+                          .item-object-square
+                            p
+                              | Площадь: 
+                              br
+                              span= objects[i].object_offices[j].office_area+' м'
+                                sup 2
+                  a(href='/object'+objects[i].object_id) Все помещения
+        // Пагинация
+        #search-pagination
+          a.left(href='#')
+          a(href='#') 1
+          a.active(href='#') 2
+          a(href='#') 3
+          a.last(href='#') 6
+          a.right(href='#')

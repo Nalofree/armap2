@@ -1,0 +1,30 @@
+{
+  "name": "armap2",
+  "version": "1.0.0",
+  "description": "flor&commercaly rent portal",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nalofree/armap2.git"
+  },
+  "keywords": [
+    "rent"
+  ],
+  "author": "nalofree",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nalofree/armap2/issues"
+  },
+  "homepage": "https://github.com/Nalofree/armap2#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "express-session": "^1.14.0",
+    "jade": "^1.11.0",
+    "mysql": "^2.11.1",
+    "nodemon": "^1.9.2",
+    "promise": "^7.1.1"
+  }
+}
