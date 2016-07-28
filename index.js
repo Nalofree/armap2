@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
   database : 'admin_armap_db'
 });
 
-connection.connect();
+//connection.connect();
 
 app.use(function(req,res,next) {
   console.log("%s %s", req.method, req.url);
