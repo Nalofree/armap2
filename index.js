@@ -152,30 +152,30 @@ function getOfficeImages(officeId) {
 
 app.get('/', function(req,res) {
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  getObjects().then(function(objects) {
-    getOffices().then(function(offices) {
-      for (var i = 0; i < objects.length; i++) {
-        objects[i].object_offices = [];
-        for (var j = 0; j < offices.length; j++) {
-          if (objects[i].object_id == offices[j].office_object) {
-            objects[i].object_offices.push(offices[j]);
-          }
-        }
-      }
+  // getObjects().then(function(objects) {
+    //getOffices().then(function(offices) {
+      // for (var i = 0; i < objects.length; i++) {
+      //   objects[i].object_offices = [];
+      //   for (var j = 0; j < offices.length; j++) {
+      //     if (objects[i].object_id == offices[j].office_object) {
+      //       objects[i].object_offices.push(offices[j]);
+      //     }
+      //   }
+      // }
       var geo = geoip.lookup(ip.substring(7));// ? geoip.lookup(ip.slice(1,-1)) : 0;
-      console.log();
+      console.log(geo);
       res.render('home',{
-        objects: objects,
+        //objects: objects,
         geo: geo
       });
-    },function(error) {
-      console.log(error);
-      res.send('Something wrong');
-    });
-  },function(error) {
-    console.log(error);
-    res.send('Something wrong');
-  });
+    // },function(error) {
+    //   console.log(error);
+    //   res.send('Something wrong');
+    // });
+  // },function(error) {
+  //   console.log(error);
+  //   res.send('Something wrong');
+  // });
 });
 
 server = app.listen(3000,function(){
