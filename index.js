@@ -4,6 +4,7 @@ var express = require('express'),
     // Promise = require('promise'),
     //session = require('express-session'),
     mysql = require('mysql');
+    geoip = require('geoip-lite');
 
 var connection = mysql.createConnection({
   host     : 'localhost',
@@ -22,74 +23,10 @@ app.use(function(req,res,next) {
 app.use(express.static(__dirname+'/public'));
 app.set('view engine', 'jade');
 
-// app.use( session({
-//    secret : 's3Cur3',
-//    name : 'sessionId',
-//    resave: false,
-//    saveUninitialized: false
-//   })
-// );
-
-// function getObjects(req, res, next){
-//   connection.query('SELECT * FROM objects LEFT JOIN images_object\
-// 										ON images_object_object = object_id LEFT JOIN images\
-// 										ON image_id = images_object_image',
-// 		function(error, result, fields){
-// 			if (error) throw error;
-// 		  var objects = [];
-// 		  for (var i = 0; i <= result.length - 1; i++) {
-// 		   	objects[i] = {
-// 		   		object_id: result[i].object_id,
-// 		   		object_name: decodeURI(result[i].object_name),
-// 		   		object_coordinates: result[i].object_coordinates,
-// 		   		object_addres: decodeURI(result[i].object_addres),
-// 		   		object_show: result[i].object_show
-// 		   	};
-// 		  };
-//       res.objects = objects;
-//       next();
-// 	});
-// };
+// var ip = "188.168.22.110";
+// var geo = geoip.lookup(ip);
 //
-// function getOffices(req, res, next){
-//   console.log(res.objectsIds);
-//   connection.query('SELECT * FROM offices WHERE office_id\
-//    IN ('+req.objectsIds+')',
-//   function(error, result, fields) {
-//     if (error) throw error;
-//     var offices = [];
-//     for (var i = 0; i < result.length; i++) {
-//       offices[i] = {
-//         office_id: result[i].office_id,
-//         office_description: result[i].office_description,
-//         office_area: result[i].office_area,
-//         office_subprice: result[i].office_subprice,
-//         office_totalprice: result[i].office_totalprice,
-//         office_height: result[i].office_height,
-//         office_owner: result[i].office_owner,
-//         office_object: result[i].office_object,
-//         office_status: result[i].office_status
-//       };
-//     };
-//     res.offices = offices;
-//     next();
-//   });
-// };
-
-//connection.end();
-
-
-/* getObjects getting objects array by params
-  params as object:
-    id:  list of number | self id,
-    name:  list of text,
-    coordinates:  list of text,
-    addres:  list of text | temp parametr,
-    show:  list of 1 or 0,
-    publish:  list of 1 or 0,
-    type:  list of number | types id,
-    author: list of number | authors id
- */
+// console.log(geo);
 
 function getObjects(objParams) {
   if (objParams!== undefined) {
@@ -185,62 +122,6 @@ function getOffices(ofcParams) {
   });
 };
 
-function getOfficeById(ofcId) {
-  return new Promise(function(resolve, reject) {
-    var offices=[];
-    connection.query('SELECT * FROM offices LEFT JOIN images_office\
-    									ON images_office_office = office_id LEFT JOIN images\
-    									ON image_id = images_office_image WHERE office_id = '+ofcId+' AND image_cover = 1',
-    	function(error, result, fields){
-    		if (error) reject(error);
-        if (result!== undefined) {
-          //for (var i = 0; i <= result.length - 1; i++) {
-           	office = {
-           		office_id: result[0].office_id,
-           		office_name: decodeURI(result[0].office_name),
-           		office_dascription: decodeURI(result[0].office_description),
-           		office_area: result[0].office_area,
-           		office_show: result[0].office_show,
-              office_cover: result[0].image_name,
-              office_create_date: result[0].office_create_date,
-              office_publish: result[0].office_publish,
-              office_type: result[0].office_type,
-              office_taked: result[0].office_taked,
-              office_author: result[0].office_author,
-              office_height: result[0].office_height,
-              office_subprice: result[0].office_subprice,
-              office_totalprice: result[0].office_totalprice,
-              office_object: result[0].office_object,
-           	};
-            getOfficeImages(result[0].office_id).then(function(images) {
-              office.office_images = images;
-              resolve(office);
-            });
-        }else{
-          reject('No one results');
-        }
-    });
-  });
-};
-
-function getOptions(officeId, service) {
-  if ( officeId !== undefined ) {
-    return new Promise(function(reslove, reject) {
-      var services = [];
-      connection.query('SELECT * FROM ' + service + ' LEFT JOIN ' + service + ' s_office WHERE ' + officeId, function(error, result, fields) {
-        if ( error ) reject(error);
-        if ( result !== undefined ) {
-
-        }else{
-          reject('no one result');
-        }
-      });
-    });
-  }else{
-    reject('Wrong argument');
-  };
-};
-
 function getOfficeImages(officeId) {
   if (officeId!== undefined) {
     return new Promise(function(resolve, reject) {
@@ -269,149 +150,33 @@ function getOfficeImages(officeId) {
   }
 };
 
-//getObjects(paramsForObj).then(objects => console.log('objects'), error => console.log(error));
-
-// var store = {
-//   home: {
-//     title: 'Карта'
-//   },
-//   objects: {
-//     title: 'Все объекты'
-//   },
-//   object: {
-//     title: 'Помещения в текущем объекте'
-//   },
-//   office: {
-//     title: 'Текущее помещение'
-//   },
-//   mod: {
-//     title: 'Модерация'
-//   },
-//   kab: {
-//     title: 'Личный кабинет'
-//   },
-//   bookmarks: {
-//     title: 'Закладки'
-//   },
-//   admin: {
-//     title: 'Администрирование'
-//   }
-// }
-//
-// app.get('/:page?', function(req,res) {
-//   var page = req.params.page;
-//   var data;
-//   var id = req.params.id;
-//   if (!page) page = 'home';
-//   data = store[page];
-//   if (!data){
-//     res.redirect('/');
-//     return;
-//   };
-//   console.log('title: '+data.title);
-//   res.render(page,{
-//     title: data.title
-//   });
-// });
-
-app.get('/objects', function (req, res) {
-  //var objParams = {};
-  //objParams.id = '51';
-  var ofcParams = {};
-  //ofcParams.object = '51'
+app.get('/', function(req,res) {
+  var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   getObjects().then(function(objects) {
-    objIds = [];
-    for (var i = 0; i < objects.length; i++) {
-      objIds.push(objects[i].object_id);
-    };
-    ofcParams.object = objIds.join(',');
-    getOffices(ofcParams).then(function(offices) {
-      //getOfficeImages(offices[0].office_id).then(function(images) {
-        //offices[0].office_images = images;
-        for (var i = 0; i < objects.length; i++) {
-          objects[i].object_offices = [];
-          for (var j = 0; j < offices.length; j++) {
-            if (objects[i].object_id == offices[j].office_object && objects[i].object_offices.length <= 1) {
-              objects[i].object_offices.push(offices[j]);
-            }
+    getOffices().then(function(offices) {
+      for (var i = 0; i < objects.length; i++) {
+        objects[i].object_offices = [];
+        for (var j = 0; j < offices.length; j++) {
+          if (objects[i].object_id == offices[j].office_object) {
+            objects[i].object_offices.push(offices[j]);
           }
         }
-        res.render('objects',{
-          objects: objects
-        });
-    //});
+      }
+      var geo = geoip.lookup(ip.substring(7));// ? geoip.lookup(ip.slice(1,-1)) : 0;
+      console.log();
+      res.render('home',{
+        objects: objects,
+        geo: geo
+      });
     },function(error) {
       console.log(error);
+      res.send('Something wrong');
     });
   },function(error) {
     console.log(error);
+    res.send('Something wrong');
   });
 });
-
-app.get('/object:objectId', function (req, res) {
-  var objParams = {};
-  objParams.id = req.params.objectId;
-  var ofcParams = {};
-  ofcParams.object = req.params.objectId;
-  getObjects(objParams).then(function(objects) {
-    objIds = [];
-    for (var i = 0; i < objects.length; i++) {
-      objIds.push(objects[i].object_id);
-    };
-    ofcParams.object = objIds.join(',');
-    getOffices(ofcParams).then(function(offices) {
-      //getOfficeImages(offices[0].office_id).then(function(images) {
-        //offices[0].office_images = images;
-        for (var i = 0; i < objects.length; i++) {
-          objects[i].object_offices = [];
-          for (var j = 0; j < offices.length; j++) {
-            if (objects[i].object_id == offices[j].office_object) {
-              objects[i].object_offices.push(offices[j]);
-            }
-          }
-        }
-        res.render('object',{
-          objects: objects
-        });
-    //});
-    },function(error) {
-      console.log(error);
-    });
-  },function(error) {
-    console.log(error);
-  });
-});
-
-app.get('/office:officeId', function (req, res) {
-  var ofcId = req.params.officeId;
-  getOfficeById(ofcId).then(function(office) {
-    res.render('office',{
-      office: office
-    });
-  });
-});
-
-// app.get('/objects', function (req, res) {
-//   //var objParams = {};
-//   //objParams.id = '51';
-//   var ofcParams = {};
-//   //ofcParams.object = '51'
-//   getObjects().then(function(objects) {
-//     //getOffices(ofcParams).then(function(offices) {
-//       //getOfficeImages(offices[0].office_id).then(function(images) {
-//         //offices[0].office_images = images;
-//         res.send('objects',{
-//           objects: objects
-//           //offices: offices
-//         });
-//       //});
-//     //},function(error) {
-//     //  console.log(error);
-//     //});
-//   },function(error) {
-//     console.log(error);
-//   });
-// });
 
 server = app.listen(3000,function(){
   console.log('Listening on port 3000');
