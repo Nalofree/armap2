@@ -23,30 +23,11 @@ block content
           h3 Назначение:
           p Для чего вы ищите помещение?
           .filter-object-type
-            .checkbox
-              label
-                input(type='checkbox')
-                | Торговый павильон
-            .checkbox
-              label
-                input(type='checkbox')
-                | Свободного назначения
-            .checkbox
-              label
-                input(type='checkbox')
-                | Склад
-            .checkbox
-              label
-                input(type='checkbox')
-                | Кафе
-            .checkbox
-              label
-                input(type='checkbox')
-                | Магазин
-            .checkbox
-              label
-                input(type='checkbox')
-                | Офис
+            -for (var i = 0; i < meanings.length; i++)
+              .checkbox
+                label
+                  input(type='checkbox', name= meanings[i].meaning_id)
+                  span= meanings[i].meaning_name
           section.filter-object-square
             h3 Площадь:
             p Какая площадь вам необходима?

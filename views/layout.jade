@@ -12,13 +12,15 @@ html(lang='ru')
     link(href='https://fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto:500,700&subset=latin,cyrillic,cyrillic-ext', rel='stylesheet', type='text/css')
     script(src='https://api-maps.yandex.ru/2.1/?lang=ru_RU', type='text/javascript')
   body
+    - var A = JSON.stringify(geo.ll)
     script(type='text/javascript').
+      var coords = JSON.parse(("#{A}").replace(/&quot;/g,'""'));
       ymaps.ready(init);
       var myMap;
       function init(){
       myMap = new ymaps.Map("map", {
-      center: [55.76, 37.64],
-      zoom: 7
+      center: coords,
+      zoom: 13
       });
       }
     #wrapper.animsition
@@ -36,7 +38,7 @@ html(lang='ru')
               li
                 a(href='#') Помощь
               li
-                a(href='#') Город
+                a(href='#')= geo.city
             ul#head-log-in
               li
                 button(type='button', data-toggle='modal', data-target='#header-register') Регистрация

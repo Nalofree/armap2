@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
   database : 'admin_armap_db'
 });
 
-//connection.connect();
+connection.connect();
 
 app.use(function(req,res,next) {
   console.log("%s %s", req.method, req.url);
@@ -150,34 +150,64 @@ function getOfficeImages(officeId) {
   }
 };
 
+function getMeanings() {
+  return new Promise(function(resolve, reject) {
+    var meanings=[];
+    connection.query('SELECT * FROM meanings',
+      function(error, result, fields){
+        if (error) reject(error);
+        if (result!== undefined) {
+          for (var i = 0; i <= result.length - 1; i++) {
+            meanings[i] = {
+              meaning_id: result[i].meaning_id,
+              meaning_name: decodeURI(result[i].meaning_name)
+            };
+          };
+          resolve(meanings);
+        }else{
+          reject('No one results');
+        }
+    });
+  });
+};
+
 app.get('/', function(req,res) {
-  var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  // getObjects().then(function(objects) {
-    //getOffices().then(function(offices) {
-      // for (var i = 0; i < objects.length; i++) {
-      //   objects[i].object_offices = [];
-      //   for (var j = 0; j < offices.length; j++) {
-      //     if (objects[i].object_id == offices[j].office_object) {
-      //       objects[i].object_offices.push(offices[j]);
-      //     }
-      //   }
-      // }
-      var geo = geoip.lookup(ip.substring(7));// ? geoip.lookup(ip.slice(1,-1)) : 0;
-      console.log(geo);
-      res.render('home',{
-        //objects: objects,
-        geo: geo
+  // var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  // ip = ip.substring(7);
+  ip = '188.168.22.110';
+  getObjects().then(function(objects) {
+    getOffices().then(function(offices) {
+      getMeanings().then(function(meanings) {
+        for (var i = 0; i < objects.length; i++) {
+          objects[i].object_offices = [];
+          for (var j = 0; j < offices.length; j++) {
+            if (objects[i].object_id == offices[j].office_object) {
+              objects[i].object_offices.push(offices[j]);
+            }
+          }
+        }
+        var geo = geoip.lookup(ip);// ? geoip.lookup(ip.slice(1,-1)) : 0;
+        console.log(geo);
+        console.log(meanings);
+        res.render('home',{
+          objects: objects,
+          geo: geo,
+          meanings: meanings
+        });
+      },function(error) {
+        console.log(error);
+        res.send('Something wrong with meanings');
       });
-    // },function(error) {
-    //   console.log(error);
-    //   res.send('Something wrong');
-    // });
-  // },function(error) {
-  //   console.log(error);
-  //   res.send('Something wrong');
-  // });
+    },function(error) {
+      console.log(error);
+      res.send('Something wrong with offices');
+    });
+  },function(error) {
+    console.log(error);
+    res.send('Something wrong with objects');
+  });
 });
 
-server = app.listen(80,function(){
+server = app.listen(3000,function(){
   console.log('Listening on port 3000');
 });
