@@ -89,10 +89,17 @@ function getOffices(ofcParams) {
         whereArray = [];
     for (var key in ofcParams) {
       var parametr = ofcParams[key];
-      whereArray.push('office_'+key+' IN ('+parametr+')');
+      if (parametr !== undefined) {
+        if (['subprice','price','area'].indexOf(key)>=0) {
+            parametr.replace(","," AND ");
+            whereArray.push('office_'+key+' BETWEEN ('+parametr+')')
+        }else{
+          whereArray.push('office_'+key+' IN ('+parametr+')');
+        }
+      }
     }
     whereString = whereString + whereArray.join(' AND ');
-    //console.log(whereString);
+    console.log(whereString);
     whereString += ' AND ';
   }else{
     var whereString = ' WHERE ';
@@ -304,6 +311,24 @@ app.get('/allobjects', function(req,res) {
   },function(error) {
     console.log(error);
     res.send('Something wrong with objects');
+  });
+});
+
+app.post('/filtred', function (req,res) {
+  //res.send(req.body);
+  //console.log(req.body);
+  var ofcParams = {};
+  ofcParams.meanings = req.body.meanings ? (req.body.meanings).join(',') : undefined;
+  ofcParams.subprice = req.body.price ? (req.body.price).join(',') : undefined;
+  ofcParams.area = req.body.area ? (req.body.area).join(',') : undefined;
+  console.log(ofcParams);
+  getOffices(ofcParams).then(function(offices) {
+    res.send({
+      offices: offices
+    });
+  },function(error) {
+    console.log(error);
+    res.send('Something wrong with offices');
   });
 });
 

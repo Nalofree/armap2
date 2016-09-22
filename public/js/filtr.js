@@ -32,6 +32,10 @@ if($("#filter").length) {
 		$(".filter-object-price input.max").val(parseInt(priceCaptionArr[1])+'р');
 	});
 
+	$(".filter-object-square input,.filter-object-price input").focus(function () {
+		$(this).val('');
+	});
+
 	$(".filter-object-square input").change(function() {
 		var minVal = parseFloat($(".filter-object-square input.min").val().replace(/\D+/g,""));
 		$(".filter-object-square input.min").val(parseInt(minVal)+'м');
@@ -49,9 +53,45 @@ if($("#filter").length) {
 		var valArr = [minVal,maxVal];
 		priceSlider.noUiSlider.set(valArr);
 	});
+
+	$("#filter .filtr-it").click(function (e) {
+		e.preventDefault();
+		var data = {};
+		data.meanings=[];
+		data.price = [];
+		data.area = [];
+		$(".filter-object-type input[type='checkbox']:checked").each(function () {
+			data.meanings.push($(this).attr('name'));
+		});
+		data.area = squareSlider.noUiSlider.get();
+		for (var i = 0; i < data.area.length; i++) {
+			data.area[i] = parseInt(data.area[i]);
+		}
+		data.price = priceSlider.noUiSlider.get();
+		for (var i = 0; i < data.price.length; i++) {
+			data.price[i] = parseInt(data.price[i]);
+		}
+		console.log(data);
+		$.ajax({
+			type: 'POST',
+			data: data,
+			//contentType: 'application/json',
+			url: '/filtred',
+			success: function(data) {
+				console.log('success');
+				console.log(JSON.stringify(data));
+			},
+			error: function(data,status,error){
+				console.log(data);
+				console.log(status);
+				console.log(error);
+			}
+		});
+	});
+
 	// document.getElementById('read-button').addEventListener('click', function(){
 	// 	alert( slider.noUiSlider.get() );
 	// });
 }else{
-	alert('no filtr');
+	//alert('no filtr');
 }
