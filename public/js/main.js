@@ -11,31 +11,7 @@ if (win == '/' || win == '/index.html') {
     mainMenu.removeClass('main-page');
 }
 
-if (win == '/' || win == '/index.html' || win == '/search.html') {
-    //Cлайдер в фильтре
-    var squareSlider = document.getElementById('square-slider');
-    var priceSlider = document.getElementById('price-slider');
 
-    noUiSlider.create(squareSlider, {
-        start: [20, 300],
-        connect: true,
-        step: 5,
-        range: {
-            'min': [0],
-            'max': [700]
-        }
-    });
-
-    noUiSlider.create(priceSlider, {
-        start: [500, 1500],
-        connect: true,
-        step: 5,
-        range: {
-            'min': [300],
-            'max': [2000]
-        }
-    });
-}
 
 //Плавный скролл к якорю у ссылок с классом href
 $(document).ready(function () {

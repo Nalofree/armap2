@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/Nalofree/armap2#readme",
   "dependencies": {
+    "body-parser": "^1.15.2",
+    "cookie-session": "^2.0.0-alpha.1",
     "express": "^4.14.0",
     "express-session": "^1.14.0",
     "geoip-lite": "^1.1.8",

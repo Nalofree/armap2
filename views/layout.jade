@@ -1,9 +1,11 @@
 doctype html
 html(lang='ru')
   head
+    //- meta(charset='UTF-8')
+    //- meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    //- meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1.0; user-scalable=0;')
     meta(charset='UTF-8')
-    meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1.0; user-scalable=0;')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
     title Irkutsk-arenda.ru
     link(rel='stylesheet', href='css/main.css')
     link(rel='stylesheet', href='css/slider-pro.min.css')
@@ -12,19 +14,13 @@ html(lang='ru')
     link(href='https://fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto:500,700&subset=latin,cyrillic,cyrillic-ext', rel='stylesheet', type='text/css')
     script(src='https://api-maps.yandex.ru/2.1/?lang=ru_RU', type='text/javascript')
   body
-    - var A = JSON.stringify(geo.ll)
-    script(type='text/javascript').
-      var coords = JSON.parse(("#{A}").replace(/&quot;/g,'""'));
-      ymaps.ready(init);
-      var myMap;
-      function init(){
-      myMap = new ymaps.Map("map", {
-      center: coords,
-      zoom: 13
-      });
-      }
+    style.
+      .geo-ll,.geo-zoom{height: 0; opacity: 0}
+    .geo-ll= geo.ll
+    .geo-zoom= geo.zoom
     #wrapper.animsition
-      #map(style='width: 100%; height: 100%; position: fixed; background: #eee;')
+      -if (ishome === 1)
+        #map(style='width: 100%; height: 100%; position: fixed; background: #eee;')
       // Header
       header#header
         // Меню в самом верху
@@ -39,22 +35,32 @@ html(lang='ru')
                 a(href='#') Помощь
               li
                 a(href='#')= geo.city
-            ul#head-log-in
-              li
-                button(type='button', data-toggle='modal', data-target='#header-register') Регистрация
-              li
-                button(type='button', data-toggle='modal', data-target='#end-visit') Войти
+            -if (role)
+              ul#head-log-in
+                li
+                  span= username + " | "
+                  //- + role
+                li
+                  //- button(type='button', data-toggle='modal', data-target='#end-visit', class='end-visit') Выйти
+                  a(href="/logout",class='logout') Выйти
+            -else
+              ul#head-log-in
+                li
+                  button(type='button', data-toggle='modal', data-target='#header-register') Регистрация
+                li
+                  button(type='button', data-toggle='modal', data-target='#header-login') Войти
+                // выйти - data-target='#end-visit'
         // Главное меню
         article#head-main-menu
           section.container
             div
               h1
-                a(href='index.html') Аренда в Иркутске
+                a(href='/') Аренда в Иркутске
               p Коммерческая недвижимость от собственников
             nav#main-menu
               ul
                 li
-                  a(href='/home') Карта
+                  a(href='/') Карта
                 li
                   a(href='/objects') Объекты
                 li
@@ -70,7 +76,7 @@ html(lang='ru')
                 span
               ul.menu-items
                 li.active
-                  a(href='/home') Карта
+                  a(href='/') Карта
                 li
                   a(href='/objects') Объекты
                 li
@@ -132,16 +138,16 @@ html(lang='ru')
                 h4 Войти
                 p Вход в систему
               .modal-body
-                form#login-form
+                form#login-form(name='login_form', action='/', method='POST')
                   .input-group
                     label
                       | Почта
-                      input(type='email', required='')
+                      input(type='email', required='', name='login_email', id='login_email')
                   .input-group
                     label
                       | Пароль
-                      input(type='password', required='')
-                  button.btn-submit(type='submit') Отправить
+                      input(type='password', required='', name='login_pass', id='login_pass')
+                  input.btn-submit(type='submit', value='Отправить')
               .modal-footer
                 span или
                 .modal-social
@@ -235,28 +241,38 @@ html(lang='ru')
                 h4 Регистрация
                 p Зарегистрируйтесь чтобы разместить объявление
               .modal-body
-                form#login-register
+                form#login-register(name='login_register', action='/', method='POST')
                   .input-group
                     label
-                      | ФИО
-                      input(type='text', required='')
+                      | Имя
+                      input(type='text', required='', id='reg_firstname', name='reg_firstname', placeholder=' Имя из букв, не более 30 символов' )
+                  .input-group
+                    label
+                      | Фамилия
+                      input(type='text', required='', id='reg_lastname', name='reg_lastname', placeholder=' Фамилия из букв, не более 30 символов' )                  
                   .input-group
                     label
                       | Почта
-                      input(type='email', required='')
+                      input(type='email', required='', id='reg_email', name='reg_email', placeholder=' Почта не более 60 символов' )
                   .input-group
                     label
                       | Пароль
-                      input(type='password', required='')
-                  button.btn-submit(type='submit') Отправить
+                      input(type='password', required='', id='reg_pass', name='reg_pass', placeholder=' от 8 до 60 латинских букв и цифр' )
+                  input.btn-submit(type='submit', value='Отправить')
               .modal-footer
-                span или
-                .modal-social
-                  a.vk(href='#')
-                  a.fb(href='#')
-                  a.ok(href='#')
+                //- span или
+                //- .modal-social
+                //-   a.vk(href='#')
+                //-   a.fb(href='#')
+                //-   a.ok(href='#')
                 button(type='button', data-toggle='modal', data-target='#modal-object') Уже зарегистрированы?
             // Появляется при успешком заполнении формы
+            .modal-regerror
+              .modal-regerror-header
+                button.close(data-dismiss='modal', aria-label='close')
+                  span(aria-hidden='true')
+                h4 Пользователь с такой почтой уже существует!
+                p Возможно вы регистрировались ранее
             .modal-thanks
               .modal-thanks-header
                 button.close(data-dismiss='modal', aria-label='close')
@@ -523,3 +539,7 @@ html(lang='ru')
       script(src='js/wNumb.js')
       script(src='js/nouislider.min.js')
       script(src='js/main.js')
+      script(src='js/map.js')
+      script(src='js/reg.js')
+      script(src='js/login.js')
+      script(src='js/filtr.js')

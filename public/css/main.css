@@ -4858,7 +4858,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   margin: 0;
 }
 
-#object #obj-description #obj-header a {
+#object #obj-description #obj-header .bookmark-trigger {
   display: block;
   width: 195px;
   height: 35px;
@@ -8577,27 +8577,30 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   text-decoration: underline;
 }
 
-.modal-dialog .modal-thanks {
+.modal-dialog .modal-thanks, .modal-dialog .modal-regerror {
   display: none;
   border-radius: 5px;
 }
 
-.modal-dialog .modal-thanks .modal-thanks-header {
+.modal-dialog .modal-thanks .modal-thanks-header, .modal-dialog .modal-regerror .modal-regerror-header {
   padding: 20px 30px;
   text-align: center;
   border-bottom: 1px solid #e4e4e4;
 }
 
-.modal-dialog .modal-thanks .modal-thanks-header h4, .modal-dialog .modal-thanks .modal-thanks-header p {
+.modal-dialog .modal-thanks .modal-thanks-header h4, .modal-dialog .modal-thanks .modal-thanks-header p,
+.modal-dialog .modal-regerror .modal-regerror-header h4, .modal-dialog .modal-regerror .modal-regerror-header p {
   margin: 0;
 }
 
-.modal-dialog .modal-thanks .modal-thanks-header h4 {
+.modal-dialog .modal-thanks .modal-thanks-header h4,
+.modal-dialog .modal-regerror .modal-regerror-header h4 {
   color: #f5584e;
   font-size: 30px;
 }
 
-.modal-dialog .modal-thanks .modal-thanks-header p {
+.modal-dialog .modal-thanks .modal-thanks-header p,
+.modal-dialog .modal-regerror .modal-regerror-header p {
   font-size: 16px;
 }
 

@@ -23,7 +23,7 @@ block content
             section.item
               .item-img
                 a(href='/object'+objects[i].object_id)
-                  img(src='images/search/result-big.png')
+                  img(src='images/obj/'+objects[i].object_image)
               section
                 .item-desc
                   h3.nowrap-text
@@ -32,26 +32,27 @@ block content
                     span= objects[i].object_addres
                 .item-rooms
                   -for (var j = 0; j < objects[i].object_offices.length; j++)
-                    a.item-object(href='#')
-                      .item-object-img
-                        img(src='images/search/result-img.png')
-                      .item-object-desc
-                        h4= objects[i].object_offices[j].office_dascription
-                        p= objects[i].object_addres
-                        section
-                          .item-object-price
-                            p
-                              | Цена за м
-                              sup 2
-                              | : 
-                              br
-                              span= objects[i].object_offices[j].office_subprice+' р.'
-                          .item-object-square
-                            p
-                              | Площадь: 
-                              br
-                              span= objects[i].object_offices[j].office_area+' м'
+                    -if (j <= 1)
+                      a.item-object(href='#')
+                        .item-object-img
+                          img(src='images/obj/'+objects[0].object_offices[i].office_cover)
+                        .item-object-desc
+                          h4= objects[i].object_offices[j].office_dascription
+                          p= objects[i].object_addres
+                          section
+                            .item-object-price
+                              p
+                                | Цена за м
                                 sup 2
+                                | : 
+                                br
+                                span= objects[i].object_offices[j].office_subprice+' р.'
+                            .item-object-square
+                              p
+                                | Площадь: 
+                                br
+                                span= objects[i].object_offices[j].office_area+' м'
+                                  sup 2
                   a(href='/object'+objects[i].object_id) Все помещения
         // Пагинация
         #search-pagination
