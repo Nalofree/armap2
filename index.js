@@ -364,7 +364,7 @@ app.post('/addoffice', auth, function(req,res) {
             if (error) throw error;
             connection.query('SELECT * FROM images WHERE image_id IN ('+images+')',function (error,result,fields) {
               for (var i = 0; i < result.length; i++) {
-                fs.renameSync('uploads/'+result[i].image_filename,'public/images/obj/'+result[i].image_filename);
+                fs.renameSync(__dirname+'/public/uploads/'+result[i].image_filename,__dirname+'/public/images/obj/'+result[i].image_filename);
                 //fs.renameSync('uploads/'+result[i].image_min,'public/images/obj/'+result[i].image_min);
               }
               res.send(result);
