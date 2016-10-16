@@ -2,6 +2,11 @@ function fieldValidation() {
   // допишу потом
 }
 
+$('button[data-target="#header-register"]').click(function () {
+  $('.modal-form').show();
+  $('.modal-thanks').hide();
+});
+
 $("#login-register .btn-submit").click(function (e) {
   e.preventDefault();
   if ($("#reg_firstname").val() && $("#reg_lastname").val() && $("#reg_email").val() && $("#reg_pass").val() ) {
@@ -62,10 +67,11 @@ $("#login-register .btn-submit").click(function (e) {
       $.ajax('/register', {
         type: 'post',
         data: data,
-        dataType: 'json',
-        timeout: 10000,
+        //dataType: 'json',
+        //timeout: 10000,
         success: function(data) {
           if (data.status == 'success') {
+            $('.modal-regerror').hide();
             $('.modal-form').hide();
             $('.modal-thanks').show();
             console.log(data);

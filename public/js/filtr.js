@@ -2,7 +2,7 @@ if($("#filter").length) {
 	var squareSlider = document.getElementById('square-slider');
 	var priceSlider = document.getElementById('price-slider');
 	noUiSlider.create(squareSlider, {
-			start: [20, 300],
+			start: [0, 700],
 			connect: true,
 			step: 5,
 			range: {
@@ -11,12 +11,12 @@ if($("#filter").length) {
 			}
 	});
 	noUiSlider.create(priceSlider, {
-			start: [500, 1500],
+			start: [200, 3000],
 			connect: true,
 			step: 5,
 			range: {
-					'min': [300],
-					'max': [2000]
+					'min': [200],
+					'max': [3000]
 			}
 	});
 
@@ -79,7 +79,12 @@ if($("#filter").length) {
 			url: '/filtred',
 			success: function(data) {
 				console.log('success');
-				console.log(JSON.stringify(data));
+				//console.log(JSON.stringify(data));
+				for (var i = 0; i < data.offices.length; i++) {
+					if (data.offices[i].object) {
+						console.log(data.offices[i].object.object_name);
+					}					
+				}
 			},
 			error: function(data,status,error){
 				console.log(data);

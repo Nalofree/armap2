@@ -23,20 +23,39 @@ block content
           h3 Назначение:
           p Для чего вы ищите помещение?
           .filter-object-type
-            -for (var i = 0; i < meanings.length; i++)
-              .checkbox
-                label
-                  input(type='checkbox', name= meanings[i].meaning_id)
-                  span= meanings[i].meaning_name
+            .checkbox
+              label
+                input(type='checkbox')
+                | Торговый павильон
+            .checkbox
+              label
+                input(type='checkbox')
+                | Свободного назначения
+            .checkbox
+              label
+                input(type='checkbox')
+                | Склад
+            .checkbox
+              label
+                input(type='checkbox')
+                | Кафе
+            .checkbox
+              label
+                input(type='checkbox')
+                | Магазин
+            .checkbox
+              label
+                input(type='checkbox')
+                | Офис
           section.filter-object-square
             h3 Площадь:
             p Какая площадь вам необходима?
             .ui-slider
               section
-                input.min(type='text', value='')
-                input.max(type='text', value='')
+                input.min(type='text', value='20м')
+                input.max(type='text', value='20м')
               #square-slider
-          section.filter-object-price
+          section
             h3 Цена:
             p
               | Какая цена за 1м
@@ -44,8 +63,8 @@ block content
               |  вас интересует?
             .ui-slider
               section
-                input.min(type='text', value='')
-                input.max(type='text', value='')
+                input.min(type='text', value='20м')
+                input.max(type='text', value='20м')
               #price-slider
               p.price-desc
                 | Цена за всю площадь:
@@ -53,7 +72,7 @@ block content
                 |  -
                 span.max-price  150000р
           section
-            button.btn.filtr-it Применить
+            button.btn Применить
         // Результаты поиска в фильтре
         article#filter-result.tab-pane.fade(role='tabpanel')
           article
@@ -210,7 +229,7 @@ block content
                       span
                         | 50 м
                         sup 2
-    //- // Блок появляется при наведении на маркет объека
+    // Блок появляется при наведении на маркет объека
     //- .map-marker-info-hover
     //-   h3.nowrap-text
     //-     a(href='#') ТЦ “Рублёв”

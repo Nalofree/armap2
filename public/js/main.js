@@ -279,3 +279,7 @@ footerShowBtn.click(function () {
         footer.animate({height: "show"}, 400);
     }
 });
+
+$(document).ready(function () {
+  $("#create-tel").mask("+7 (999) 999-9999");
+});
