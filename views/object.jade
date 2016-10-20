@@ -80,26 +80,26 @@ block content
             a.item-block.active(href='#')
             a.item-line(href='#')
         article#search-results.block-style.style-block
-          - for (var i = 0; i < objects[0].object_offices.length; i++)
+          - for (var i = 0; i < object.object_offices.length; i++)
             .result
               .result-img
-                a(href='/office'+objects[0].object_offices[i].office_id)
-                  img(src='images/obj/'+objects[0].object_offices[i].office_cover)
+                a(href='/office-'+object.object_offices[i].office_id)
+                  img(src='images/obj/'+object.object_offices[i].office_cover)
               .result-desc
-                a(href='/office'+objects[0].object_offices[i].office_id)
-                  h3.nowrap-text= objects[0].object_offices[i].office_dascription
-                p.nowrap-text= objects[0].object_addres
+                a(href='/office-'+object.object_offices[i].office_id)
+                  h3.nowrap-text= object.object_offices[i].office_dascription
+                p.nowrap-text= object.object_addres
                 section
                   .result-price
                     p
                       | Цена за м
                       sup 2
                       | : 
-                      span= objects[0].object_offices[i].office_subprice +'р.'
+                      span= object.object_offices[i].office_subprice +'р.'
                   .result-square
                     p
                       | Площадь: 
-                      span= objects[0].object_offices[i].office_area+'м'
+                      span= object.object_offices[i].office_area+'м'
                         sup 2
         #search-pagination
           a.left(href='#')

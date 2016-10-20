@@ -7,7 +7,7 @@ block content
       article.kab-info
         section.kab-head
           h2 Личный кабинет
-          a.nickname.pro(href='#')= username
+          a.nickname.pro(href='/my')= username
         .kab-settings
           a.btn-create-object.href(href='#my-objects') создать объявление
           a.btn-setting(href='#') Настройки
@@ -58,7 +58,7 @@ block content
                   select#choose-object(name="object[]") Выберите объект
                     option(selected='' value='') Выберите объект
                     - for (var i = 0; i < objects.length; i++)
-                      option(value= objects[i].object_id, title= decodeURI(objects[i].object_adres))= objects[i].object_name
+                      option(value= objects[i].object_id, title= decodeURI(objects[i].object_adres))= decodeURI(objects[i].object_name)
                 .step-submit
                   a.first-step.step-btn(href='#') Продолжить
             // Шаг 2
@@ -72,7 +72,7 @@ block content
                     - for (var i = 0; i < objtypes.length; i++)
                       .radio
                         label
-                          input(type='radio', name='objectType', value= objtypes[i].objtype_id, checked='checked')
+                          input(type='radio', name='objectType', data-title= objtypes[i].objtype_id, checked='checked')
                           div= decodeURI(objtypes[i].objtype_name)
                 label
                   | Введите название:

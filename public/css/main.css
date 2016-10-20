@@ -8939,3 +8939,19 @@ h1 a:hover, h1 a:focus {
   right: -10px;
   /*margin-left: -75px;*/
 }
+
+.balloon-count-link {
+  display: inline-block;
+  width: 50%;
+}
+.balloon-more-link,
+.balloon-more-link:hover,
+.balloon-more-link:active,
+.balloon-more-link:link,
+.balloon-more-link:visited {
+  display: inline-block;
+  width: 50%;
+  text-align: right;
+  font-weight: 600;
+  color: #f5584e;
+}

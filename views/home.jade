@@ -23,30 +23,32 @@ block content
           h3 Назначение:
           p Для чего вы ищите помещение?
           .filter-object-type
-            .checkbox
-              label
-                input(type='checkbox')
-                | Торговый павильон
-            .checkbox
-              label
-                input(type='checkbox')
-                | Свободного назначения
-            .checkbox
-              label
-                input(type='checkbox')
-                | Склад
-            .checkbox
-              label
-                input(type='checkbox')
-                | Кафе
-            .checkbox
-              label
-                input(type='checkbox')
-                | Магазин
-            .checkbox
-              label
-                input(type='checkbox')
-                | Офис
+            -for (var i = 0; i < meanings.length; i++)
+              .checkbox
+                label
+                  input(type='checkbox', data-title= meanings[i].option_id)
+                  - option_name = decodeURI(meanings[i].option_name) ? decodeURI(meanings[i].option_name) : 'error';
+                  span= option_name
+            //- .checkbox
+            //-   label
+            //-     input(type='checkbox')
+            //-     | Свободного назначения
+            //- .checkbox
+            //-   label
+            //-     input(type='checkbox')
+            //-     | Склад
+            //- .checkbox
+            //-   label
+            //-     input(type='checkbox')
+            //-     | Кафе
+            //- .checkbox
+            //-   label
+            //-     input(type='checkbox')
+            //-     | Магазин
+            //- .checkbox
+            //-   label
+            //-     input(type='checkbox')
+            //-     | Офис
           section.filter-object-square
             h3 Площадь:
             p Какая площадь вам необходима?
@@ -62,7 +64,7 @@ block content
               sup 2
               |  вас интересует?
             .ui-slider
-              section
+              section.filter-object-price
                 input.min(type='text', value='20м')
                 input.max(type='text', value='20м')
               #price-slider
@@ -72,7 +74,7 @@ block content
                 |  -
                 span.max-price  150000р
           section
-            button.btn Применить
+            button.btn.filtr-it Применить
         // Результаты поиска в фильтре
         article#filter-result.tab-pane.fade(role='tabpanel')
           article

@@ -84,7 +84,7 @@ $(document).ready(function() {
           object_create: now,
           object_publish: 0,
           object_show: 1,
-          object_type: $('input[name="objectType"]:checked').val()
+          object_type: $('input[name="objectType"]:checked').attr('data-title')
         }
         $('.step-inform-address').html("Адрес: <span>"+decodeURI(objectData.object_adres)+"</span>");
       }

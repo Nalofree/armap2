@@ -54,45 +54,74 @@ if($("#filter").length) {
 		priceSlider.noUiSlider.set(valArr);
 	});
 
-	$("#filter .filtr-it").click(function (e) {
-		e.preventDefault();
-		var data = {};
-		data.meanings=[];
-		data.price = [];
-		data.area = [];
-		$(".filter-object-type input[type='checkbox']:checked").each(function () {
-			data.meanings.push($(this).attr('name'));
-		});
-		data.area = squareSlider.noUiSlider.get();
-		for (var i = 0; i < data.area.length; i++) {
-			data.area[i] = parseInt(data.area[i]);
-		}
-		data.price = priceSlider.noUiSlider.get();
-		for (var i = 0; i < data.price.length; i++) {
-			data.price[i] = parseInt(data.price[i]);
-		}
-		console.log(data);
-		$.ajax({
-			type: 'POST',
-			data: data,
-			//contentType: 'application/json',
-			url: '/filtred',
-			success: function(data) {
-				console.log('success');
-				//console.log(JSON.stringify(data));
-				for (var i = 0; i < data.offices.length; i++) {
-					if (data.offices[i].object) {
-						console.log(data.offices[i].object.object_name);
-					}					
-				}
-			},
-			error: function(data,status,error){
-				console.log(data);
-				console.log(status);
-				console.log(error);
-			}
-		});
-	});
+	// $("#filter .filtr-it").click(function (e) {
+	// 	e.preventDefault();
+	// 	var data = {};
+	// 	data.meanings=[];
+	// 	data.price = [];
+	// 	data.area = [];
+	// 	$(".filter-object-type input[type='checkbox']:checked").each(function () {
+	// 		data.meanings.push($(this).attr('data-title'));
+	// 	});
+	// 	data.area = squareSlider.noUiSlider.get();
+	// 	for (var i = 0; i < data.area.length; i++) {
+	// 		data.area[i] = parseInt(data.area[i]);
+	// 	}
+	// 	data.price = priceSlider.noUiSlider.get();
+	// 	for (var i = 0; i < data.price.length; i++) {
+	// 		data.price[i] = parseInt(data.price[i]);
+	// 	}
+	// 	console.log(data);
+	// 	$.ajax({
+	// 		type: 'POST',
+	// 		data: data,
+	// 		//contentType: 'application/json',
+	// 		url: '/filtred',
+	// 		success: function(data) {
+	// 			console.log('success');
+	// 			console.log(data);
+	// 			$('#filter-result').empty();
+	// 			if (data.count > 0) {
+	// 				for (var i = 0; i < data.offices.length; i++) {
+	// 					var adres = decodeURI(data.offices[i].object_adres) ? decodeURI(data.objects[i].object_adres) : 'Error';
+	// 					var officeItem = '<article><a href="#">\
+	// 				    <div class="result-img"><img src="images/search/result-img.png"/></div>\
+	// 				    <div class="result-desc">\
+	// 				      <h4>'+data.offices[i].office_name+'</h4>\
+	// 				      <p>'+adres+'</p>\
+	// 				      <section>\
+	// 				        <div class="result-price">\
+	// 				          <p>Цена за м<sup>2</sup>: <br/><span>'+data.offices[i].office_subprice+' р.</span></p>\
+	// 				        </div>\
+	// 				        <div class="result-square">\
+	// 				          <p>Площадь: <br/><span>'+data.offices[i].office_area+' м<sup>2</sup></span></p>\
+	// 				        </div>\
+	// 				      </section>\
+	// 				    </div></a></article>';
+	// 					$('#filter-result').append(officeItem);
+	// 				}
+	// 				if ($('#map').length) {
+	// 					for (var i = 0; i < data.objects.length; i++) {
+	// 						var coords=data.objects[i].object_coords.split(',');
+	// 						var coordsArr = [];
+	// 						coordsArr[0] = parseFloat(coords[0]);
+	// 						coordsArr[1] = parseFloat(coords[1]);
+	// 					}
+	// 				}else{
+	// 					console.log('map is false');
+	// 				}
+	// 			}else{
+	// 				var officeItem = '<p class="lead" align=center>Нет результатов, измените параметры поиска или свяжитесь с менеджером для более точного поиска помещения</p>';
+	// 				$('#filter-result').append(officeItem);
+	// 			}
+	// 		},
+	// 		error: function(data,status,error){
+	// 			console.log(data);
+	// 			console.log(status);
+	// 			console.log(error);
+	// 		}
+	// 	});
+	// });
 
 	// document.getElementById('read-button').addEventListener('click', function(){
 	// 	alert( slider.noUiSlider.get() );

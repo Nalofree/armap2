@@ -12,7 +12,8 @@ block content
           a.active(href='#') Офис №233, 25м2
         section#obj-header
           section
-            h2= office.office_dascription
+            - name = decodeURI(office.office_name) ? decodeURI(office.office_name) : 'Error!'
+            h2= name
             p ТЦ “Рублёв” ул. Чехова д. 19
           section.bookmark-trigger Добавить в закладки
         // Слайдер
@@ -20,11 +21,11 @@ block content
           .sp-slides
             - for (var i = 0; i < images.length; i++)
               .sp-slide
-                img(src=images[i].image_name)
+                img(src='images/obj/'+images[i].image_filename)
           .sp-thumbnails
             - for (var i = 0; i < images.length; i++)
               .sp-thumbnail
-                img(src=images[i].image_name)
+                img(src='images/obj/'+images[i].image_filename)
         // Информация о цене, площади и заказать звонок
         section#obj-info
           section
@@ -57,7 +58,7 @@ block content
         section#obj-summ
           p
             span Общая стоимость
-            span= office.office_totalprice+' р.'
+            span= (office.office_subprice*office.office_area) + ' р.'
           p
             span Высота потолков
             span= office.office_height == null ? 0+'м' : office.office_height+'м'
@@ -65,20 +66,23 @@ block content
           div
             h3 В арендную плану входит:
             ul
-              - for (var i = 0; i < office.includes.length; i++)
-                li= office.includes[i].name
+              - for (var i = 0; i < included.length; i++)
+                - var option = decodeURI(included[i].option_name) ? decodeURI(included[i].option_name) : 'Error!';
+                li= option
           div
             h3 Доступные провайдеры:
             ul.providers
               div
-                - for (var i = 0; i < office.providers.length; i++)
-                  li= '- '+office.providers[i].name
+                - for (var i = 0; i < providers.length; i++)
+                  - var option = decodeURI(providers[i].option_name) ? decodeURI(providers[i].option_name) : 'Error!';
+                  li= '- '+option
         section.obj-service
           div
             h3 Дополнительные услуги:
             ul
-              - for (var i = 0; i < office.extendes.length; i++)
-                li= office.extendes[i].name
+              - for (var i = 0; i < advanced.length; i++)
+                - var option = decodeURI(advanced[i].option_name) ? decodeURI(advanced[i].option_name) : 'Error!';
+                li= option
         section
           p
             | Вернуться в 
