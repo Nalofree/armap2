@@ -56,8 +56,8 @@ ymaps.ready(function(){
             for (var i = 0; i < data.offices.length; i++) {
               var adres = decodeURI(data.offices[i].office_adres) ? decodeURI(data.offices[i].office_adres) : 'Error';
               var name = decodeURI(data.offices[i].office_name);// ? decodeURI(data.offices[i].office_name) : 'Error';
-              var officeItem = '<article><a href="#">\
-                <div class="result-img"><img src="images/search/result-img.png"/></div>\
+              var officeItem = '<article><a href="office-'+data.offices[i].office_id+'">\
+                <div class="result-img"><img src="images/obj/'+data.offices[i].image_filename+'"/></div>\
                 <div class="result-desc">\
                   <h4>'+name+'</h4>\
                   <p>'+adres+'</p>\
@@ -95,6 +95,19 @@ ymaps.ready(function(){
                     map.balloon.close();
                 });
               }
+              $("#filter .filtr-it").click(function(){
+              	for (var i = placemarks.length - 1; i >= 0; i--) {
+              		map.geoObjects.remove(placemarks[i]);
+              	};
+                $('a[href="#filter-result"]').click();
+                map.geoObjects.removeAll();
+              });
+              var clusterer = new ymaps.Clusterer({ hasBalloon: true, disableClickZoom: true,  zoomMargin: 50});
+              clusterer.add(placemarks);
+              map.geoObjects.add(clusterer);
+              $("#filter .filtr-it").click(function(){
+                  map.geoObjects.remove(clusterer);
+              });
             }else{
               console.log('map is false');
             }
@@ -113,7 +126,14 @@ ymaps.ready(function(){
       	for (var i = placemarks.length - 1; i >= 0; i--) {
       		map.geoObjects.remove(placemarks[i]);
       	};
-          $('a[href="#filter-result"]').click();
+        $('a[href="#filter-result"]').click();
+        map.geoObjects.removeAll();
+      });
+      var clusterer = new ymaps.Clusterer({ hasBalloon: true, disableClickZoom: true,  zoomMargin: 50});
+      clusterer.add(placemarks);
+      map.geoObjects.add(clusterer);
+      $("#filter .filtr-it").click(function(){
+          map.geoObjects.remove(clusterer);
       });
     }
 

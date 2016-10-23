@@ -276,9 +276,11 @@ app.get('/object-:object_id', auth, function (req,res) {
   connection.query('SELECT * FROM objects WHERE object_id = '+req.params.object_id, function (error,result,fields) {
     if (error) throw error;
     object = result[0];
-    connection.query('SELECT * FROM offices WHERE office_object = '+object.object_id, function (error,result,fields) {
+    connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_object = '+object.object_id, function (error,result,fields) {
       if (error) throw error;
+      console.log(result);
       object.object_offices = result;
+      //console.log(object);
       res.render('object.jade',{
         role: res.role,
         username: res.userfullname,
@@ -311,7 +313,7 @@ app.get('/office-:office_id', auth, function (req,res) {
         connection.query('SELECT * FROM objtypes', function (error,result,fields) {
           if (error) throw error;
           var objtypes = result;
-          connection.query('SELECT * FROM options', function (error,result,fields) {
+          connection.query('SELECT * FROM options WHERE option_id IN ('+optionIdsStr+')', function (error,result,fields) {
             if (error) throw error;
             var meanings = [], included = [], advanced = [], providers = [];
             var opttypes = result;
@@ -355,15 +357,27 @@ app.get('/objects', auth, function (req,res) {
   geo = geolocation();
   connection.query('SELECT * FROM objects', function (error,result,fields) {
     if (error) throw error;
-    objects = result;
-    res.render('objects.jade',{
-      role: res.role,
-      username: res.userfullname,
-      userid: res.userid,
-      geo: geo,
-      objects: objects
+    var objects = result;
+    connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id',function (error, result, fields) {
+      if (error) throw error;
+      var offices = result;
+      for (var i = 0; i < objects.length; i++) {
+        objects[i].object_offices = [];
+        for (var j = 0; j < offices.length; j++) {
+          if (objects[i].object_id === offices[j].office_object) {
+            objects[i].object_offices.push(offices[j]);
+          }
+        }
+      }
+      console.log(objects);
+      res.render('objects.jade',{
+        role: res.role,
+        username: res.userfullname,
+        userid: res.userid,
+        geo: geo,
+        objects: objects
+      });
     });
-    // res.send(objects);
   });
 });
 
@@ -515,7 +529,7 @@ app.post('/filtred',function (req,res) {
           officesIdArr.push(item.link_office);
         });
         officesIdString = officesIdArr.join(',');
-        connection.query('SELECT * FROM offices WHERE (office_id IN ('+officesIdString+')) AND (office_area BETWEEN '+req.body.area[0]+' AND '+req.body.area[1]+')\
+        connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover WHERE (office_id IN ('+officesIdString+')) AND (office_area BETWEEN '+req.body.area[0]+' AND '+req.body.area[1]+')\
         AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+')', function (error,result,fields) {
           if (error) throw error;
           if (result.length<=0) {
@@ -556,7 +570,7 @@ app.post('/filtred',function (req,res) {
       }
     });
   }else{
-    connection.query('SELECT * FROM offices WHERE (office_area BETWEEN '+req.body.area[0]+' AND '+req.body.area[1]+')\
+    connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover  WHERE (office_area BETWEEN '+req.body.area[0]+' AND '+req.body.area[1]+')\
     AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+')', function (error,result,fields) {
       if (error) throw error;
       if (result.length<=0) {

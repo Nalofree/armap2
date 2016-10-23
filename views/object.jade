@@ -84,11 +84,13 @@ block content
             .result
               .result-img
                 a(href='/office-'+object.object_offices[i].office_id)
-                  img(src='images/obj/'+object.object_offices[i].office_cover)
+                  img(src='images/obj/'+object.object_offices[i].image_filename)
               .result-desc
                 a(href='/office-'+object.object_offices[i].office_id)
-                  h3.nowrap-text= object.object_offices[i].office_dascription
-                p.nowrap-text= object.object_addres
+                  - var name = decodeURI(object.object_offices[i].office_name) ? decodeURI(object.object_offices[i].office_name) : 'Error!';
+                  h3.nowrap-text= name
+                - var adres = decodeURI(object.object_adres) ? decodeURI(object.object_adres) : 'Error!';
+                  p.nowrap-text= adres
                 section
                   .result-price
                     p
