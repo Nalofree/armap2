@@ -29,12 +29,12 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-// var watermarkOptions = {
-//     'text' : 'rentozavr-rf',
-//     //'resize' : '200%',
-//     //'override-image' : true,
-//     //'dstPath' : 'uploads/watermark.jpg'
-// };
+var watermarkOptions = {
+    'text' : 'rentozavr-rf',
+    //'resize' : '200%',
+    //'override-image' : true,
+    //'dstPath' : 'uploads/watermark.jpg'
+};
 
 var connection = mysql.createConnection({
   host     : 'localhost',
