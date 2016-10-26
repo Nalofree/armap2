@@ -384,17 +384,104 @@ app.get('/objects', auth, function (req,res) {
 app.get('/bookmarks', auth, function (req,res) {
   //res.send(req.params);
   geo = geolocation();
-  connection.query('SELECT * FROM objects', function (error,result,fields) {
-    if (error) throw error;
-    objects = result;
+  console.log(req.cookies.bmarks);
+  if (req.cookies.bmarks) {
+    console.log('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_id IN ('+req.cookies.bmarks+')');
+    connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_id IN ('+req.cookies.bmarks+')', function (error,result,fields) {
+      if (error) throw error;
+      offices = result;
+      console.log(offices);
+      res.render('bookmarks.jade',{
+        role: res.role,
+        username: res.userfullname,
+        userid: res.userid,
+        geo: geo,
+        count: offices.length,
+        offices: offices
+      });
+    });
+  }else{
     res.render('bookmarks.jade',{
       role: res.role,
       username: res.userfullname,
       userid: res.userid,
       geo: geo,
-      objects: objects
+      count: 0
     });
-    // res.send(objects);
+  }
+});
+
+app.get('/moder', auth,function (req,res) {
+  geo = geolocation();
+  res.render('moder.jade',{
+    role: res.role,
+    username: res.userfullname,
+    userid: res.userid,
+    geo: geo
+  });
+});
+
+app.post('/delobj',function (req,res) {
+  // res.send(req.body);
+  connection.query('SELECT office_id FROM offices WHERE office_object = '+req.body.object_id,function (error,result,fields) {
+    if (error) throw error;
+    console.log(result.length);
+    if (result.length > 0) {
+      var offices = result,
+          ofcIdsStr = "",
+          ofcIdsArr = [];
+      offices.forEach(function(office) {
+        ofcIdsArr.push(office.office_id);
+      });
+      ofcIdsStr = ofcIdsArr.join(',');
+      connection.query('DELETE FROM objects\
+      WHERE object_id = '+req.body.object_id,
+      function (error,result,fields) {
+        if (error) throw error;
+        connection.query('DELETE FROM offices\
+        WHERE office_id IN ('+ofcIdsStr+')',
+        function (error,result,fields) {
+          if (error) throw error;
+          connection.query('DELETE FROM images\
+          WHERE image_office IN ('+ofcIdsStr+')',
+          function (error,result,fields) {
+            if (error) throw error;
+            connection.query('DELETE FROM options_offices\
+            WHERE link_office IN ('+ofcIdsStr+')',
+            function (error,result,fields) {
+              if (error) throw error;
+              res.send(req.result);
+            });
+          });
+        });
+      });
+    }else{
+      connection.query('DELETE FROM objects WHERE object_id = '+req.body.object_id+'',
+      function (error,result,fields) {
+        if (error) throw error;
+        res.send(req.result);
+      });
+    }
+  });
+});
+
+app.post('/delofc',function (req,res) {
+  // res.send(req.body);
+  connection.query('DELETE FROM offices\
+  WHERE office_id = '+req.body.office_id,
+  function (error,result,fields) {
+    if (error) throw error;
+    connection.query('DELETE FROM images\
+    WHERE image_office = '+req.body.office_id,
+    function (error,result,fields) {
+      if (error) throw error;
+      connection.query('DELETE FROM options_offices\
+      WHERE link_office = '+req.body.office_id,
+      function (error,result,fields) {
+        if (error) throw error;
+        res.send(req.result);
+      });
+    });
   });
 });
 

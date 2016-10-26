@@ -14,94 +14,37 @@ block content
         section#bm-header
           h2 Мои закладки
         section#bm-items
-          section.bm-item
-            .bm-item-img
-              a(href='object.html')
-                img(src='images/search/result-big.png')
-            .bm-item-desc
-              h3
-                a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
-              section
-                .bm-item-price
-                  p
-                    | Цена за м
-                    sup 2
-                    | : 
-                    span 2000 р.
-                .bm-item-square
-                  p
-                    | Площадь: 
-                    span
-                      | 50 м
-                      sup 2
-            a.bm-delete(href='#')
-          section.bm-item
-            .bm-item-img
-              a(href='object.html')
-                img(src='images/search/result-big.png')
-            .bm-item-desc
-              h3
-                a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
-              section
-                .bm-item-price
-                  p
-                    | Цена за м
-                    sup 2
-                    | : 
-                    span 2000 р.
-                .bm-item-square
-                  p
-                    | Площадь: 
-                    span
-                      | 50 м
-                      sup 2
-            a.bm-delete(href='#')
-          section.bm-item
-            .bm-item-img
-              a(href='object.html')
-                img(src='images/search/result-big.png')
-            .bm-item-desc
-              h3
-                a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
-              section
-                .bm-item-price
-                  p
-                    | Цена за м
-                    sup 2
-                    | : 
-                    span 2000 р.
-                .bm-item-square
-                  p
-                    | Площадь: 
-                    span
-                      | 50 м
-                      sup 2
-            a.bm-delete(href='#')
-          section.bm-item
-            .bm-item-img
-              a(href='object.html')
-                img(src='images/search/result-big.png')
-            .bm-item-desc
-              h3
-                a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
-              section
-                .bm-item-price
-                  p
-                    | Цена за м
-                    sup 2
-                    | : 
-                    span 2000 р.
-                .bm-item-square
-                  p
-                    | Площадь: 
-                    span
-                      | 50 м
-                      sup 2
-            a.bm-delete(href='#')
-        section.bm-none
-          div
-            h2 Закладок нет
-            a(href='search.html') Перейти к списку
+          //- - for (var i = 0; i < offices.length; i++) {
+          //-   offices[i]
+          //- }
+          - if (count == 0)
+            section.bm-none
+              div
+                h2 Закладок нет
+                //- a(href='search.html') Перейти к списку
+          - else
+            -for (var i = 0; i < offices.length; i++)
+              section.bm-item
+                .bm-item-img
+                  a(href='office-'+offices[i].office_id)
+                    img(src='images/obj/'+offices[i].image_filename)
+                .bm-item-desc
+                  h3
+                    - var name = decodeURI(offices[i].office_name) ? decodeURI(offices[i].office_name) : 'Error!'
+                      a(href='office-'+offices[i].office_id)= name
+                  section
+                    .bm-item-price
+                      p
+                        | Цена за м
+                        sup 2
+                        | : 
+                        span= offices[i].office_subprice +' р.'
+                    .bm-item-square
+                      p
+                        | Площадь: 
+                        span= offices[i].office_area +' м'
+                          sup 2
+                a.bm-delete(href='#', data-title=offices[i].office_id)
       // Рекомендуемые
       article#recomended
         section#best-offer

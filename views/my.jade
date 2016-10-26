@@ -215,9 +215,9 @@ block content
                       p.nowrap-text= adres
                     section.kab-item-change
                       .kab-item-edit
-                        a(href='#') Удалить
+                        a(href='#', class='del-obj', data-title=objects[i].object_id) Удалить
                         span |
-                        a(href='#') Редактировать
+                        a(href='#', class='edit-obj', data-title=objects[i].object_id) Редактировать
                       .kab-item-create
                         a(href= ""+objects[i].object_id) + Добавить помещение
                   .kab-item-last
@@ -276,7 +276,7 @@ block content
                                 li
                                   a(href='#') Снять с публикации
                                 li
-                                  a(href='#') Удалить
+                                  a(href='#', class='del-ofc', data-title=offices[j].office_id) Удалить
                       tr
                         td.table-date
                           | 21 июнь 2014

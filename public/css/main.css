@@ -5278,7 +5278,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 #bookmarks #my-bookmarks.bm-none #bm-items {
-  display: none;
+  /*display: none;*/
 }
 
 #bookmarks #my-bookmarks.bm-none .bm-none {
@@ -5307,7 +5307,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 #bookmarks #my-bookmarks .bm-none {
-  display: none;
+  /*display: none;*/
 }
 
 #bookmarks #bm-header {
@@ -8954,4 +8954,8 @@ h1 a:hover, h1 a:focus {
   text-align: right;
   font-weight: 600;
   color: #f5584e;
+}
+
+.bookmark-trigger {
+  cursor: pointer;
 }

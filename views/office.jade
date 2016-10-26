@@ -12,10 +12,10 @@ block content
           a.active(href='#') Офис №233, 25м2
         section#obj-header
           section
-            - name = decodeURI(office.office_name) ? decodeURI(office.office_name) : 'Error!'
+            - var name = decodeURI(office.office_name) ? decodeURI(office.office_name) : 'Error!'
             h2= name
             p ТЦ “Рублёв” ул. Чехова д. 19
-          section.bookmark-trigger Добавить в закладки
+          section.bookmark-trigger(data-title= office.office_id) Добавить в закладки
         // Слайдер
         section#obj-slider.slider-pro
           .sp-slides
