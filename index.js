@@ -68,7 +68,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 //
 // console.log(geo);
 
-function geolocation() {
+function geolocation(req,res,next) {
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   ip = ip.substring(7);
   // var ip = "188.168.22.110";
@@ -81,7 +81,9 @@ function geolocation() {
     geo.city = "Все города";
     geo.zoom = 4;
   }
-  return geo;
+  // return geo;
+  res.geo = geo;
+  next();
 }
 
 function auth(req, res, next) {
@@ -187,8 +189,8 @@ function getOffices(ofcParams) {
   }
 }
 
-app.get('/',auth, function(req,res) {
-  geo = geolocation();
+app.get('/',auth,geolocation, function(req,res) {
+  geo = res.geo;
   console.log('Cookies: ', req.cookies);
   connection.query('SELECT * FROM options WHERE option_type = 1',function (error,result,fields) {
     if (error) throw error;
@@ -204,8 +206,8 @@ app.get('/',auth, function(req,res) {
   })
 });
 
-app.get('/my',auth, function(req,res) {
-  geo = geolocation();
+app.get('/my',auth,geolocation, function(req,res) {
+  geo = res.geo;
   if (res.role == 'user' || res.role == 'admin' || res.role == 'moder') {
     connection.query('SELECT * FROM objtypes', function (error,result,fields) {
       if (error) throw error;
@@ -270,9 +272,9 @@ app.get('/my',auth, function(req,res) {
   }
 });
 
-app.get('/object-:object_id', auth, function (req,res) {
+app.get('/object-:object_id', auth,geolocation, function (req,res) {
   //res.send(req.params);
-  geo = geolocation();
+  geo = res.geo;
   connection.query('SELECT * FROM objects WHERE object_id = '+req.params.object_id, function (error,result,fields) {
     if (error) throw error;
     object = result[0];
@@ -292,9 +294,9 @@ app.get('/object-:object_id', auth, function (req,res) {
   });
 });
 
-app.get('/office-:office_id', auth, function (req,res) {
+app.get('/office-:office_id', auth,geolocation, function (req,res) {
   //res.send(req.params);
-  var geo = geolocation();
+  var geo = res.geo;
   connection.query('SELECT * FROM offices WHERE office_id = ' + req.params.office_id, function (error,result,fields) {
     if (error) throw error;
     var office = result[0];
@@ -352,9 +354,9 @@ app.get('/office-:office_id', auth, function (req,res) {
   });
 });
 
-app.get('/objects', auth, function (req,res) {
+app.get('/objects', auth,geolocation, function (req,res) {
   //res.send(req.params);
-  geo = geolocation();
+  geo = res.geo;
   connection.query('SELECT * FROM objects', function (error,result,fields) {
     if (error) throw error;
     var objects = result;
@@ -381,9 +383,9 @@ app.get('/objects', auth, function (req,res) {
   });
 });
 
-app.get('/bookmarks', auth, function (req,res) {
+app.get('/bookmarks', auth,geolocation, function (req,res) {
   //res.send(req.params);
-  geo = geolocation();
+  geo = res.geo;
   console.log(req.cookies.bmarks);
   if (req.cookies.bmarks) {
     console.log('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_id IN ('+req.cookies.bmarks+')');
@@ -411,8 +413,8 @@ app.get('/bookmarks', auth, function (req,res) {
   }
 });
 
-app.get('/moder', auth,function (req,res) {
-  geo = geolocation();
+app.get('/moder', auth,geolocation,function (req,res) {
+  geo = res.geo;
   res.render('moder.jade',{
     role: res.role,
     username: res.userfullname,
@@ -548,7 +550,7 @@ app.post('/deluplimage',function (req,res) {
   });
 });
 
-app.post('/setobject',auth,function (req,res) {
+app.post('/setobject',auth,geolocation,function (req,res) {
   // console.log('INSERT INTO objects (object_name,object_create,object_author,object_coords,object_adres,object_publish,object_show,object_type)\
   // VALUES ("'+req.body.object_name+'","'+req.body.object_create+'",'+res.userid+',"'+req.body.object_coords+'","'+req.body.object_adres+'",'+req.body.object_publish+','+req.body.object_show+','+req.body.object_type+')');
   connection.query('INSERT INTO objects (object_name,object_create,object_author,object_coords,object_adres,object_publish,object_show,object_type)\
@@ -559,7 +561,7 @@ app.post('/setobject',auth,function (req,res) {
   });
 });
 
-app.post('/addoffice', auth, function(req,res) {
+app.post('/addoffice', auth,geolocation, function(req,res) {
   connection.query('SELECT * FROM images WHERE image_id ='+req.body.cover[0],function (error,result,fields) {
     if (error) throw error;
     var cover = result[0].image_id;
