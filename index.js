@@ -38,8 +38,8 @@ var watermarkOptions = {
 
 var connection = mysql.createConnection({
   host     : 'localhost',
-  user     : 'root',
-  password : 'root',
+  user     : 'admin_armapuser',
+  password : 'HQCbezLWux',
   database : 'armap2_db',
   //charset: 'cp1251'
   charset: 'UTF8_GENERAL_CI'
@@ -69,11 +69,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 // console.log(geo);
 
 function geolocation() {
-  //var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  //ip = ip.substring(7);
-  var ip = "188.168.22.110";
+  var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  ip = ip.substring(7);
+  // var ip = "188.168.22.110";
   if (ip != 0) {
-    var geo = geoip.lookup(ip);// ? geoip.lookup(ip.slice(1,-1)) : 0;
+    var geo = geoip.lookup(ip) ? geoip.lookup(ip.slice(1,-1)) : 0;
     geo.zoom = 13;
   }else{
     var geo = {};//61.802742, 97.175641
@@ -702,6 +702,6 @@ app.post('/filtred',function (req,res) {
   //connection.query('SELECT * FROM options_offices WHERE link_option IN ('+meaningsString+')');
 });
 
-server = app.listen(5080,function(){
-  console.log('Listening on port 5080');
+server = app.listen(8000,function(){
+  console.log('Listening on port 8000');
 });
