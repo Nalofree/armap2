@@ -72,7 +72,8 @@ function geolocation(req,res,next) {
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   ip = ip.substring(7);
   // var ip = "188.168.22.110";
-  if (ip != 0) {
+  console.log(typeof(ip));
+  if (ip != "") {
     var geo = geoip.lookup(ip) ? geoip.lookup(ip.slice(1,-1)) : 0;
     geo.zoom = 13;
   }else{
@@ -233,7 +234,8 @@ app.get('/my',auth,geolocation, function(req,res) {
           }
           result[i]
         }
-        connection.query('SELECT object_id,object_name,object_adres,object_cover FROM objects WHERE object_author ='+res.userid,function (error,result,fields) {
+        connection.query('SELECT object_id,object_name,object_adres,object_cover\
+         FROM objects WHERE object_author ='+res.userid,function (error,result,fields) {
           if (error) throw error;
           var objects = result;
           connection.query('SELECT * FROM offices WHERE office_author ='+res.userid, function (error,result,fields) {
@@ -415,11 +417,45 @@ app.get('/bookmarks', auth,geolocation, function (req,res) {
 
 app.get('/moder', auth,geolocation,function (req,res) {
   geo = res.geo;
-  res.render('moder.jade',{
-    role: res.role,
-    username: res.userfullname,
-    userid: res.userid,
-    geo: geo
+  connection.query('SELECT object_name, object_type, object_adres, object_author, object_id, object_cover, object_create FROM objects', function (error, result, fields) {
+    if (error) throw error;
+    var objects = result;
+    connection.query('SELECT office_name, office_phone, office_subprice, office_area, office_height, office_create, image_filename FROM offices LEFT JOIN images ON image_id = office_cover', function (error, result, fields) {
+      if (error) throw error;
+      var offices = result;
+      for (var i = 0; i < offices.length; i++) {
+        var date = offices[i].office_create,
+            day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate(),
+            month = date.getMonth() < 10 ? '0'+date.getMonth() : date.getMonth(),
+            year = date.getFullYear(),
+            hours = date.getHours() < 10 ? '0'+date.getHours() : date.getHours(),
+            minutes = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes(),
+            time = hours+':'+minutes;
+        offices[i].office_create = day+'.'+month+'.'+year+' '+time;
+      }
+      connection.query('SELECT image_id, image_filename FROM images WHERE image_office IS NOT NULL', function (error, result, fields) {
+        if (error) throw error;
+        var images = result;
+        for (var i = 0; i < objects.length; i++) {
+          objects[i].offices = [];
+          for (var j = 0; j < offices.length; j++) {
+            if (offices[j].office_object == objects[i].object_id) {
+              objects[i].offices.push(offices[j]);
+            }
+          }
+        }
+        console.log(offices);
+        res.render('moder.jade',{
+          role: res.role,
+          username: res.userfullname,
+          userid: res.userid,
+          geo: geo,
+          objects: objects,
+          offices: offices,
+          images: images
+        });
+      });
+    })
   });
 });
 

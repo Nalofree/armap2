@@ -220,29 +220,28 @@ block content
                         a(href='#', class='edit-obj', data-title=objects[i].object_id) Редактировать
                       .kab-item-create
                         a(href= ""+objects[i].object_id) + Добавить помещение
-                  .kab-item-last
-                    p Последнее измененное:
-                    a.last-object(href='#')
-                      .last-object-img
-                        img(src='images/search/result-img.png')
-                      .last-object-desc
-                        h4 Офис № 241
-                        p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
-                        section
-                          .last-object-price
-                            p
-                              | Цена за м
-                              sup 2
-                              | : 
-                              br
-                              span 2000 р.
-                          .last-object-square
-                            p
-                              | Площадь: 
-                              br
-                              span
-                                | 50 м
-                                sup 2
+                  //- .kab-item-last
+                  //-   p Последнее измененное:
+                  //-   a.last-object(href='#')
+                  //-     .last-object-img
+                  //-       img(src='images/search/result-img.png')
+                  //-     .last-object-desc
+                  //-       h4= decodeURI(offices[0].office_name) ? decodeURI(offices[0].office_name) : 'Error!'
+                  //-       p= decodeURI(objects[i].object_name) ? decodeURI(objects[i].object_name) : 'Error!'
+                  //-       section
+                  //-         .last-object-price
+                  //-           p
+                  //-             | Цена за м
+                  //-             sup 2
+                  //-             | : 
+                  //-             br
+                  //-             span= offices[0].office_subprice +' р.'
+                  //-         .last-object-square
+                  //-           p
+                  //-             | Площадь: 
+                  //-             br
+                  //-             span= offices[0].office_area +' м'
+                  //-               sup 2
                   span.rooms-show
                 // Таблица помещений
                 section.kab-item-table
