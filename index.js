@@ -195,6 +195,7 @@ function getOffices(ofcParams) {
 }
 
 app.get('/',auth,geolocation, function(req,res) {
+  console.log(__dirname);
   geo = res.geo;
   console.log('Cookies: ', req.cookies);
   connection.query('SELECT * FROM options WHERE option_type = 1',function (error,result,fields) {
