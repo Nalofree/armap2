@@ -70,12 +70,12 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 function geolocation(req,res,next) {
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  console.log(ip);
   ip = ip.substring(7);
+  console.log(ip);
   // var ip = "188.168.22.110";
   console.log(typeof(ip));
   var geo;
-  if (ip != undefined) {
+  if (ip) {
     geo = geoip.lookup(ip) ? geoip.lookup(ip.slice(1,-1)) : 0;
     geo.zoom = 13;
     geo.ip = ip;
