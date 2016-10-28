@@ -76,11 +76,13 @@ function geolocation(req,res,next) {
   if (ip != "") {
     var geo = geoip.lookup(ip) ? geoip.lookup(ip.slice(1,-1)) : 0;
     geo.zoom = 13;
+    geo.ip = ip;
   }else{
     var geo = {};//61.802742, 97.175641
     geo.ll = [61.802742, 97.175641];
     geo.city = "Все города";
     geo.zoom = 4;
+    geo.ip = ip;
   }
   // return geo;
   res.geo = geo;

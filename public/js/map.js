@@ -51,6 +51,7 @@ ymaps.ready(function(){
         success: function(data) {
           console.log('success');
           console.log(data);
+          console.log(data.geo);
           $('#filter-result').empty();
           if (data.count > 0) {
             for (var i = 0; i < data.offices.length; i++) {
