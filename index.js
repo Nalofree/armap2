@@ -71,10 +71,12 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 function geolocation(req,res,next) {
   // console.log(req.connection.remoteAddress);
-  var servip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  console.log(servip.replace(/^.*:/, ''));
+  var surceIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+      ip;
+  // console.log(servip.replace(/^.*:/, ''));
+  ip = servip.replace(/^.*:/, '');
   // ip = ip.substring(7);
-  var ip = req.cookies.clientIP ? req.cookies.clientIP : 0;
+  // var ip = req.cookies.clientIP ? req.cookies.clientIP : 0;
   // console.log(req.cookies.clientIP);
   // var ip = "188.168.22.110";
   // console.log(typeof(ip));
@@ -84,7 +86,7 @@ function geolocation(req,res,next) {
     geo = geoip.lookup(ip) ? geoip.lookup(ip) : 0;//geoip.lookup(ip.slice(1,-1)) : 0;
     geo.zoom = 13;
     geo.ip = ip;
-    geo.servip = servip.replace(/^.*:/, '');
+    // geo.servip = servip.replace(/^.*:/, '');
     console.log(geo);
   }else{
     geo = {};//61.802742, 97.175641
@@ -92,7 +94,7 @@ function geolocation(req,res,next) {
     geo.city = "Все города";
     geo.zoom = 4;
     geo.ip = ip;
-    geo.servip = servip.replace(/^.*:/, '');
+    // geo.servip = servip.replace(/^.*:/, '');
   }
   // return geo;
   res.geo = geo;
