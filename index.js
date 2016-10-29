@@ -12,7 +12,8 @@ var express = require('express'),
     cookieSession = require('cookie-session'),
     cookieParser = require('cookie-parser'),
     watermark = require('image-watermark'),
-    im = require('imagemagick');
+    im = require('imagemagick'),
+    requestIp = require('request-ip');
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -91,6 +92,12 @@ function geolocation(req,res,next) {
   res.geo = geo;
   next();
 }
+
+var ipMiddleware = function(req, res, next) {
+    var clientIp = requestIp.getClientIp(req);
+    // console.log(clientIp);
+    next();
+};
 
 function auth(req, res, next) {
   var role;
@@ -195,7 +202,7 @@ function getOffices(ofcParams) {
   }
 }
 
-app.get('/',auth,geolocation, function(req,res) {
+app.get('/',auth,geolocation,ipMiddleware, function(req,res) {
   console.log(__dirname);
   geo = res.geo;
   console.log('Cookies: ', req.cookies);
@@ -208,7 +215,8 @@ app.get('/',auth,geolocation, function(req,res) {
       userid: res.userid,
       geo: geo,
       meanings: meanings,
-      ishome: 1
+      ishome: 1,
+      clientIp: clientIp
     });
   })
 });
