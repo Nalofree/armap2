@@ -82,8 +82,8 @@ function geolocation(req,res,next) {
   // console.log(typeof(ip));
   console.log('ip: '+ip);
   var geo;
-  if (ip != 0) {
-    geo = geoip.lookup(ip) ? geoip.lookup(ip) : 0;//geoip.lookup(ip.slice(1,-1)) : 0;
+  if (geoip.lookup(ip)) {
+    geo = geoip.lookup(ip);//geoip.lookup(ip.slice(1,-1)) : 0;
     geo.zoom = 13;
     geo.ip = ip;
     // geo.servip = servip.replace(/^.*:/, '');
