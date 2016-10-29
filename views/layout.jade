@@ -29,13 +29,13 @@ html(lang='ru')
           nav.top-line.container
             ul#head-top-menu
               li
-                a.show-footer.href(href='#footer')= 'Контакты '+clientIP
+                a.show-footer.href(href='#footer')= 'Контакты'
               li
                 a(href='#') Арендодателям
               li
                 a(href='#') Помощь
               li
-                a(href='#')#city= geo.city + ' ' + servip
+                a(href='#')#city= geo.city + ' ' + geo.servip
             -if (role)
               ul#head-log-in
                 li
