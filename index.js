@@ -73,13 +73,14 @@ function geolocation(req,res,next) {
   console.log(req.connection.remoteAddress);
   // var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   // ip = ip.substring(7);
-  var ip = req.cookies.clientIp ? req.cookies.clientIp : 0;
-  console.log('ip: '+ip);
+  var ip = req.cookies.clientIP ? req.cookies.clientIP : 0;
+  // console.log(req.cookies.clientIP);
   // var ip = "188.168.22.110";
-  console.log(typeof(ip));
+  // console.log(typeof(ip));
+  console.log('ip: '+ip);
   var geo;
   if (ip != 0) {
-    geo = geoip.lookup(ip) ? geoip.lookup(ip.slice(1,-1)) : 0;
+    geo = geoip.lookup(ip) ? geoip.lookup(ip) : 0;//geoip.lookup(ip.slice(1,-1)) : 0;
     geo.zoom = 13;
     geo.ip = ip;
     console.log(geo);
