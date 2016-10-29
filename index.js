@@ -84,7 +84,7 @@ function geolocation(req,res,next) {
     geo = geoip.lookup(ip) ? geoip.lookup(ip) : 0;//geoip.lookup(ip.slice(1,-1)) : 0;
     geo.zoom = 13;
     geo.ip = ip;
-    geo.servip;
+    geo.servip = servip;
     console.log(geo);
   }else{
     geo = {};//61.802742, 97.175641
@@ -92,7 +92,7 @@ function geolocation(req,res,next) {
     geo.city = "Все города";
     geo.zoom = 4;
     geo.ip = ip;
-    geo.servip;
+    geo.servip = servip;
   }
   // return geo;
   res.geo = geo;
