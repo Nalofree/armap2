@@ -96,6 +96,7 @@ function geolocation(req,res,next) {
 var ipMiddleware = function(req, res, next) {
     var clientIp = requestIp.getClientIp(req);
     // console.log(clientIp);
+    res.clientIp = clientIp;
     next();
 };
 
@@ -216,7 +217,7 @@ app.get('/',auth,geolocation,ipMiddleware, function(req,res) {
       geo: geo,
       meanings: meanings,
       ishome: 1,
-      clientIp: clientIp
+      clientIp: res.clientIp
     });
   })
 });
