@@ -1,10 +1,11 @@
 
-var coords = $(".geo-ll").text().split(',');
-var zoom = $(".geo-zoom").text();
+var coords = "61.802742, 97.175641".split(',');
+var zoom = 4;
 console.log(coords);
 var map, clusterer, placemarks = [];
 
 ymaps.ready(function(){
+
   map = new ymaps.Map("map", {
     center: coords,
     zoom: zoom,
@@ -22,6 +23,10 @@ ymaps.ready(function(){
       right: 5
     }
   });
+
+  console.log(ymaps.geolocation.city);
+  console.log(ymaps.geolocation.region);
+	console.log(ymaps.geolocation.country);
 
   map.behaviors.enable('scrollZoom');
 

@@ -139,7 +139,7 @@ app.post('/login',function (req,res) {
   var email = req.body.email;
   connection.query('SELECT * FROM users WHERE user_email = "'+email+'"',
   function(error, result, fields){
-    if (error) throw error;
+    if (error) {throw error; res.send({status:'error'})};
     if (result.length > 0) {
       var pass = req.body.pass;
       var hash = crypto.createHmac('sha256', pass)
@@ -149,7 +149,7 @@ app.post('/login',function (req,res) {
         var user = result[0];
         console.log(user);
         connection.query('SELECT * FROM roles WHERE role_id = '+user.user_role, function (error,result,fields) {
-          if (error) throw error;
+          if (error) {throw error; res.send({status:'error'})};
           req.session.userfullname = decodeURI(user.user_firstname) + ' ' + decodeURI(user.user_lastname);
   				req.session.role = result[0].role_name;
           req.session.userid = user.user_id;
@@ -161,6 +161,8 @@ app.post('/login',function (req,res) {
                     userid: req.session.userid
           });
         });
+      }else{
+        res.send({status: 'unsuccess'});
       }
     }else{
       res.send({status: 'unsuccess'});
@@ -203,7 +205,7 @@ function getOffices(ofcParams) {
   }
 }
 
-app.get('/',auth,geolocation,ipMiddleware, function(req,res) {
+app.get('/',auth,geolocation, function(req,res) {
   console.log(__dirname);
   geo = res.geo;
   console.log('Cookies: ', req.cookies);
