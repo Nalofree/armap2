@@ -70,8 +70,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 // console.log(geo);
 
 function geolocation(req,res,next) {
-  console.log(req.connection.remoteAddress);
-  // var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  // console.log(req.connection.remoteAddress);
+  var servip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  console.log(servip);
   // ip = ip.substring(7);
   var ip = req.cookies.clientIP ? req.cookies.clientIP : 0;
   // console.log(req.cookies.clientIP);
@@ -83,6 +84,7 @@ function geolocation(req,res,next) {
     geo = geoip.lookup(ip) ? geoip.lookup(ip) : 0;//geoip.lookup(ip.slice(1,-1)) : 0;
     geo.zoom = 13;
     geo.ip = ip;
+    geo.servip;
     console.log(geo);
   }else{
     geo = {};//61.802742, 97.175641
@@ -90,6 +92,7 @@ function geolocation(req,res,next) {
     geo.city = "Все города";
     geo.zoom = 4;
     geo.ip = ip;
+    geo.servip;
   }
   // return geo;
   res.geo = geo;
