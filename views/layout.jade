@@ -534,6 +534,7 @@ html(lang='ru')
                           | 50 м
                           sup 2
       script(src='js/jquery-1.11.0.min.js')
+      script(src="http://ip-jobs.staff-base.spb.ru/ip.cgi")
       script(src='js/jquery.maskedinput.js')
       script(src='js/animsition.min.js')
       script(src='js/bootstrap.min.js')
@@ -547,14 +548,4 @@ html(lang='ru')
       script(src='js/filtr.js')
       script(src='js/addobject.js')
       script(src='js/bmarks.js')
-      script(src='js/remove.js')
-      script(src="http://ip-jobs.staff-base.spb.ru/ip.cgi")
-      script.
-        console.log(IP);
-        function setCookie(cname, cvalue, exdays) {
-          var d = new Date();
-          d.setTime(d.getTime() + (exdays*24*60*60*1000));
-          var expires = "expires="+d.toUTCString();
-          document.cookie = cname + "=" + cvalue + "; " + expires;
-        }
-        setCookie('clientIP', IP, 30); 
+      script(src='js/remove.js') 

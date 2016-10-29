@@ -73,8 +73,8 @@ function geolocation(req,res,next) {
   console.log(req.connection.remoteAddress);
   // var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   // ip = ip.substring(7);
-  var ip = req.cookies.clientIp;
-  console.log(ip);
+  var ip = req.cookies.clientIp ? req.cookies.clientIp : 0;
+  console.log('ip: '+ip);
   // var ip = "188.168.22.110";
   console.log(typeof(ip));
   var geo;
@@ -82,6 +82,7 @@ function geolocation(req,res,next) {
     geo = geoip.lookup(ip) ? geoip.lookup(ip.slice(1,-1)) : 0;
     geo.zoom = 13;
     geo.ip = ip;
+    console.log(geo);
   }else{
     geo = {};//61.802742, 97.175641
     geo.ll = [61.802742, 97.175641];

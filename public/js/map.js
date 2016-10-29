@@ -4,6 +4,10 @@ var zoom = $(".geo-zoom").text();
 console.log(coords);
 var map, clusterer, placemarks = [];
 
+  console.log(IP);
+  
+  setCookie('clientIP', IP, 30);
+
 ymaps.ready(function(){
   map = new ymaps.Map("map", {
     center: coords,
