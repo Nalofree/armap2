@@ -75,7 +75,7 @@ function geolocation(req,res,next) {
   // ip = ip.substring(7);
   var ip = req.cookies.clientIp ? req.cookies.clientIp : 0;
   console.log('ip: '+ip);
-  // var ip = "188.168.22.110";
+  var ip = "188.168.22.110";
   console.log(typeof(ip));
   var geo;
   if (ip != 0) {
