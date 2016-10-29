@@ -69,6 +69,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 // console.log(geo);
 
 function geolocation(req,res,next) {
+  console.log(req.connection.remoteAddress);
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   ip = ip.substring(7);
   console.log(ip);
