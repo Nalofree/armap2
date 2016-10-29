@@ -74,7 +74,7 @@ function geolocation(req,res,next) {
   var surceIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress,
       ip;
   // console.log(servip.replace(/^.*:/, ''));
-  ip = servip.replace(/^.*:/, '');
+  ip = surceIp.replace(/^.*:/, '');
   // ip = ip.substring(7);
   // var ip = req.cookies.clientIP ? req.cookies.clientIP : 0;
   // console.log(req.cookies.clientIP);
