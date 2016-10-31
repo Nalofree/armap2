@@ -14,11 +14,19 @@ html(lang='ru')
     link(href='https://fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto:500,700&subset=latin,cyrillic,cyrillic-ext', rel='stylesheet', type='text/css')
     script(src='https://api-maps.yandex.ru/2.1/?lang=ru_RU', type='text/javascript')
   body
-    style.
-      .geo-ll,.geo-zoom{height: 0; opacity: 0}
-    .geo-ll= geo.ll
-    .geo-zoom= geo.zoom
+    //- style.
+    //-   .geo-ll,.geo-zoom{height: 0; opacity: 0}
+    //- .geo-ll
     .close-layout
+    div#choosecity.citys
+      div.citys-list
+      div.citys-form
+        form#citys-form
+          h3.citys-form__heading Нет вашего города?
+          .form-groups
+            input.citys-form__input(type='text', required='required', placeholder='Название города')
+          .form-groups
+            button.btn.btn-important.citys-form__submit Добавить город
     #wrapper.animsition
       if (ishome === 1)
         #map(style='width: 100%; height: 100%; position: fixed; background: #eee;')
@@ -35,7 +43,14 @@ html(lang='ru')
               li
                 a(href='#') Помощь
               li
-                a(href='#')#city= geo.city
+                a(href='#')#city= ""
+                div#isyourcity.tooltip-white
+                  div.tooltip-white__quastion= 'Ваш город '
+                    span.tooltip-white__quastion-cityname
+                    | ?
+                  div.tooltip-white__buttons
+                    button#mycity.btn.btn-important Да
+                    button#notmycity.btn Нет
             -if (role)
               ul#head-log-in
                 li
@@ -542,6 +557,7 @@ html(lang='ru')
       script(src='js/wNumb.js')
       script(src='js/nouislider.min.js')
       script(src='js/main.js')
+      script(src='js/choosecity.js')
       script(src='js/map.js')
       script(src='js/reg.js')
       script(src='js/login.js')

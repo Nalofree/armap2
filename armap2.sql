@@ -2,6 +2,7 @@ CREATE DATABASE armap2_db CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 -- ALTER TABLE offices MODIFY office_cover INT(11);
 -- ALTER TABLE objects MODIFY object_cover INT(11);
+-- ALTER TABLE objects ADD object_city INT(11);
 
 CREATE TABLE users (
   user_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -32,6 +33,7 @@ CREATE TABLE objects (
   object_show INT(2),
   object_type INT(11),
   object_cover VARCHAR(255),
+  object_city INT(11);
   PRIMARY KEY (object_id)
 );
 
@@ -88,4 +90,10 @@ CREATE TABLE options_offices (
   link_office INT(11),
   link_option INT(11),
   PRIMARY KEY (link_id)
+);
+
+CREATE TABLE citys (
+  city_id INT(11) NOT NULL AUTO_INCREMENT,
+  city_name VARCHAR(255),
+  PRIMARY KEY (city_id)
 );

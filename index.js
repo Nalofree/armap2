@@ -73,27 +73,20 @@ function geolocation(req,res,next) {
   // console.log(req.connection.remoteAddress);
   var surceIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress,
       ip;
-  // console.log(servip.replace(/^.*:/, ''));
   ip = surceIp.replace(/^.*:/, '');
-  // ip = ip.substring(7);
-  // var ip = req.cookies.clientIP ? req.cookies.clientIP : 0;
-  // console.log(req.cookies.clientIP);
-  // var ip = "188.168.22.110";
-  // console.log(typeof(ip));
-  console.log('ip: '+ip);
   var geo;
   if (geoip.lookup(ip)) {
-    geo = geoip.lookup(ip);//geoip.lookup(ip.slice(1,-1)) : 0;
+    geo = geoip.lookup(ip);
     geo.zoom = 13;
     geo.ip = ip;
-    // geo.servip = servip.replace(/^.*:/, '');
-    console.log(geo);
   }else{
-    geo = {};//61.802742, 97.175641
-    geo.ll = [61.802742, 97.175641];
-    geo.city = "Все города";
-    geo.zoom = 4;
+    geo = {};
+    geo.ll = [55.7543, 37.619744];
+    geo.city = "Москва";
+    geo.cityId = 2;
+    geo.zoom = 13;
     geo.ip = ip;
+    req.cookies.city = "";
     // geo.servip = servip.replace(/^.*:/, '');
   }
   // return geo;
@@ -120,6 +113,46 @@ function auth(req, res, next) {
   next();
 };
 
+app.post('/getlocation', geolocation, function (req,res) {
+  var coords = res.geo.ll;
+  res.send({
+    coords: coords
+  });
+});
+
+app.post('/choosecity',function (req,res) {
+  connection.query('SELECT city_id, city_name FROM citys',function (error,result,fields) {
+    if (error) throw error;
+    if (result) {
+      res.send({
+        citys: result,
+        count: result.length
+      });
+    }else{
+      res.send({
+        count: 0
+      });
+    }
+  });
+});
+
+app.post('/addcity',function (req,res) {
+  connection.query('INSERT INTO citys (city_name) VALUES ("'+req.body.city_name+'")',function (error,result,fields) {
+    if (error) throw error;
+    if (result) {
+      res.send({
+        status: "success",
+        city_id: result.insertId,
+        city_name: req.body.city_name
+      });
+    }else{
+      res.send({
+        status: "unsuccess"
+      });
+    }
+  });
+});
+
 app.post('/register',function (req,res) {
   var user = req.body;
   var pass = req.body.pass;
@@ -139,7 +172,8 @@ app.post('/register',function (req,res) {
       });
     }
   });
-})
+});
+
 
 app.post('/login',function (req,res) {
   console.log(req.body);
@@ -213,9 +247,7 @@ function getOffices(ofcParams) {
   }
 }
 
-app.get('/',auth,geolocation, function(req,res) {
-  console.log(__dirname);
-  geo = res.geo;
+app.get('/',auth, function(req,res) {
   console.log('Cookies: ', req.cookies);
   connection.query('SELECT * FROM options WHERE option_type = 1',function (error,result,fields) {
     if (error) throw error;
@@ -224,7 +256,6 @@ app.get('/',auth,geolocation, function(req,res) {
       role: res.role,
       username: res.userfullname,
       userid: res.userid,
-      geo: geo,
       meanings: meanings,
       ishome: 1,
       clientIp: res.clientIp
@@ -232,8 +263,7 @@ app.get('/',auth,geolocation, function(req,res) {
   })
 });
 
-app.get('/my',auth,geolocation, function(req,res) {
-  geo = res.geo;
+app.get('/my',auth, function(req,res) {
   if (res.role == 'user' || res.role == 'admin' || res.role == 'moder') {
     connection.query('SELECT * FROM objtypes', function (error,result,fields) {
       if (error) throw error;
@@ -281,7 +311,6 @@ app.get('/my',auth,geolocation, function(req,res) {
               role: res.role,
               username: res.userfullname,
               userid: res.userid,
-              geo: geo,
               objects: objects,
               objtypes: objtypes,
               offices: offices,
@@ -299,9 +328,7 @@ app.get('/my',auth,geolocation, function(req,res) {
   }
 });
 
-app.get('/object-:object_id', auth,geolocation, function (req,res) {
-  //res.send(req.params);
-  geo = res.geo;
+app.get('/object-:object_id', auth, function (req,res) {
   connection.query('SELECT * FROM objects WHERE object_id = '+req.params.object_id, function (error,result,fields) {
     if (error) throw error;
     object = result[0];
@@ -314,16 +341,13 @@ app.get('/object-:object_id', auth,geolocation, function (req,res) {
         role: res.role,
         username: res.userfullname,
         userid: res.userid,
-        geo: geo,
         object: object
       });
     });
   });
 });
 
-app.get('/office-:office_id', auth,geolocation, function (req,res) {
-  //res.send(req.params);
-  var geo = res.geo;
+app.get('/office-:office_id', auth, function (req,res) {
   connection.query('SELECT * FROM offices WHERE office_id = ' + req.params.office_id, function (error,result,fields) {
     if (error) throw error;
     var office = result[0];
@@ -366,7 +390,6 @@ app.get('/office-:office_id', auth,geolocation, function (req,res) {
               role: res.role,
               username: res.userfullname,
               userid: res.userid,
-              geo: geo,
               office: office,
               images: images,
               meanings: meanings,
@@ -381,9 +404,7 @@ app.get('/office-:office_id', auth,geolocation, function (req,res) {
   });
 });
 
-app.get('/objects', auth,geolocation, function (req,res) {
-  //res.send(req.params);
-  geo = res.geo;
+app.get('/objects', auth, function (req,res) {
   connection.query('SELECT * FROM objects', function (error,result,fields) {
     if (error) throw error;
     var objects = result;
@@ -403,16 +424,13 @@ app.get('/objects', auth,geolocation, function (req,res) {
         role: res.role,
         username: res.userfullname,
         userid: res.userid,
-        geo: geo,
         objects: objects
       });
     });
   });
 });
 
-app.get('/bookmarks', auth,geolocation, function (req,res) {
-  //res.send(req.params);
-  geo = res.geo;
+app.get('/bookmarks', auth, function (req,res) {
   console.log(req.cookies.bmarks);
   if (req.cookies.bmarks) {
     console.log('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_id IN ('+req.cookies.bmarks+')');
@@ -434,14 +452,12 @@ app.get('/bookmarks', auth,geolocation, function (req,res) {
       role: res.role,
       username: res.userfullname,
       userid: res.userid,
-      geo: geo,
       count: 0
     });
   }
 });
 
-app.get('/moder', auth,geolocation,function (req,res) {
-  geo = res.geo;
+app.get('/moder', auth,function (req,res) {
   connection.query('SELECT object_name, object_type, object_adres, object_author, object_id, object_cover, object_create FROM objects', function (error, result, fields) {
     if (error) throw error;
     var objects = result;
@@ -474,7 +490,6 @@ app.get('/moder', auth,geolocation,function (req,res) {
           role: res.role,
           username: res.userfullname,
           userid: res.userid,
-          geo: geo,
           objects: objects,
           offices: offices,
           images: images
@@ -611,7 +626,7 @@ app.post('/deluplimage',function (req,res) {
   });
 });
 
-app.post('/setobject',auth,geolocation,function (req,res) {
+app.post('/setobject',auth,function (req,res) {
   // console.log('INSERT INTO objects (object_name,object_create,object_author,object_coords,object_adres,object_publish,object_show,object_type)\
   // VALUES ("'+req.body.object_name+'","'+req.body.object_create+'",'+res.userid+',"'+req.body.object_coords+'","'+req.body.object_adres+'",'+req.body.object_publish+','+req.body.object_show+','+req.body.object_type+')');
   connection.query('INSERT INTO objects (object_name,object_create,object_author,object_coords,object_adres,object_publish,object_show,object_type)\
@@ -622,7 +637,7 @@ app.post('/setobject',auth,geolocation,function (req,res) {
   });
 });
 
-app.post('/addoffice', auth,geolocation, function(req,res) {
+app.post('/addoffice', auth, function(req,res) {
   connection.query('SELECT * FROM images WHERE image_id ='+req.body.cover[0],function (error,result,fields) {
     if (error) throw error;
     var cover = result[0].image_id;
