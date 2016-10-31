@@ -149,7 +149,7 @@
                 });
                 var clusterer = new ymaps.Clusterer({ hasBalloon: true, disableClickZoom: true,  zoomMargin: 50});
                 clusterer.add(placemarks);
-                // map.geoObjects.add(clusterer);
+                map.geoObjects.add(clusterer);
                 $("#filter .filtr-it").click(function(){
                     map.geoObjects.remove(clusterer);
                 });
