@@ -1,5 +1,5 @@
 
-  var coords;
+  var coords = ["55.7543", "37.619744"];
   var zoom = 13;
   var map, clusterer, placemarks = [];
 
