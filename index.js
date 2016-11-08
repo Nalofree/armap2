@@ -70,7 +70,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 // console.log(geo);
 
 function geolocation(req,res,next) {
-  // console.log(req.connection.remoteAddress);
   var surceIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress,
       ip;
   ip = surceIp.replace(/^.*:/, '');
@@ -87,9 +86,7 @@ function geolocation(req,res,next) {
     geo.zoom = 13;
     geo.ip = ip;
     req.cookies.city = "";
-    // geo.servip = servip.replace(/^.*:/, '');
   }
-  // return geo;
   res.geo = geo;
   next();
 }
