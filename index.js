@@ -135,6 +135,7 @@ app.post('/choosecity',function (req,res) {
 
 app.post('/addcity',function (req,res) {
   connection.query('INSERT INTO citys (city_name) VALUES ("'+req.body.city_name+'")',function (error,result,fields) {
+    console.log(req.body.city_name);
     if (error) throw error;
     if (result) {
       res.send({

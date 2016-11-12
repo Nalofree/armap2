@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  var ctyName, map;
+  var ctyName, map, data;
   cityName = getCookie("city_name");
   // removeCookie("city_name"); //Удаление куков по имени
 
@@ -11,11 +11,10 @@ $(document).ready(function () {
       $("#isyourcity").hide();
     });
     $("#notmycity").click(function () {
-      var data;
       $(".close-layout").show();
+      var data = {};
       $.ajax({
         type: 'POST',
-        data: data,
         url: '/choosecity',
         success: function (data) {
           console.log(data);
@@ -58,47 +57,49 @@ $(document).ready(function () {
           console.log(data,status,error);
         }
       });
-      $(".citys-form__submit").click(function (e) {
-        e.preventDefault();
-        if ($(".citys-form__input").val()) {
-          var data = {
-            city_name: encodeURI($(".citys-form__input").val())
-          };
-          $.ajax({
-            type: 'POST',
-            data: data,
-            url: '/addcity',
-            success: function (data) {
-              console.log(data);
-              $(".citys-list").append("<div class='citys-list__item' id='city-"+data.city_id+"'>"+decodeURI(data.city_name)+"</div>");
-              $(".citys-form__input").val("");
-              $(".citys-list__item").click(function () {
-                var city = $(this).text();
-                setCookie('city_name', city, 365);
-                var myGeocoder = ymaps.geocode(city),
-                    newCoords;
-                myGeocoder.then(
-                  function (res) {
-                      newCoords = res.geoObjects.get(0).geometry.getCoordinates();
-                      console.log(newCoords);
-                      map.setCenter(newCoords, 13);
-                  },
-                  function (err) {
-                      console.log('Error');
-                  }
-                );
-                $(".citys").hide();
-                $(".close-layout").hide();
-              });
-            },
-            error: function (data,status,error) {
-              console.log(data,status,error);
-            }
-          });
-        }else{
-          alert('Введите название города');
-        }
-      });
+    });
+    $(".citys-form__submit").click(function (e) {
+      e.preventDefault();
+      if ($(".citys-form__input").val()) {
+        var newCityData = {
+          city_name: encodeURI($(".citys-form__input").val())
+        };
+        console.log(newCityData);
+        $.ajax({
+          type: 'POST',
+          data: newCityData,
+          url: '/addcity',
+          success: function (newCityData) {
+            console.log(newCityData);
+            $(".citys-list").append("<div class='citys-list__item' id='city-"+newCityData.city_id+"'>"+decodeURI(newCityData.city_name) +"</div>");
+            $(".citys-form__input").val("");
+            $(".citys-list__item").click(function () {
+              var city = $(this).text();
+              setCookie('city_name', city, 365);
+              $("#city").text(getCookie('city_name'));
+              var myGeocoder = ymaps.geocode(city),
+                  newCoords;
+              myGeocoder.then(
+                function (res) {
+                    newCoords = res.geoObjects.get(0).geometry.getCoordinates();
+                    console.log(newCoords);
+                    map.setCenter(newCoords, 13);
+                },
+                function (err) {
+                    console.log('Error');
+                }
+              );
+              $(".citys").hide();
+              $(".close-layout").hide();
+            });
+          },
+          error: function (newCityData,status,error) {
+            console.log(newCityData,status,error);
+          }
+        });
+      }else{
+        alert('Введите название города');
+      }
     });
   }
 
@@ -160,7 +161,6 @@ $(document).ready(function () {
                 var cityName = cityArr[1];
                 setCookie('city_name', city, 365);
                 $('#city').text(cityName);
-                isYourCity(cityName);
             },
             function (err) {
                 console.log('Error');
@@ -196,6 +196,7 @@ $(document).ready(function () {
     console.log("Set map");
     console.log("Get objects");
     console.log("Set placemarks");
+    isYourCity(getCookie('city_name'));
   }
 
   $("#city").click(function (e) {
