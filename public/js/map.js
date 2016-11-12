@@ -58,50 +58,51 @@ $(document).ready(function () {
         }
       });
     });
-    $(".citys-form__submit").click(function (e) {
-      e.preventDefault();
-      if ($(".citys-form__input").val()) {
-        var newCityData = {
-          city_name: encodeURI($(".citys-form__input").val())
-        };
-        console.log(newCityData);
-        $.ajax({
-          type: 'POST',
-          data: newCityData,
-          url: '/addcity',
-          success: function (newCityData) {
-            console.log(newCityData);
-            $(".citys-list").append("<div class='citys-list__item' id='city-"+newCityData.city_id+"'>"+decodeURI(newCityData.city_name) +"</div>");
-            $(".citys-form__input").val("");
-            $(".citys-list__item").click(function () {
-              var city = $(this).text();
-              setCookie('city_name', city, 365);
-              $("#city").text(getCookie('city_name'));
-              var myGeocoder = ymaps.geocode(city),
-                  newCoords;
-              myGeocoder.then(
-                function (res) {
-                    newCoords = res.geoObjects.get(0).geometry.getCoordinates();
-                    console.log(newCoords);
-                    map.setCenter(newCoords, 13);
-                },
-                function (err) {
-                    console.log('Error');
-                }
-              );
-              $(".citys").hide();
-              $(".close-layout").hide();
-            });
-          },
-          error: function (newCityData,status,error) {
-            console.log(newCityData,status,error);
-          }
-        });
-      }else{
-        alert('Введите название города');
-      }
-    });
   }
+
+  $(".citys-form__submit").click(function (e) {
+    e.preventDefault();
+    if ($(".citys-form__input").val()) {
+      var newCityData = {
+        city_name: encodeURI($(".citys-form__input").val())
+      };
+      console.log(newCityData);
+      $.ajax({
+        type: 'POST',
+        data: newCityData,
+        url: '/addcity',
+        success: function (newCityData) {
+          console.log(newCityData);
+          $(".citys-list").append("<div class='citys-list__item' id='city-"+newCityData.city_id+"'>"+decodeURI(newCityData.city_name) +"</div>");
+          $(".citys-form__input").val("");
+          $(".citys-list__item").click(function () {
+            var city = $(this).text();
+            setCookie('city_name', city, 365);
+            $("#city").text(getCookie('city_name'));
+            var myGeocoder = ymaps.geocode(city),
+                newCoords;
+            myGeocoder.then(
+              function (res) {
+                  newCoords = res.geoObjects.get(0).geometry.getCoordinates();
+                  console.log(newCoords);
+                  map.setCenter(newCoords, 13);
+              },
+              function (err) {
+                  console.log('Error');
+              }
+            );
+            $(".citys").hide();
+            $(".close-layout").hide();
+          });
+        },
+        error: function (newCityData,status,error) {
+          console.log(newCityData,status,error);
+        }
+      });
+    }else{
+      alert('Введите название города');
+    }
+  });
 
   if (cityName) {
     console.log("City name:" + cityName);
