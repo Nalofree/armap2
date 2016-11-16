@@ -259,7 +259,7 @@ block content
                           tr
                             td.table-date= offices[j].office_create
                             td.table-name
-                              a.nowrap-text(href='#')= offices[j].office_name
+                              a.nowrap-text(href='#')= decodeURI(offices[j].office_name)
                               - if (offices[j].office_publish == 0)
                                 span.status.wait Ожидает модерации
                               - else
@@ -276,213 +276,25 @@ block content
                                   a(href='#') Снять с публикации
                                 li
                                   a(href='#', class='del-ofc', data-title=offices[j].office_id) Удалить
-                      tr
-                        td.table-date
-                          | 21 июнь 2014
-                          br
-                          | в 21:03
-                        td.table-name
-                          a.nowrap-text(href='#') Пав. weres123 копия
-                          span.status.published Опубликовано
-                        td.table-time Осталось 8 дней
-                        td.table-square 49 кв. м
-                        td.table-price 34000 руб.
-                        td.table-edit
-                          a.table-edit-menu-show(href='javascript: void(0);') Редактировать
-                          ul.table-edit-menu
-                            li
-                              a(href='#') Изменить
-                            li
-                              a(href='#') Снять с публикации
-                            li
-                              a(href='#') Удалить
-                      tr
-                        td.table-date
-                          | 21 июнь 2014
-                          br
-                          | в 21:03
-                        td.table-name
-                          a.nowrap-text(href='#') Пав. weres123 копия
-                          span.status.wait Ожидает модерации
-                        td.table-time Осталось 8 дней
-                        td.table-square 49 кв. м
-                        td.table-price 34000 руб.
-                        td.table-edit
-                          a.table-edit-menu-show(href='javascript: void(0);') Редактировать
-                          ul.table-edit-menu
-                            li
-                              a(href='#') Изменить
-                            li
-                              a(href='#') Снять с публикации
-                            li
-                              a(href='#') Удалить
-                      tr
-                        td.table-date
-                          | 21 июнь 2014
-                          br
-                          | в 21:03
-                        td.table-name
-                          a.nowrap-text(href='#') Пав. weres123 копия
-                          span.status.wait Ожидает модерации
-                        td.table-time Осталось 8 дней
-                        td.table-square 49 кв. м
-                        td.table-price 34000 руб.
-                        td.table-edit
-                          a.table-edit-menu-show(href='javascript: void(0);') Редактировать
-                          ul.table-edit-menu
-                            li
-                              a(href='#') Изменить
-                            li
-                              a(href='#') Снять с публикации
-                            li
-                              a(href='#') Удалить
-            article.kab-item
-              section.kab-item-info
-                .kab-item-img
-                  img(src='images/search/result-big.png')
-                .kab-item-desc
-                  section.kab-item-header
-                    h4.nowrap-text ТЦ “Рублёв”
-                    p.nowrap-text г. Иркутск, ул. Чехова 19
-                  section.kab-item-change
-                    .kab-item-edit
-                      a(href='#') Удалить
-                      span |
-                      a(href='#') Редактировать
-                    .kab-item-create
-                      a(href='#') + Добавить помещение
-                .kab-item-last
-                  p Последнее измененное:
-                  a.last-object(href='#')
-                    .last-object-img
-                      img(src='images/search/result-img.png')
-                    .last-object-desc
-                      h4 Офис № 241
-                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
-                      section
-                        .last-object-price
-                          p
-                            | Цена за м
-                            sup 2
-                            | : 
-                            br
-                            span 2000 р.
-                        .last-object-square
-                          p
-                            | Площадь: 
-                            br
-                            span
-                              | 50 м
-                              sup 2
-                span.rooms-show
-              section.kab-item-table
-                table
-                  tbody
-                    tr
-                      // td
-                      // td Имя
-                      // td Площадь
-                      // td
-                      // td Статус
-                      // td
-                    tr
-                      td.table-date
-                        | 21 июнь 2014
-                        br
-                        | в 21:03
-                      td.table-name
-                        a.nowrap-text(href='#') Пав. weres123 копия
-                        span.status.wait Ожидает модерации
-                      td.table-time Осталось 8 дней
-                      td.table-square 49 кв. м
-                      td.table-price 34000 руб.
-                      td.table-edit
-                        a.table-edit-menu-show(href='javascript: void(0);') Редактировать
-                        ul.table-edit-menu
-                          li
-                            a(href='#') Изменить
-                          li
-                            a(href='#') Снять с публикации
-                          li
-                            a(href='#') Удалить
-                    tr
-                      td.table-date
-                        | 21 июнь 2014
-                        br
-                        | в 21:03
-                      td.table-name
-                        a.nowrap-text(href='#') Пав. weres123 копия
-                        span.status.wait Ожидает модерации
-                      td.table-time Осталось 8 дней
-                      td.table-square 49 кв. м
-                      td.table-price 34000 руб.
-                      td.table-edit
-                        a.table-edit-menu-show(href='javascript: void(0);') Редактировать
-                        ul.table-edit-menu
-                          li
-                            a(href='#') Изменить
-                          li
-                            a(href='#') Снять с публикации
-                          li
-                            a(href='#') Удалить
-                    tr
-                      td.table-date
-                        | 21 июнь 2014
-                        br
-                        | в 21:03
-                      td.table-name
-                        a.nowrap-text(href='#') Пав. weres123 копия
-                        span.status.wait Ожидает модерации
-                      td.table-time Осталось 8 дней
-                      td.table-square 49 кв. м
-                      td.table-price 34000 руб.
-                      td.table-edit
-                        a.table-edit-menu-show(href='javascript: void(0);') Редактировать
-                        ul.table-edit-menu
-                          li
-                            a(href='#') Изменить
-                          li
-                            a(href='#') Снять с публикации
-                          li
-                            a(href='#') Удалить
-                    tr
-                      td.table-date
-                        | 21 июнь 2014
-                        br
-                        | в 21:03
-                      td.table-name
-                        a.nowrap-text(href='#') Пав. weres123 копия
-                        span.status.wait Ожидает модерации
-                      td.table-time Осталось 8 дней
-                      td.table-square 49 кв. м
-                      td.table-price 34000 руб.
-                      td.table-edit
-                        a.table-edit-menu-show(href='javascript: void(0);') Редактировать
-                        ul.table-edit-menu
-                          li
-                            a(href='#') Изменить
-                          li
-                            a(href='#') Снять с публикации
-                          li
-                            a(href='#') Удалить
-            // Пустой объект имеет класс empty
-            article.kab-item.empty
-              section.kab-item-info
-                .kab-item-img
-                  img(src='images/search/result-big.png')
-                section
-                  .kab-item-desc
-                    section.kab-item-header
-                      h4.nowrap-text ТЦ “Рублёв”
-                      p.nowrap-text г. Иркутск, ул. Чехова 19
-                    section.kab-item-change
-                      .kab-item-edit
-                        a(href='#') Удалить
-                        span |
-                        a(href='#') Редактировать
-                  .kab-item-create
-                    p Помещений нет
-                    a(href='#') + Добавить помещение
+
+            //- // Пустой объект имеет класс empty
+            //- article.kab-item.empty
+            //-   section.kab-item-info
+            //-     .kab-item-img
+            //-       img(src='images/search/result-big.png')
+            //-     section
+            //-       .kab-item-desc
+            //-         section.kab-item-header
+            //-           h4.nowrap-text ТЦ “Рублёв”
+            //-           p.nowrap-text г. Иркутск, ул. Чехова 19
+            //-         section.kab-item-change
+            //-           .kab-item-edit
+            //-             a(href='#') Удалить
+            //-             span |
+            //-             a(href='#') Редактировать
+            //-       .kab-item-create
+            //-         p Помещений нет
+            //-         a(href='#') + Добавить помещение
         // Вкладка архив, здесь должны быть удаленные помещения и объекты
         article#kab-archive.fade
         // Вкладка подписки, здесь хз че;)

@@ -9,6 +9,12 @@ $(document).ready(function () {
       setCookie('city_name',cityName,365);
       // console.log(" set city cookie");
       $("#isyourcity").hide();
+      ymaps.ready(function(){
+        filter(cityName,map);
+        $("#filter .filtr-it").click(function(){
+          filter(cityName,map);
+        });
+      });
     });
     $("#notmycity").click(function () {
       $(".close-layout").show();
@@ -41,6 +47,11 @@ $(document).ready(function () {
                       newCoords = res.geoObjects.get(0).geometry.getCoordinates();
                       console.log(newCoords);
                       map.setCenter(newCoords, 13);
+                      filter(city,map);
+                      // alert('filtr');
+                      $("#filter .filtr-it").click(function(){
+                      	filter(city,map);
+                      });
                   },
                   function (err) {
                       console.log('Error');
@@ -86,6 +97,10 @@ $(document).ready(function () {
                   newCoords = res.geoObjects.get(0).geometry.getCoordinates();
                   console.log(newCoords);
                   map.setCenter(newCoords, 13);
+                  filter(cityName,map);
+                  $("#filter .filtr-it").click(function(){
+                  	filter(cityName,map);
+                  });
               },
               function (err) {
                   console.log('Error');
@@ -137,6 +152,10 @@ $(document).ready(function () {
               }
             });
             map.behaviors.enable('scrollZoom');
+            filter(cityName,map);
+            $("#filter .filtr-it").click(function(){
+            	filter(cityName,map);
+            });
         },
         function (err) {
             console.log('Error');
@@ -155,11 +174,12 @@ $(document).ready(function () {
         console.log(coords);
         ymaps.ready(function(){
           var myGeocoder = ymaps.geocode(coords);
+          var cityName;
           myGeocoder.then(
             function (res) {
                 city = res.geoObjects.get(0).properties.get('description');
                 var cityArr = city.split(',');
-                var cityName = cityArr[1];
+                cityName = cityArr[1];
                 setCookie('city_name', city, 365);
                 $('#city').text(cityName);
             },
@@ -185,6 +205,10 @@ $(document).ready(function () {
             }
           });
           map.behaviors.enable('scrollZoom');
+          filter(cityName,map);
+          $("#filter .filtr-it").click(function(){
+          	filter(cityName,map);
+          });
         });
       },
       error: function (data,status,error) {
@@ -204,6 +228,118 @@ $(document).ready(function () {
     e.preventDefault();
     isYourCity(cityName);
   });
+
+  function getCoords() {
+    var coords;
+    $.ajax({
+      type: 'POST',
+      url: '/getlocation',
+      success: function (data) {
+        coords = data.coords;
+        console.log(coords);
+      },
+      error: function (data,status,error) {
+        console.log(data,status,error);
+      },
+    });
+  };
+
+  function filter(city,map) {
+    var data = {};
+    data.meanings=[];
+    data.price = [];
+    data.area = [];
+    data.city = encodeURI(city);
+    $(".filter-object-type input[type='checkbox']:checked").each(function () {
+      data.meanings.push($(this).attr('data-title'));
+    });
+    data.area = squareSlider.noUiSlider.get();
+    for (var i = 0; i < data.area.length; i++) {
+      data.area[i] = parseInt(data.area[i]);
+    }
+    data.price = priceSlider.noUiSlider.get();
+    for (var i = 0; i < data.price.length; i++) {
+      data.price[i] = parseInt(data.price[i]);
+    }
+    $.ajax({
+      type: 'POST',
+      data: data,
+      url: '/filtred',
+      success: function(data) {
+        console.log('success');
+        // console.log(data);
+        $('#filter-result').empty();
+        if (data.count > 0) {
+          for (var i = 0; i < data.offices.length; i++) {
+            var adres = decodeURI(data.offices[i].office_adres) ? decodeURI(data.offices[i].office_adres) : 'Error';
+            var name = decodeURI(data.offices[i].office_name);// ? decodeURI(data.offices[i].office_name) : 'Error';
+            var officeItem = '<article><a href="office-'+data.offices[i].office_id+'">\
+              <div class="result-img"><img src="images/obj/'+data.offices[i].image_filename+'"/></div>\
+              <div class="result-desc">\
+                <h4>'+name+'</h4>\
+                <p>'+adres+'</p>\
+                <section>\
+                  <div class="result-price">\
+                    <p>Цена за м<sup>2</sup>: <br/><span>'+data.offices[i].office_subprice+' р.</span></p>\
+                  </div>\
+                  <div class="result-square">\
+                    <p>Площадь: <br/><span>'+data.offices[i].office_area+' м<sup>2</sup></span></p>\
+                  </div>\
+                </section>\
+              </div></a></article>';
+            $('#filter-result').append(officeItem);
+            $("#filter-result").addClass('active in');
+            $(".filter-result-btn").addClass('active');
+            $(".filter-btn").removeClass('active');
+            $("#filter").removeClass('active in');
+          }
+          var placemarks = [];
+          for (var i = 0; i < data.objects.length; i++) {
+            var coordss=data.objects[i].object_coords.split(',');
+            var coordsArr = [];
+            coordsArr[0] = parseFloat(coordss[0]);
+            coordsArr[1] = parseFloat(coordss[1]);
+            var officeCountByObject = data.objects[i].offices_count;
+            officeCountByObject = officeCountByObject.toString();
+            var adres = decodeURI(data.objects[i].object_adres) ? decodeURI(data.objects[i].object_adres) : 'Error!';
+            var name = decodeURI(data.objects[i].object_name) ? decodeURI(data.objects[i].object_name) : 'Error!';
+            placemarks[i] = new ymaps.Placemark(coordsArr,{
+              balloonContentHeader: name,
+              balloonContentBody: adres,
+              balloonContentFooter: '<a href="/object-'+data.objects[i].object_id+'" class="balloon-count-link">Найдено '+officeCountByObject+' помещений</a><a href="/object-'+data.objects[i].object_id+'" class="balloon-more-link">Подробнее</a>',
+              hintContent: '<strong>'+name+'</strong><br>'+adres,
+              clusterCaption: name,
+              iconContent: officeCountByObject
+            });
+            map.geoObjects.add(placemarks[i]);
+            map.events.add('click', function (e) {
+                map.balloon.close();
+            });
+          }
+          $("#filter .filtr-it").click(function(){
+          	for (var i = placemarks.length - 1; i >= 0; i--) {
+          		map.geoObjects.remove(placemarks[i]);
+          	};
+            map.geoObjects.removeAll();
+          });
+          var clusterer = new ymaps.Clusterer({ hasBalloon: true, disableClickZoom: true,  zoomMargin: 50});
+          clusterer.add(placemarks);
+          map.geoObjects.add(clusterer);
+          $("#filter .filtr-it").click(function(){
+              map.geoObjects.remove(clusterer);
+          });
+        }else{
+          var officeItem = '<p class="lead" align=center>Нет результатов, измените параметры поиска или свяжитесь с менеджером для более точного поиска помещения</p>';
+          $('#filter-result').append(officeItem);
+        }
+      },
+      error: function(data,status,error){
+        console.log(data);
+        console.log(status);
+        console.log(error);
+      }
+    });
+  }
 });
 
 // console.log(cityName);
@@ -227,7 +363,7 @@ $(document).ready(function () {
 //     });
 //   };
 //
-//   function filter(city) {
+//   function filter() {
 //     var data = {};
 //     data.meanings=[];
 //     data.price = [];
