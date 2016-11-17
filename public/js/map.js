@@ -23,7 +23,7 @@ $(document).ready(function () {
         type: 'POST',
         url: '/choosecity',
         success: function (data) {
-          console.log(data);
+          // console.log(data);
           $(".citys").show();
           $("#isyourcity").hide();
           if (data.count === 0) {
@@ -38,14 +38,14 @@ $(document).ready(function () {
               var city = $(this).text();
               setCookie('city_name', city, 365);
               $("#city").text(getCookie('city_name'));
-              console.log(city);
+              // console.log(city);
               ymaps.ready(function(){
                 var myGeocoder = ymaps.geocode(city),
                     newCoords;
                 myGeocoder.then(
                   function (res) {
                       newCoords = res.geoObjects.get(0).geometry.getCoordinates();
-                      console.log(newCoords);
+                      // console.log(newCoords);
                       map.setCenter(newCoords, 13);
                       filter(city,map);
                       // alert('filtr');
@@ -57,8 +57,11 @@ $(document).ready(function () {
                       console.log('Error');
                   }
                 );
-                map.behaviors.enable('scrollZoom');
+                if (map) {
+                  map.behaviors.enable('scrollZoom');
+                }
                 $(".citys").hide();
+                getObjInfoByCity(city);
                 $(".close-layout").hide();
               });
             });
@@ -77,13 +80,13 @@ $(document).ready(function () {
       var newCityData = {
         city_name: encodeURI($(".citys-form__input").val())
       };
-      console.log(newCityData);
+      // console.log(newCityData);
       $.ajax({
         type: 'POST',
         data: newCityData,
         url: '/addcity',
         success: function (newCityData) {
-          console.log(newCityData);
+          // console.log(newCityData);
           $(".citys-list").append("<div class='citys-list__item' id='city-"+newCityData.city_id+"'>"+decodeURI(newCityData.city_name) +"</div>");
           $(".citys-form__input").val("");
           $(".citys-list__item").click(function () {
@@ -95,7 +98,7 @@ $(document).ready(function () {
             myGeocoder.then(
               function (res) {
                   newCoords = res.geoObjects.get(0).geometry.getCoordinates();
-                  console.log(newCoords);
+                  // console.log(newCoords);
                   map.setCenter(newCoords, 13);
                   filter(cityName,map);
                   $("#filter .filtr-it").click(function(){
@@ -120,12 +123,12 @@ $(document).ready(function () {
   });
 
   if (cityName) {
-    console.log("City name:" + cityName);
-    console.log("Set city name in head");
-    console.log("Get coords by city name");
-    console.log("Set map");
-    console.log("Get objects");
-    console.log("Set placemarks");
+    // console.log("City name:" + cityName);
+    // console.log("Set city name in head");
+    // console.log("Get coords by city name");
+    // console.log("Set map");
+    // console.log("Get objects");
+    // console.log("Set placemarks");
     ymaps.ready(function(){
       var myGeocoder = ymaps.geocode(cityName),
       coords;
@@ -163,15 +166,15 @@ $(document).ready(function () {
       );
     });
   }else{
-    console.log("City name: none");
-    console.log("Get coords by ip");
+    // console.log("City name: none");
+    // console.log("Get coords by ip");
     $.ajax({
       type: 'POST',
       url: '/getlocation',
       success: function (data) {
         var coords;
         coords = data.coords;
-        console.log(coords);
+        // console.log(coords);
         ymaps.ready(function(){
           var myGeocoder = ymaps.geocode(coords);
           var cityName;
@@ -215,12 +218,12 @@ $(document).ready(function () {
         console.log(data,status,error);
       },
     });
-    console.log("Get city name by coords or user choise");
-    console.log("Set city cookies");
-    console.log("Set city name in head");
-    console.log("Set map");
-    console.log("Get objects");
-    console.log("Set placemarks");
+    // console.log("Get city name by coords or user choise");
+    // console.log("Set city cookies");
+    // console.log("Set city name in head");
+    // console.log("Set map");
+    // console.log("Get objects");
+    // console.log("Set placemarks");
     isYourCity(getCookie('city_name'));
   }
 
@@ -236,7 +239,7 @@ $(document).ready(function () {
       url: '/getlocation',
       success: function (data) {
         coords = data.coords;
-        console.log(coords);
+        // console.log(coords);
       },
       error: function (data,status,error) {
         console.log(data,status,error);
@@ -266,7 +269,7 @@ $(document).ready(function () {
       data: data,
       url: '/filtred',
       success: function(data) {
-        console.log('success');
+        // console.log('success');
         // console.log(data);
         $('#filter-result').empty();
         if (data.count > 0) {

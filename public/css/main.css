@@ -5621,7 +5621,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 #objects #obj-items.style-line .item .item-desc {
-  padding: 25px 0;
+  padding: 25px 10px;
   border-bottom: 1px solid #ebebeb;
 }
 

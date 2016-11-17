@@ -327,7 +327,7 @@ app.get('/my',auth, function(req,res) {
 });
 
 app.get('/object-:object_id', auth, function (req,res) {
-  connection.query('SELECT * FROM objects WHERE object_id = '+req.params.object_id, function (error,result,fields) {
+  connection.query('SELECT * FROM objects WHERE object_id = '+req.params.object_id+'', function (error,result,fields) {
     if (error) throw error;
     object = result[0];
     connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_object = '+object.object_id, function (error,result,fields) {
@@ -403,9 +403,18 @@ app.get('/office-:office_id', auth, function (req,res) {
 });
 
 app.get('/objects', auth, function (req,res) {
-  connection.query('SELECT * FROM objects', function (error,result,fields) {
+  res.render('objects.jade',{
+    role: res.role,
+    username: res.userfullname,
+    userid: res.userid
+  });
+});
+
+app.post('/objects', function (req, res) {
+  connection.query('SELECT * FROM objects WHERE object_adres LIKE "%'+req.body.city+'%"', function (error,result,fields) {
     if (error) throw error;
     var objects = result;
+    console.log(req.body.city);
     connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id',function (error, result, fields) {
       if (error) throw error;
       var offices = result;
@@ -418,10 +427,13 @@ app.get('/objects', auth, function (req,res) {
         }
       }
       console.log(objects);
-      res.render('objects.jade',{
-        role: res.role,
-        username: res.userfullname,
-        userid: res.userid,
+      // res.render('objects.jade',{
+      //   role: res.role,
+      //   username: res.userfullname,
+      //   userid: res.userid,
+      //   objects: objects
+      // });
+      res.send({
         objects: objects
       });
     });

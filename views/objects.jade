@@ -19,45 +19,48 @@ block content
             a.item-line(href='#')
         // Объекты
         section#obj-items.block-style.style-block
-          -for (var i = 0; i < objects.length; i++)
-            section.item
-              .item-img
-                a(href='/object-'+objects[i].object_id)
-                  - var cover = objects[i].object_cover ? 'images/obj/'+objects[i].object_cover : 'images/object/1.png';
-                  img(src= cover, width = '100%')
-              section
-                .item-desc
-                  h3.nowrap-text
-                    a(href='/object-'+objects[i].object_id)= objects[i].object_name
-                  p
-                    - adres = decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!'
-                    span= adres
-                .item-rooms
-                  -for (var j = 0; j < objects[i].object_offices.length; j++)
-                    -if (j <= 1)
-                      a.item-object(href='office-'+objects[i].object_offices[j].office_id)
-                        .item-object-img
-                          img(src='images/obj/'+objects[i].object_offices[j].image_filename)
-                        .item-object-desc
-                          - var name = decodeURI(objects[i].object_offices[j].office_name) ? decodeURI(objects[i].object_offices[j].office_name) : 'Error!';
-                          - var adres = decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!'
-                            h4= name
-                            p= addres
-                            section
-                              .item-object-price
-                                p
-                                  | Цена за м
-                                  sup 2
-                                  | : 
-                                  br
-                                  span= objects[i].object_offices[j].office_subprice+' р.'
-                              .item-object-square
-                                p
-                                  | Площадь: 
-                                  br
-                                  span= objects[i].object_offices[j].office_area+' м'
-                                    sup 2
-                  a(href='/object-'+objects[i].object_id) Все помещения
+          //- -if (objects.length > 0)
+          //-   -for (var i = 0; i < objects.length; i++)
+          //-     section.item
+          //-       .item-img
+          //-         a(href='/object-'+objects[i].object_id)
+          //-           - var cover = objects[i].object_cover ? 'images/obj/'+objects[i].object_cover : 'images/object/1.png';
+          //-           img(src= cover, width = '100%')
+          //-       section
+          //-         .item-desc
+          //-           h3.nowrap-text
+          //-             a(href='/object-'+objects[i].object_id)= objects[i].object_name
+          //-           p
+          //-             - adres = decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!'
+          //-             span= adres
+          //-         .item-rooms
+          //-           -for (var j = 0; j < objects[i].object_offices.length; j++)
+          //-             -if (j <= 1)
+          //-               a.item-object(href='office-'+objects[i].object_offices[j].office_id)
+          //-                 .item-object-img
+          //-                   img(src='images/obj/'+objects[i].object_offices[j].image_filename)
+          //-                 .item-object-desc
+          //-                   - var name = decodeURI(objects[i].object_offices[j].office_name) ? decodeURI(objects[i].object_offices[j].office_name) : 'Error!';
+          //-                   - var adres = decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!'
+          //-                     h4= name
+          //-                     p= addres
+          //-                     section
+          //-                       .item-object-price
+          //-                         p
+          //-                           | Цена за м
+          //-                           sup 2
+          //-                           | : 
+          //-                           br
+          //-                           span= objects[i].object_offices[j].office_subprice+' р.'
+          //-                       .item-object-square
+          //-                         p
+          //-                           | Площадь: 
+          //-                           br
+          //-                           span= objects[i].object_offices[j].office_area+' м'
+          //-                             sup 2
+          //-           a(href='/object-'+objects[i].object_id) Все помещения
+          //- -else
+          //-   h3 Нет объектов для вашего города
         // Пагинация
         #search-pagination
           a.left(href='#')
