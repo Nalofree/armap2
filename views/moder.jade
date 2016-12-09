@@ -1,17 +1,18 @@
 extends layout
 block content
+  //- script
   #content
     // Модерация
     article#moderation.container
       article.kab-info
         section.kab-head
           h2 режим модератора
-          a.nickname.pro(href='#') Игорь Николаевич
-          select.kab-location
-            option(selected='') Иркутск
+          a.nickname.pro(href='#')= username
+          //- select.kab-location
+          //-   option(selected='') Иркутск
         .kab-settings
           a.btn-setting(href='#') Настройки
-          a.btn-setting(href='#') Выйти
+          a.btn-setting(href='/logout') Выйти
       article.kab-tab-panel
         ul(role='tablist')
           li.active(role='presentation')
@@ -55,11 +56,12 @@ block content
               a(href='#') Количество помещений
           // Объект на модерацию
           - for (var i = 0; i < objects.length; i++)
+            - var currenObj = JSON.stringify(objects[i])
             .mod-object-list-item
               .item-desc
-                .item-time= objects[i].object_create
-                  p Сегодня
-                  p в 21:03
+                .item-time
+                  p= objects[i].object_create
+                  //- p в 21:03
                 .item-object
                   h3
                     a.nowrap-text(href='#')= decodeURI(objects[i].object_name) ? decodeURI(objects[i].object_name) : 'Error!'
@@ -67,563 +69,608 @@ block content
                   p.status.new Новый объект
                   .object-tooltip
                     .image
-                      img(src='images/kabinet/moderation/mod-min.png')
+                      - var objimg = objects[i].object_cover != null ? 'images/obj/'+objects[i].object_cover : "images/kabinet/moderation/mod-big.png"
+                      img(src=objimg)
                     .description
-                      p.nowrap-text ТРЦ “Комсомолл”
-                      p Торгово-развлекательный комплекс
-                      p ТЦ “Рублёв” ул. Чехова д. 19
+                      p.nowrap-text= decodeURI(objects[i].object_name) ? decodeURI(objects[i].object_name) : 'Error!'
+                      p= decodeURI(objects[i].object_typename) ? decodeURI(objects[i].object_typename) : 'Error!'
+                      p= decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!'
                 .item-quantity
-                  p 24 помещения
+                  p= objects[i].object_offices.length + " помещения"
                 .item-more-show
                   // Кнопка посмотреть подробнее
                   a.show-object-info(href='javascript: void(0);')
               // Подробная информация объекта
-              .item-object-more
-                .item-object-info
+              //- - if (objects[i].object_publish === 0)
+              //- - else if (objects[i].object_publish === 2)
+              //- - else if (objects[i].object_publish === 1) //-Что, блять, с этим делать, а?
+              //- - else
+              //-   h1 Error!
+              .item-object-more(data-title= objects[i].object_publish)
+                .item-object-info.change-solution
                   h2 Новый объект!
                   .object-info-block
                     .object-info-img
-                      img(src='images/kabinet/moderation/mod-big.png')
+                      img(src=objimg)
                     .object-info-name
                       .input-group
                         label(for='object-name') Имя объекта:
-                        input#object-name(type='text')
+                        input.object-name(type='text', value= decodeURI(objects[i].object_name) ? decodeURI(objects[i].object_name) : 'Error!')
                       .input-group
                         label(for='object-type') Тип объекта:
-                        input#object-type(type='text')
+                        //- input#object-type(type='text')
+                        select.object-type
+                          - for (var j = 0; j < objtypes.length; j++)
+                            - if (objtypes[j].objtype_id ===  objects[i].object_type)
+                              option(selected='selected', value=objtypes[j].objtype_id)= decodeURI(objtypes[j].objtype_name) ? decodeURI(objtypes[j].objtype_name) : 'Error!'
+                            - else
+                              option(selected='', value=objtypes[j].objtype_id)= decodeURI(objtypes[j].objtype_name) ? decodeURI(objtypes[j].objtype_name) : 'Error!'
                       .input-group
                         label(for='object-address') Адрес:
-                        input#object-address(type='text')
+                        input.object-address(type='text', value= decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!', title= decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!')
+                        .moder-object-address__tooltip
                       a(href='#') Показать на карте
                     .object-info-submit
                       p.user
                         | Добавил пользователь:
-                        a(href='#') Apocalypse
+                        - var userFullname = decodeURI(objects[i].object_author.user_firstname + ' ' + objects[i].object_author.user_lastname);
+                        a(href='#')= userFullname
+                        // what href??
                       p Такой объект уже существует?
                       select
                         option(selected='') Выберите объект
+                        - for (var k = 0; k < objects.length; k++)
+                          option(selected='', value=objects[k].object_id)= decodeURI(objects[k].object_name) ? decodeURI(objects[k].object_name) : 'Error!'
                       .submit-btn
-                        button.disable-btn(type='button', data-toggle='modal', data-target='#modal-object') Отклонить
-                        a.success-btn(href='#') Подтвердить
-                .item-object-info
-                  // При отклонении объекта он приобретает класс object-disabled
-                  .object-info-block.object-status.object-disabled
-                    .object-symbol
-                    .object-info-img
-                      img(src='images/kabinet/moderation/mod-big.png')
-                    .object-info-name
-                      h3 ТК “СТАРЫЙ СОКОЛ”
-                      span Отклонено
-                      p Тип объекта:  Торговый комплекс
-                      p Адрес:   г. Иркутск, Чехова 13
-                      a(href='#') Комментарий модератора
-                    .object-info-submit
-                      a.change-btn(href='#') Изменить решение
+                        button.disable-btn.moder-object_unconfirm(type='button', data-toggle='modal', data-target='#modal-object', data-title=currenObj) Отклонить
+                        //objects[i].object_id
+                        button.success-btn.moder-object_confirm(data-title=objects[i].object_id) Подтвердить                
+                //- .item-object-info
+                //-   // При отклонении объекта он приобретает класс object-disabled
+                //-   .object-info-block.object-status.object-disabled
+                //-     .object-symbol
+                //-     .object-info-img
+                //-       img(src=objimg)
+                //-     .object-info-name
+                //-       h3= decodeURI(objects[i].object_name) ? decodeURI(objects[i].object_name) : 'Error!'
+                //-       span Отклонено
+                //-       p= "Тип объекта: " + decodeURI(objects[i].object_typename) ? decodeURI(objects[i].object_typename) : 'Error!'
+                //-       p= "Адрес: " + decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!'
+                //-       a(href='#') Комментарий модератора
+                //-     .object-info-submit
+                //-       button.change-btn Изменить решение                
                 .item-object-info
                   // При публикации объекта он приобретает класс object-published
                   .object-info-block.object-status.object-published
                     .object-symbol
                     .object-info-img
-                      img(src='images/kabinet/moderation/mod-big.png')
+                      img(src=objimg)
                     .object-info-name
-                      h3 ТК “СТАРЫЙ СОКОЛ”
+                      h3= decodeURI(objects[i].object_name) ? decodeURI(objects[i].object_name) : 'Error!'
                       span Подтвержден
-                      p Тип объекта:  Торговый комплекс
-                      p Адрес:   г. Иркутск, Чехова 13
-                      a(href='#') Комментарий модератора
+                      p= "Тип объекта: " + decodeURI(objects[i].object_typename) ? decodeURI(objects[i].object_typename) : 'Error!'
+                      p= "Адрес: " + decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!'
+                      //- a(href='#') Комментарий модератора
                     .object-info-submit
                       // Открыть подробную информацию о помещениях
-                      a.change-btn(href='#') Изменить решение
+                      button.change-btn Изменить решение
                 // Подробная информация о помещениях
-                .item-object-rooms-list
-                  .item-room
-                    .item-desc
-                      .item-time
-                        p 21 июнь 2014
-                        p в 21:03
-                      .item-name
-                        h3
-                          a.nowrap-text(href='#') Офис 342
-                        p.status.wait Ожидает модерации
-                      .item-user
-                        p Пользователь
-                        a(href='#') Hell666
-                      //
-                        Кнопки в таблице помещений
-                        при классе wait помещение Ожидает модерации
-                        при классе published помещение Опубликовано
-                        при классе disabled помещение Отклонено
-                      .item-show-more.wait
-                        a.published(href='#') Снять с публикации
-                        a.disabled-history(href='#') Посмотреть историю
-                        a.show-room-info(href='javascript: void(0);') Просмотр
-                    // Подробная информация о помещении
-                    .item-room-more
-                      .item-room-block-one
-                        .item-room-inputs
-                          .input-group
-                            label(for='room-name') Название помещения:
-                            input#room-name(type='text')
-                            span
-                              a.error(href='#') Х
-                              a.edit(href='#') Редактировать
-                          .input-group
-                            label(for='room-address') Адрес/объект:
-                            input#room-address(type='text')
-                            span
-                              a.error(href='#') Х
-                              a.edit(href='#') Редактировать
-                          .input-group
-                            label(for='room-tel') Телефон собственника:
-                            input#room-tel(type='text')
-                            span
-                              a.error(href='#') Х
-                              a.edit(href='#') Редактировать
-                          .input-group
-                            label(for='room-price') Цена за м2:
-                            input#room-price(type='text')
-                            span
-                              a.error(href='#') Х
-                              a.edit(href='#') Редактировать
-                          .input-group
-                            label(for='room-square') Площадь:
-                            input#room-square(type='text')
-                            span
-                              a.error(href='#') Х
-                              a.edit(href='#') Редактировать
-                          .input-group
-                            label(for='room-height') Высота потолков:
-                            input#room-height(type='text')
-                            span
-                              a.error(href='#') Х
-                              a.edit(href='#') Редактировать
-                        .item-room-disable
-                          button.disable-btn(type='button', data-toggle='modal', data-target='#modal-rooms') Отклонить
-                          a(href='#') Заблокировать пользователя
-                      .item-room-block-two
-                        section
-                          h3 Назначение:
+                - for (var m = 0; m < objects[i].object_offices.length; m++)
+                  .item-object-rooms-list
+                    .item-room
+                      .item-desc
+                        .item-time
+                          p= objects[i].object_offices[m].office_create
+                          //- p 21 июнь 2014
+                          //- p в 21:03
+                        .item-name
+                          h3
+                            a.nowrap-text(href='#')= decodeURI(objects[i].object_offices[m].office_name)
+                          p.status.wait Ожидает модерации
+                        .item-user
+                          p Пользователь
+                          a(href='#') Hell666
+                        //
+                          Кнопки в таблице помещений
+                          при классе wait помещение Ожидает модерации
+                          при классе published помещение Опубликовано
+                          при классе disabled помещение Отклонено
+                        .item-show-more.wait
+                          a.published(href='#') Снять с публикации
+                          a.disabled-history(href='#') Посмотреть историю
+                          a.show-room-info(href='javascript: void(0);') Просмотр
+                      // Подробная информация о помещении
+                      .item-room-more
+                        .item-room-block-one
+                          .item-room-inputs
+                            .input-group
+                              label(for='room-name') Название помещения:
+                              input#room-name(type='text')
+                              span
+                                a.error(href='#') Х
+                                a.edit(href='#') Редактировать
+                            .input-group
+                              label(for='room-address') Адрес/объект:
+                              input#room-address(type='text')
+                              span
+                                a.error(href='#') Х
+                                a.edit(href='#') Редактировать
+                            .input-group
+                              label(for='room-tel') Телефон собственника:
+                              input#room-tel(type='text')
+                              span
+                                a.error(href='#') Х
+                                a.edit(href='#') Редактировать
+                            .input-group
+                              label(for='room-price') Цена за м2:
+                              input#room-price(type='text')
+                              span
+                                a.error(href='#') Х
+                                a.edit(href='#') Редактировать
+                            .input-group
+                              label(for='room-square') Площадь:
+                              input#room-square(type='text')
+                              span
+                                a.error(href='#') Х
+                                a.edit(href='#') Редактировать
+                            .input-group
+                              label(for='room-height') Высота потолков:
+                              input#room-height(type='text')
+                              span
+                                a.error(href='#') Х
+                                a.edit(href='#') Редактировать
+                          .item-room-disable
+                            button.disable-btn(type='button', data-toggle='modal', data-target='#modal-rooms') Отклонить
+                            a(href='#') Заблокировать пользователя
+                        .item-room-block-two
+                          section
+                            h3 Назначение:
+                            ul
+                              li Электроэнергия
+                              li Электроэнергия
+                              li Электроэнергия
+                              li Электроэнергия
+                            .input-group
+                              input(type='text')
+                              span
+                                a.error(href='#') Х
+                          section
+                            h3 В арендную плату входит:
+                            ul
+                              li Электроэнергия
+                              li Электроэнергия
+                              li Электроэнергия
+                              li Электроэнергия
+                            .input-group
+                              input(type='text')
+                              span
+                                a.error(href='#') Х
+                          section
+                            h3 Дополнительные услуги:
+                            ul
+                              li Электроэнергия
+                              li Электроэнергия
+                              li Электроэнергия
+                              li Электроэнергия
+                            .input-group
+                              input(type='text')
+                              span
+                                a.error(href='#') Х
+                          section
+                            h3 Доступные провайдеры:
+                            ul
+                              li Электроэнергия
+                              li Электроэнергия
+                              li Электроэнергия
+                              li Электроэнергия
+                            .input-group
+                              input(type='text')
+                              span
+                                a.error(href='#') Х
+                        .item-room-block-three
+                          .item-three-head
+                            h3 Загруженные фотографии
+                            button.disable-btn(type='button', data-toggle='modal', data-target='#modal-photo') Отклонить фотографии
+                          .item-three-images
+                            .image
+                              img(src='images/kabinet/moderation/mod-very-big.png')
+                              .photos-settings
+                                .checkbox
+                                  label
+                                    input(type='checkbox', name='mainPhoto')
+                                    | Отметить
+                                .radio
+                                  label
+                                    input(type='radio', name='mainPhoto', checked='')
+                                    | Главная
+                            .image
+                              img(src='images/kabinet/moderation/mod-very-big.png')
+                              .photos-settings
+                                .checkbox
+                                  label
+                                    input(type='checkbox', name='mainPhoto')
+                                    | Отметить
+                                .radio
+                                  label
+                                    input(type='radio', name='mainPhoto')
+                                    | Главная
+                            .image
+                              img(src='images/kabinet/moderation/mod-very-big.png')
+                              .photos-settings
+                                .checkbox
+                                  label
+                                    input(type='checkbox', name='mainPhoto')
+                                    | Отметить
+                                .radio
+                                  label
+                                    input(type='radio', name='mainPhoto')
+                                    | Главная
+                            .image
+                              img(src='images/kabinet/moderation/mod-very-big.png')
+                              .photos-settings
+                                .checkbox
+                                  label
+                                    input(type='checkbox', name='mainPhoto')
+                                    | Отметить
+                                .radio
+                                  label
+                                    input(type='radio', name='mainPhoto')
+                                    | Главная
+                            .image
+                              img(src='images/kabinet/moderation/mod-very-big.png')
+                              .photos-settings
+                                .checkbox
+                                  label
+                                    input(type='checkbox', name='mainPhoto')
+                                    | Отметить
+                                .radio
+                                  label
+                                    input(type='radio', name='mainPhoto')
+                                    | Главная
+                            .image
+                              img(src='images/kabinet/moderation/mod-very-big.png')
+                              .photos-settings
+                                .checkbox
+                                  label
+                                    input(type='checkbox', name='mainPhoto')
+                                    | Отметить
+                                .radio
+                                  label
+                                    input(type='radio', name='mainPhoto')
+                                    | Главная
+                            .image
+                              img(src='images/kabinet/moderation/mod-very-big.png')
+                              .photos-settings
+                                .checkbox
+                                  label
+                                    input(type='checkbox', name='mainPhoto')
+                                    | Отметить
+                                .radio
+                                  label
+                                    input(type='radio', name='mainPhoto')
+                                    | Главная
+                            .image
+                              img(src='images/kabinet/moderation/mod-very-big.png')
+                              .photos-settings
+                                .checkbox
+                                  label
+                                    input(type='checkbox', name='mainPhoto')
+                                    | Отметить
+                                .radio
+                                  label
+                                    input(type='radio', name='mainPhoto')
+                                    | Главная
+                        .item-room-block-four
+                          .reset
+                            a.reset-btn(href='#') Отменить изменения
+                          .btns
+                            a(href='#') Заблокировать пользователя
+                            button.disable-btn(type='button', data-toggle='modal', data-target='#modal-rooms') Отклонить
+                            a.success-btn(href='#') Опубликовать
+                        .item-room-block-five
+                          h3 Сообщение для пользователя
+                          p Исправьте следующие поля:
                           ul
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                          .input-group
-                            input(type='text')
-                            span
-                              a.error(href='#') Х
-                        section
-                          h3 В арендную плату входит:
-                          ul
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                          .input-group
-                            input(type='text')
-                            span
-                              a.error(href='#') Х
-                        section
-                          h3 Дополнительные услуги:
-                          ul
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                          .input-group
-                            input(type='text')
-                            span
-                              a.error(href='#') Х
-                        section
-                          h3 Доступные провайдеры:
-                          ul
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                          .input-group
-                            input(type='text')
-                            span
-                              a.error(href='#') Х
-                      .item-room-block-three
-                        .item-three-head
-                          h3 Загруженные фотографии
-                          button.disable-btn(type='button', data-toggle='modal', data-target='#modal-photo') Отклонить фотографии
-                        .item-three-images
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto', checked='')
-                                  | Главная
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto')
-                                  | Главная
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto')
-                                  | Главная
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto')
-                                  | Главная
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto')
-                                  | Главная
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto')
-                                  | Главная
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto')
-                                  | Главная
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto')
-                                  | Главная
-                      .item-room-block-four
-                        .reset
-                          a.reset-btn(href='#') Отменить изменения
-                        .btns
-                          a(href='#') Заблокировать пользователя
-                          button.disable-btn(type='button', data-toggle='modal', data-target='#modal-rooms') Отклонить
-                          a.success-btn(href='#') Опубликовать
-                      .item-room-block-five
-                        h3 Сообщение для пользователя
-                        p Исправьте следующие поля:
-                        ul
-                          li
-                            | Имя помещения
-                            span Формат: Офис №313, Пав. 123, Складское помещение
-                          li
-                            | Таксофон
-                            span Подсказка
-                          li
-                            | МТС
-                            span Подсказка
-                          li
-                            | Теле2
-                            span
-                        p Следующие фотографии не прошли модерацию:
-                        .disabled-img
-                          img(src='images/search/result-img.png')
-                          img(src='images/search/result-img.png')
-                        p
-                          b Причина: несоответствие правилам форума
-                        a(href='#') Читать правила
-                        p Комментарий модератора:
-                        textarea(placeholder='Комментарии...')
-                        .btns
-                          a(href='#') Отмена
-                          a.success-btn(href='#') Отправить
-                  .item-room
-                    .item-desc
-                      .item-time
-                        p 21 июнь 2014
-                        p в 21:03
-                      .item-name
-                        h3
-                          a.nowrap-text(href='#') Офис 342
-                        p.status.published Опубликован
-                      .item-user
-                        p Пользователь
-                        a(href='#') Hell666
-                      .item-show-more.published
-                        a.published(href='#') Снять с публикации
-                        a.show-room-info(href='javascript: void(0);') Просмотр
-                  .item-room
-                    .item-desc
-                      .item-time
-                        p 21 июнь 2014
-                        p в 21:03
-                      .item-name
-                        h3
-                          a.nowrap-text(href='#') Офис 342
-                        p.status.disabled Отклонен
-                      .item-user
-                        p Пользователь
-                        a(href='#') Hell666
-                      .item-show-more.disabled
-                        a.published(href='#') Снять с публикации
-                        a.disabled-history(href='#') Посмотреть историю
-                        a.show-room-info(href='javascript: void(0);') Просмотр
-                    .item-room-more
-                      .item-room-block-one
-                        .item-room-inputs
-                          .input-group
-                            label(for='room-name') Название помещения:
-                            input#room-name(type='text')
-                            span
-                              a.error(href='#') Х
-                              a.edit(href='#') Редактировать
-                          .input-group
-                            label(for='room-address') Адрес/объект:
-                            input#room-address(type='text')
-                            span
-                              a.error(href='#') Х
-                              a.edit(href='#') Редактировать
-                          .input-group
-                            label(for='room-tel') Телефон собственника:
-                            input#room-tel(type='text')
-                            span
-                              a.error(href='#') Х
-                              a.edit(href='#') Редактировать
-                          .input-group
-                            label(for='room-price') Цена за м2:
-                            input#room-price(type='text')
-                            span
-                              a.error(href='#') Х
-                              a.edit(href='#') Редактировать
-                          .input-group
-                            label(for='room-square') Площадь:
-                            input#room-square(type='text')
-                            span
-                              a.error(href='#') Х
-                              a.edit(href='#') Редактировать
-                          .input-group
-                            label(for='room-height') Высота потолков:
-                            input#room-height(type='text')
-                            span
-                              a.error(href='#') Х
-                              a.edit(href='#') Редактировать
-                        .item-room-disable
-                          a.disable-btn(href='#') Отклонить
-                          a(href='#') Заблокировать пользователя
-                      .item-room-block-two
-                        section
-                          h3 Назначение:
-                          ul
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                          .input-group
-                            input(type='text')
-                            span
-                              a.error(href='#') Х
-                        section
-                          h3 В арендную плату входит:
-                          ul
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                          .input-group
-                            input(type='text')
-                            span
-                              a.error(href='#') Х
-                        section
-                          h3 Дополнительные услуги:
-                          ul
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                          .input-group
-                            input(type='text')
-                            span
-                              a.error(href='#') Х
-                        section
-                          h3 Доступные провайдеры:
-                          ul
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                            li Электроэнергия
-                          .input-group
-                            input(type='text')
-                            span
-                              a.error(href='#') Х
-                      .item-room-block-three
-                        .item-three-head
-                          h3 Загруженные фотографии
-                          a.disable-btn(href='#') Отклонить фотографии
-                        .item-three-images
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto', checked='')
-                                  | Главная
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto')
-                                  | Главная
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto')
-                                  | Главная
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto')
-                                  | Главная
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto')
-                                  | Главная
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto')
-                                  | Главная
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto')
-                                  | Главная
-                          .image
-                            img(src='images/kabinet/moderation/mod-very-big.png')
-                            .photos-settings
-                              .checkbox
-                                label
-                                  input(type='checkbox', name='mainPhoto')
-                                  | Отметить
-                              .radio
-                                label
-                                  input(type='radio', name='mainPhoto')
-                                  | Главная
-                      .item-room-block-four
-                        .reset
-                          a.reset-btn(href='#') Отменить изменения
-                        .btns
-                          a(href='#') Заблокировать пользователя
-                          a.disable-btn(href='#') Отклонить
-                          a.success-btn(href='#') Опубликовать
-                      // Блок отправки сообщения для пользователя, появляется, когда отклоняем помещение или объект
-                      .item-room-block-five
-                        h3 Сообщение для пользователя
-                        p Исправьте следующие поля:
-                        ul
-                          li
-                            | Имя помещения
-                            span Формат: Офис №313, Пав. 123, Складское помещение
-                          li
-                            | Таксофон
-                            span Подсказка
-                          li
-                            | МТС
-                            span Подсказка
-                          li
-                            | Теле2
-                            span
-                        p Следующие фотографии не прошли модерацию:
-                        .disabled-img
-                          img(src='images/search/result-img.png')
-                          img(src='images/search/result-img.png')
-                        p
-                          b Причина: несоответствие правилам форума
-                        a(href='#') Читать правила
-                        p Комментарий модератора:
-                        textarea(placeholder='Комментарии...')
-                        .btns
-                          a(href='#') Отмена
-                          a.success-btn(href='#') Отправить
+                            li
+                              | Имя помещения
+                              span Формат: Офис №313, Пав. 123, Складское помещение
+                            li
+                              | Таксофон
+                              span Подсказка
+                            li
+                              | МТС
+                              span Подсказка
+                            li
+                              | Теле2
+                              span
+                          p Следующие фотографии не прошли модерацию:
+                          .disabled-img
+                            img(src='images/search/result-img.png')
+                            img(src='images/search/result-img.png')
+                          p
+                            b Причина: несоответствие правилам форума
+                          a(href='#') Читать правила
+                          p Комментарий модератора:
+                          textarea(placeholder='Комментарии...')
+                          .btns
+                            a(href='#') Отмена
+                            a.success-btn(href='#') Отправить
+                  //- .item-room
+                  //-   .item-desc
+                  //-     .item-time
+                  //-       p 21 июнь 2014
+                  //-       p в 21:03
+                  //-     .item-name
+                  //-       h3
+                  //-         a.nowrap-text(href='#') Офис 342
+                  //-       p.status.published Опубликован
+                  //-     .item-user
+                  //-       p Пользователь
+                  //-       a(href='#') Hell666
+                  //-     .item-show-more.published
+                  //-       a.published.btn(href='#') Снять с публикации
+                  //-       a.show-room-info(href='javascript: void(0);') Просмотр
+                  //- .item-room
+                  //-   .item-desc
+                  //-     .item-time
+                  //-       p 21 июнь 2014
+                  //-       p в 21:03
+                  //-     .item-name
+                  //-       h3
+                  //-         a.nowrap-text(href='#') Офис 342
+                  //-       p.status.disabled Отклонен
+                  //-     .item-user
+                  //-       p Пользователь
+                  //-       a(href='#') Hell666
+                  //-     .item-show-more.disabled
+                  //-       a.published(href='#') Снять с публикации
+                  //-       a.disabled-history(href='#') Посмотреть историю
+                  //-       a.show-room-info(href='javascript: void(0);') Просмотр
+                  //-   .item-room-more
+                  //-     .item-room-block-one
+                  //-       .item-room-inputs
+                  //-         .input-group
+                  //-           label(for='room-name') Название помещения:
+                  //-           input#room-name(type='text')
+                  //-           span
+                  //-             a.error(href='#') Х
+                  //-             a.edit(href='#') Редактировать
+                  //-         .input-group
+                  //-           label(for='room-address') Адрес/объект:
+                  //-           input#room-address(type='text')
+                  //-           span
+                  //-             a.error(href='#') Х
+                  //-             a.edit(href='#') Редактировать
+                  //-         .input-group
+                  //-           label(for='room-tel') Телефон собственника:
+                  //-           input#room-tel(type='text')
+                  //-           span
+                  //-             a.error(href='#') Х
+                  //-             a.edit(href='#') Редактировать
+                  //-         .input-group
+                  //-           label(for='room-price') Цена за м2:
+                  //-           input#room-price(type='text')
+                  //-           span
+                  //-             a.error(href='#') Х
+                  //-             a.edit(href='#') Редактировать
+                  //-         .input-group
+                  //-           label(for='room-square') Площадь:
+                  //-           input#room-square(type='text')
+                  //-           span
+                  //-             a.error(href='#') Х
+                  //-             a.edit(href='#') Редактировать
+                  //-         .input-group
+                  //-           label(for='room-height') Высота потолков:
+                  //-           input#room-height(type='text')
+                  //-           span
+                  //-             a.error(href='#') Х
+                  //-             a.edit(href='#') Редактировать
+                  //-       .item-room-disable
+                  //-         a.disable-btn(href='#') Отклонить
+                  //-         a(href='#') Заблокировать пользователя
+                  //-     .item-room-block-two
+                  //-       section
+                  //-         h3 Назначение:
+                  //-         ul
+                  //-           li Электроэнергия
+                  //-           li Электроэнергия
+                  //-           li Электроэнергия
+                  //-           li Электроэнергия
+                  //-         .input-group
+                  //-           input(type='text')
+                  //-           span
+                  //-             a.error(href='#') Х
+                  //-       section
+                  //-         h3 В арендную плату входит:
+                  //-         ul
+                  //-           li Электроэнергия
+                  //-           li Электроэнергия
+                  //-           li Электроэнергия
+                  //-           li Электроэнергия
+                  //-         .input-group
+                  //-           input(type='text')
+                  //-           span
+                  //-             a.error(href='#') Х
+                  //-       section
+                  //-         h3 Дополнительные услуги:
+                  //-         ul
+                  //-           li Электроэнергия
+                  //-           li Электроэнергия
+                  //-           li Электроэнергия
+                  //-           li Электроэнергия
+                  //-         .input-group
+                  //-           input(type='text')
+                  //-           span
+                  //-             a.error(href='#') Х
+                  //-       section
+                  //-         h3 Доступные провайдеры:
+                  //-         ul
+                  //-           li Электроэнергия
+                  //-           li Электроэнергия
+                  //-           li Электроэнергия
+                  //-           li Электроэнергия
+                  //-         .input-group
+                  //-           input(type='text')
+                  //-           span
+                  //-             a.error(href='#') Х
+                  //-     .item-room-block-three
+                  //-       .item-three-head
+                  //-         h3 Загруженные фотографии
+                  //-         a.disable-btn(href='#') Отклонить фотографии
+                  //-       .item-three-images
+                  //-         .image
+                  //-           img(src='images/kabinet/moderation/mod-very-big.png')
+                  //-           .photos-settings
+                  //-             .checkbox
+                  //-               label
+                  //-                 input(type='checkbox', name='mainPhoto')
+                  //-                 | Отметить
+                  //-             .radio
+                  //-               label
+                  //-                 input(type='radio', name='mainPhoto', checked='')
+                  //-                 | Главная
+                  //-         .image
+                  //-           img(src='images/kabinet/moderation/mod-very-big.png')
+                  //-           .photos-settings
+                  //-             .checkbox
+                  //-               label
+                  //-                 input(type='checkbox', name='mainPhoto')
+                  //-                 | Отметить
+                  //-             .radio
+                  //-               label
+                  //-                 input(type='radio', name='mainPhoto')
+                  //-                 | Главная
+                  //-         .image
+                  //-           img(src='images/kabinet/moderation/mod-very-big.png')
+                  //-           .photos-settings
+                  //-             .checkbox
+                  //-               label
+                  //-                 input(type='checkbox', name='mainPhoto')
+                  //-                 | Отметить
+                  //-             .radio
+                  //-               label
+                  //-                 input(type='radio', name='mainPhoto')
+                  //-                 | Главная
+                  //-         .image
+                  //-           img(src='images/kabinet/moderation/mod-very-big.png')
+                  //-           .photos-settings
+                  //-             .checkbox
+                  //-               label
+                  //-                 input(type='checkbox', name='mainPhoto')
+                  //-                 | Отметить
+                  //-             .radio
+                  //-               label
+                  //-                 input(type='radio', name='mainPhoto')
+                  //-                 | Главная
+                  //-         .image
+                  //-           img(src='images/kabinet/moderation/mod-very-big.png')
+                  //-           .photos-settings
+                  //-             .checkbox
+                  //-               label
+                  //-                 input(type='checkbox', name='mainPhoto')
+                  //-                 | Отметить
+                  //-             .radio
+                  //-               label
+                  //-                 input(type='radio', name='mainPhoto')
+                  //-                 | Главная
+                  //-         .image
+                  //-           img(src='images/kabinet/moderation/mod-very-big.png')
+                  //-           .photos-settings
+                  //-             .checkbox
+                  //-               label
+                  //-                 input(type='checkbox', name='mainPhoto')
+                  //-                 | Отметить
+                  //-             .radio
+                  //-               label
+                  //-                 input(type='radio', name='mainPhoto')
+                  //-                 | Главная
+                  //-         .image
+                  //-           img(src='images/kabinet/moderation/mod-very-big.png')
+                  //-           .photos-settings
+                  //-             .checkbox
+                  //-               label
+                  //-                 input(type='checkbox', name='mainPhoto')
+                  //-                 | Отметить
+                  //-             .radio
+                  //-               label
+                  //-                 input(type='radio', name='mainPhoto')
+                  //-                 | Главная
+                  //-         .image
+                  //-           img(src='images/kabinet/moderation/mod-very-big.png')
+                  //-           .photos-settings
+                  //-             .checkbox
+                  //-               label
+                  //-                 input(type='checkbox', name='mainPhoto')
+                  //-                 | Отметить
+                  //-             .radio
+                  //-               label
+                  //-                 input(type='radio', name='mainPhoto')
+                  //-                 | Главная
+                  //-     .item-room-block-four
+                  //-       .reset
+                  //-         a.reset-btn(href='#') Отменить изменения
+                  //-       .btns
+                  //-         a(href='#') Заблокировать пользователя
+                  //-         a.disable-btn(href='#') Отклонить
+                  //-         a.success-btn(href='#') Опубликовать
+                  //-     // Блок отправки сообщения для пользователя, появляется, когда отклоняем помещение или объект
+                  //-     .item-room-block-five
+                  //-       h3 Сообщение для пользователя
+                  //-       p Исправьте следующие поля:
+                  //-       ul
+                  //-         li
+                  //-           | Имя помещения
+                  //-           span Формат: Офис №313, Пав. 123, Складское помещение
+                  //-         li
+                  //-           | Таксофон
+                  //-           span Подсказка
+                  //-         li
+                  //-           | МТС
+                  //-           span Подсказка
+                  //-         li
+                  //-           | Теле2
+                  //-           span
+                  //-       p Следующие фотографии не прошли модерацию:
+                  //-       .disabled-img
+                  //-         img(src='images/search/result-img.png')
+                  //-         img(src='images/search/result-img.png')
+                  //-       p
+                  //-         b Причина: несоответствие правилам форума
+                  //-       a(href='#') Читать правила
+                  //-       p Комментарий модератора:
+                  //-       textarea(placeholder='Комментарии...')
+                  //-       .btns
+                  //-         a(href='#') Отмена
+                  //-         a.success-btn(href='#') Отправить
           // Архив
         #mod-archive.mod-object-list.fade
         // Пользователи
         #mod-users.mod-object-list.fade
+          table.table(width="100%")
+            thead
+              tr
+                th= "Ид"
+                th= "Почта/логин"
+                th= "Роль"
+                th= "Имя"
+                th= "Фамилия"
+                th= "Мобильный"
+                th= "Бан"
+                th= "Подтвержден"
+            tbody
+              -for (var i = 0; i < users.length; i++)
+                tr
+                  td= users[i].user_id
+                  td= users[i].user_email
+                  td= users[i].user_role
+                  td= decodeURI(users[i].user_firstname)
+                  td= decodeURI(users[i].user_lastname)
+                  td= users[i].user_mobile
+                  td
+                    div.btn= (users[i].user_ban === 0) ? "Заблокировать" : "Разблокировать"
+                  td
+                    div.btn= (users[i].user_confirm === 0) ? "Подтвердить" : "Подтвержден"
+                
     // Модальные окна при отклонениях
     .mod-modals
       // Модальные окно при отклонении фото
@@ -701,29 +748,30 @@ block content
               button.close(data-dismiss='modal', aria-label='close')
                 span(aria-hidden='true')
               h4 Отклонить объект
-              p (ТК “Сарый Сокол”)
+              p.modal-header-objectname (ТК “Сарый Сокол”)
             .modal-body
               .modal-cause
                 p Выберите причину:
                 .checkbox
                   label
-                    input(type='checkbox')
+                    input(type='checkbox', value= 'Несоответстует тематике ресурса')
                     | Несоответстует тематике ресурса
                 .checkbox
                   label
-                    input(type='checkbox')
+                    input(type='checkbox', value= 'Нарушает правила ресурса')
                     | Нарушает правила ресурса
                 .checkbox
                   label
-                    input(type='checkbox')
+                    input(type='checkbox', value= 'Ненадлежащее качество')
                     | Ненадлежащее качество
                 .checkbox
                   label
-                    input(type='checkbox')
+                    input(type='checkbox', value= 'Причина 2')
                     | Причина 2
               .modal-comment
                 p Комментарий модератора:
                 textarea(placeholder='Комментарий...')
                 .mobal-btns
-                  a.disable-btn(href='#') Отмена
-                  button.success-btn(type='submit')
+                  button.disable-btn(data-dismiss="modal", aria-label="close") Отмена
+                  //<button data-dismiss="modal" aria-label="close" class="close"><span aria-hidden="true"></span></button>
+                  button.success-btn(type='submit', data-title="", data-dismiss="modal", aria-label="close") Готово

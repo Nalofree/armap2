@@ -69,34 +69,42 @@ app.use(bodyParser.urlencoded({extended: true}));
 //
 // console.log(geo);
 
-function geolocation(req,res,next) {
+var geolocation = function(req,res,next) {
   var surceIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-      ip;
-  ip = surceIp.replace(/^.*:/, '');
+      ip, coords, randNum;
+  //ip = surceIp.replace(/^.*:/, '');
+  ip = "188.168.22.110";
   var geo;
   if (geoip.lookup(ip)) {
     geo = geoip.lookup(ip);
-    geo.zoom = 13;
     geo.ip = ip;
   }else{
     geo = {};
     geo.ll = [55.7543, 37.619744];
-    geo.city = "Москва";
-    geo.cityId = 2;
-    geo.zoom = 13;
     geo.ip = ip;
-    req.cookies.city = "";
   }
   res.geo = geo;
+  console.log(geo.ll);
+  clientlatitude = req.cookies.clientlatitude;
+  clientlongitude = req.cookies.clientlongitude;
+  if (clientlatitude === undefined) {
+    res.cookie('clientlatitude', geo.ll[0], { maxAge: 900000, httpOnly: false });
+    res.cookie('clientlongitude', geo.ll[1], { maxAge: 900000, httpOnly: false });
+    console.log('cookie created successfullyl', [clientlatitude, clientlongitude]);
+  } else {
+    console.log('cookie exists', [clientlatitude, clientlongitude]);
+  }
   next();
 }
 
-var ipMiddleware = function(req, res, next) {
-    var clientIp = requestIp.getClientIp(req);
-    // console.log(clientIp);
-    res.clientIp = clientIp;
-    next();
-};
+app.use(geolocation);
+
+// var ipMiddleware = function(req, res, next) {
+//     var clientIp = requestIp.getClientIp(req);
+//     // console.log(clientIp);
+//     res.clientIp = clientIp;
+//     next();
+// };
 
 function auth(req, res, next) {
   var role;
@@ -110,12 +118,12 @@ function auth(req, res, next) {
   next();
 };
 
-app.post('/getlocation', geolocation, function (req,res) {
-  var coords = res.geo.ll;
-  res.send({
-    coords: coords
-  });
-});
+// app.post('/getlocation', geolocation, function (req,res) {
+//   var coords = res.geo.ll;
+//   res.send({
+//     coords: coords
+//   });
+// });
 
 app.post('/choosecity',function (req,res) {
   connection.query('SELECT city_id, city_name FROM citys',function (error,result,fields) {
@@ -133,15 +141,49 @@ app.post('/choosecity',function (req,res) {
   });
 });
 
+app.post('/getcitybyname',function (req,res) {
+  connection.query('SELECT city_id, city_name, city_coords FROM citys WHERE city_name LIKE "%'+req.body.city_name+'%"',function (error,result,fields) {
+    if (error) throw error;
+    if (result) {
+      res.send({
+        city: result[0],
+        count: result.length
+      });
+    }else{
+      res.send({
+        count: 0
+      });
+    }
+  });
+});
+
+app.post('/getcitybyid',function (req,res) {
+  connection.query('SELECT city_id, city_name, city_coords FROM citys WHERE city_id = '+req.body.city_id, function (error,result,fields) {
+    if (error) throw error;
+    // console.log("city_id ", req.body.city_id);
+    if (result) {
+      res.send({
+        city: result[0],
+        count: result.length
+      });
+    }else{
+      res.send({
+        count: 0
+      });
+    }
+  });
+});
+
 app.post('/addcity',function (req,res) {
-  connection.query('INSERT INTO citys (city_name) VALUES ("'+req.body.city_name+'")',function (error,result,fields) {
+  connection.query('INSERT INTO citys (city_name, city_coords) VALUES ("'+req.body.city_name+'", "'+req.body.city_coords+'")',function (error,result,fields) {
     console.log(req.body.city_name);
     if (error) throw error;
     if (result) {
       res.send({
         status: "success",
         city_id: result.insertId,
-        city_name: req.body.city_name
+        city_name: req.body.city_name,
+        city_coords: req.body.city_coords
       });
     }else{
       res.send({
@@ -162,8 +204,8 @@ app.post('/register',function (req,res) {
     if (result.length > 0) {
       res.send({status: 'error', err: 'email already exist'});
     }else{
-      connection.query('INSERT INTO users (user_email,user_pass,user_role,user_firstname,user_lastname,user_ban) \
-      VALUES ("'+user.email+'","'+hash+'",1,"'+encodeURI(user.firstname)+'","'+encodeURI(user.lastname)+'",0)',
+      connection.query('INSERT INTO users (user_email,user_pass,user_role,user_firstname,user_lastname,user_ban,user_confirm) \
+      VALUES ("'+user.email+'","'+hash+'",1,"'+encodeURI(user.firstname)+'","'+encodeURI(user.lastname)+'",0,0)',
       function(error, result, fields) {
         if (error) throw error;
         res.send({status:'success'});
@@ -185,7 +227,7 @@ app.post('/login',function (req,res) {
       var hash = crypto.createHmac('sha256', pass)
                          .update('I love cupcakes')
                          .digest('hex');
-      if (result[0].user_pass === hash) {
+      if (result[0].user_pass === hash && result[0].user_confirm === 1) {
         var user = result[0];
         console.log(user);
         connection.query('SELECT * FROM roles WHERE role_id = '+user.user_role, function (error,result,fields) {
@@ -256,9 +298,9 @@ app.get('/',auth, function(req,res) {
       userid: res.userid,
       meanings: meanings,
       ishome: 1,
-      clientIp: res.clientIp
+      //clientIp: res.clientIp
     });
-  })
+  });
 });
 
 app.get('/my',auth, function(req,res) {
@@ -285,26 +327,38 @@ app.get('/my',auth, function(req,res) {
               providers.push(result[i]);
               break;
           }
-          result[i]
+          // result[i]
         }
+        console.log("city_id", req.cookies.city_id);
         connection.query('SELECT object_id,object_name,object_adres,object_cover\
-         FROM objects WHERE object_author ='+res.userid,function (error,result,fields) {
+         FROM objects WHERE object_city = '+req.cookies.city_id, function (error,result,fields) {
           if (error) throw error;
           var objects = result;
-          connection.query('SELECT * FROM offices WHERE office_author ='+res.userid, function (error,result,fields) {
+          for (var i = 0; i < objects.length; i++) {
+            objects[i].object_offices = [];
+          }
+          connection.query('SELECT * FROM offices WHERE office_author ='+res.userid+' ORDER BY office_create ASC', function (error,result,fields) {
             if (error) throw error;
             var offices = result;
             for (var i = 0; i < offices.length; i++) {
               var date = offices[i].office_create,
-                  day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate(),
-                  month = date.getMonth() < 10 ? '0'+date.getMonth() : date.getMonth(),
-                  year = date.getFullYear(),
-                  hours = date.getHours() < 10 ? '0'+date.getHours() : date.getHours(),
-                  minutes = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes(),
-                  time = hours+':'+minutes;
+                day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate(),
+                month = date.getMonth() < 10 ? '0'+date.getMonth() : date.getMonth(),
+                year = date.getFullYear(),
+                hours = date.getHours() < 10 ? '0'+date.getHours() : date.getHours(),
+                minutes = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes(),
+                time = hours+':'+minutes;
               offices[i].office_create = day+'.'+month+'.'+year+' '+time;
+              for (var j = 0; j < objects.length; j++) {
+                if (offices[i].office_object === objects[j].object_id) {
+                  objects[j].object_offices.push(offices[i]);
+                  offices[i].office_adres = objects[j].object_adres;
+                }
+              }
             }
-            console.log(meanings[2].option_id);
+            // console.log(objects);
+            // console.log(meanings[2].option_id);
+            console.log(res.role);
             res.render('my.jade',{
               role: res.role,
               username: res.userfullname,
@@ -326,15 +380,58 @@ app.get('/my',auth, function(req,res) {
   }
 });
 
+app.post('/my', function (req,res) {
+  // connection.query('SELECT * FROM objects WHERE object_adres LIKE "%'+req.body.city+'%" AND object_author ='+res.userid, function (error,result,fields) {
+  connection.query('SELECT * FROM objects', function (error,result,fields) {
+    if (error) throw error;
+    var objects = result;
+    var objByCityArr = [];
+    if (result.length > 0) {
+      for (var i = 0; i < result.length; i++) {
+        objByCityArr.push(result[i].object_id);
+      }
+      objByCity = objByCityArr.join(',');
+    }
+    console.log(req.body.city);
+    console.log(res.userid);
+    connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_author ='+res.userid,function (error, result, fields) {
+      if (error) throw error;
+      var offices = result;
+      for (var i = 0; i < offices.length; i++) {
+        var date = offices[i].office_create,
+            day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate(),
+            month = date.getMonth() < 10 ? '0'+date.getMonth() : date.getMonth(),
+            year = date.getFullYear(),
+            hours = date.getHours() < 10 ? '0'+date.getHours() : date.getHours(),
+            minutes = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes(),
+            time = hours+':'+minutes;
+        offices[i].office_create = day+'.'+month+'.'+year+' '+time;
+      }
+      for (var i = 0; i < objects.length; i++) {
+        objects[i].object_offices = [];
+        for (var j = 0; j < offices.length; j++) {
+          if (objects[i].object_id === offices[j].office_object) {
+            objects[i].object_offices.push(offices[j]);
+          }
+        }
+      }
+      console.log(objects);
+      res.send({
+        objects: objects
+      });
+    });
+  });
+});
+
 app.get('/object-:object_id', auth, function (req,res) {
   connection.query('SELECT * FROM objects WHERE object_id = '+req.params.object_id+'', function (error,result,fields) {
     if (error) throw error;
     object = result[0];
     connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_object = '+object.object_id, function (error,result,fields) {
       if (error) throw error;
-      console.log(result);
+      // console.log(result);
       object.object_offices = result;
-      //console.log(object);
+      console.log("role",res.role);
       res.render('object.jade',{
         role: res.role,
         username: res.userfullname,
@@ -384,6 +481,7 @@ app.get('/office-:office_id', auth, function (req,res) {
                   break;
               }
             }
+            console.log("role",res.role);
             res.render('office.jade',{
               role: res.role,
               username: res.userfullname,
@@ -403,18 +501,11 @@ app.get('/office-:office_id', auth, function (req,res) {
 });
 
 app.get('/objects', auth, function (req,res) {
-  res.render('objects.jade',{
-    role: res.role,
-    username: res.userfullname,
-    userid: res.userid
-  });
-});
-
-app.post('/objects', function (req, res) {
-  connection.query('SELECT * FROM objects WHERE object_adres LIKE "%'+req.body.city+'%"', function (error,result,fields) {
+  connection.query('SELECT * FROM objects WHERE object_city = '+req.cookies.city_id+' AND object_publish = 1 AND object_show = 1', function (error,result,fields) {
     if (error) throw error;
     var objects = result;
-    console.log(req.body.city);
+    console.log(req.cookies.city_name);
+    console.log(objects);
     connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id',function (error, result, fields) {
       if (error) throw error;
       var offices = result;
@@ -426,19 +517,54 @@ app.post('/objects', function (req, res) {
           }
         }
       }
-      console.log(objects);
-      // res.render('objects.jade',{
-      //   role: res.role,
-      //   username: res.userfullname,
-      //   userid: res.userid,
-      //   objects: objects
-      // });
-      res.send({
+      // console.log(objects);
+      res.render('objects.jade',{
+        role: res.role,
+        username: res.userfullname,
+        userid: res.userid,
         objects: objects
       });
+      // res.send({
+      //   objects: objects
+      // });
     });
   });
+  // res.render('objects.jade',{
+  //   role: res.role,
+  //   username: res.userfullname,
+  //   userid: res.userid
+  // });
 });
+
+// app.post('/objects', function (req, res) {
+//   connection.query('SELECT * FROM objects WHERE object_adres LIKE "%'+req.body.city+'%"', function (error,result,fields) {
+//     if (error) throw error;
+//     var objects = result;
+//     console.log(req.body.city);
+//     connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id',function (error, result, fields) {
+//       if (error) throw error;
+//       var offices = result;
+//       for (var i = 0; i < objects.length; i++) {
+//         objects[i].object_offices = [];
+//         for (var j = 0; j < offices.length; j++) {
+//           if (objects[i].object_id === offices[j].office_object) {
+//             objects[i].object_offices.push(offices[j]);
+//           }
+//         }
+//       }
+//       console.log(objects);
+//       res.render('objects.jade',{
+//         role: res.role,
+//         username: res.userfullname,
+//         userid: res.userid,
+//         objects: objects
+//       });
+//       // res.send({
+//       //   objects: objects
+//       // });
+//     });
+//   });
+// });
 
 app.get('/bookmarks', auth, function (req,res) {
   console.log(req.cookies.bmarks);
@@ -452,7 +578,7 @@ app.get('/bookmarks', auth, function (req,res) {
         role: res.role,
         username: res.userfullname,
         userid: res.userid,
-        geo: geo,
+        // geo: geo,
         count: offices.length,
         offices: offices
       });
@@ -468,45 +594,108 @@ app.get('/bookmarks', auth, function (req,res) {
 });
 
 app.get('/moder', auth,function (req,res) {
-  connection.query('SELECT object_name, object_type, object_adres, object_author, object_id, object_cover, object_create FROM objects', function (error, result, fields) {
-    if (error) throw error;
-    var objects = result;
-    connection.query('SELECT office_name, office_phone, office_subprice, office_area, office_height, office_create, image_filename FROM offices LEFT JOIN images ON image_id = office_cover', function (error, result, fields) {
+  if (res.role == 'admin' || res.role == 'moder') {
+    connection.query('SELECT object_id, object_name, object_type, object_adres, object_author, object_id, object_cover, object_create, object_city, object_type, object_publish FROM objects WHERE object_city = '+req.cookies.city_id, function (error, result, fields) {
       if (error) throw error;
-      var offices = result;
-      for (var i = 0; i < offices.length; i++) {
-        var date = offices[i].office_create,
+      var objects = result;
+      var objTypeIdsArr = [];
+      var objTypeIdsStr;
+      for (var i = 0; i < objects.length; i++) {
+        var date = objects[i].object_create,
             day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate(),
             month = date.getMonth() < 10 ? '0'+date.getMonth() : date.getMonth(),
             year = date.getFullYear(),
             hours = date.getHours() < 10 ? '0'+date.getHours() : date.getHours(),
             minutes = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes(),
             time = hours+':'+minutes;
-        offices[i].office_create = day+'.'+month+'.'+year+' '+time;
+        objects[i].object_create = day+'.'+month+'.'+year+' '+time;
+        objects[i].object_offices = [];
+        objects[i].object_typename = "";
+        objTypeIdsArr.push(objects[i].object_id);
       }
-      connection.query('SELECT image_id, image_filename FROM images WHERE image_office IS NOT NULL', function (error, result, fields) {
+      objTypeIdsStr = objTypeIdsArr.join(',');
+      connection.query('SELECT objtype_id, objtype_name FROM objtypes', function (error, result, fields) {
         if (error) throw error;
-        var images = result;
+        var objtypes = result;
+        console.log(objtypes);
         for (var i = 0; i < objects.length; i++) {
-          objects[i].offices = [];
-          for (var j = 0; j < offices.length; j++) {
-            if (offices[j].office_object == objects[i].object_id) {
-              objects[i].offices.push(offices[j]);
+          for (var j = 0; j < objtypes.length; j++) {
+            if (objtypes[j].objtype_id === objects[i].object_type) {
+              objects[i].object_typename = objtypes[j].objtype_name;
             }
           }
         }
-        console.log(offices);
-        res.render('moder.jade',{
-          role: res.role,
-          username: res.userfullname,
-          userid: res.userid,
-          objects: objects,
-          offices: offices,
-          images: images
+        connection.query('SELECT office_name, office_phone, office_subprice, office_area, office_height, office_create, office_object, image_filename FROM offices LEFT JOIN images ON image_id = office_cover', function (error, result, fields) {
+          if (error) throw error;
+          var offices = result;
+          for (var i = 0; i < offices.length; i++) {
+            var date = offices[i].office_create,
+                day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate(),
+                month = date.getMonth() < 10 ? '0'+date.getMonth() : date.getMonth(),
+                year = date.getFullYear(),
+                hours = date.getHours() < 10 ? '0'+date.getHours() : date.getHours(),
+                minutes = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes(),
+                time = hours+':'+minutes;
+            offices[i].office_create = day+'.'+month+'.'+year+' '+time;
+          }
+          connection.query('SELECT image_id, image_filename FROM images WHERE image_office IS NOT NULL', function (error, result, fields) {
+            if (error) throw error;
+            var images = result;
+            for (var i = 0; i < offices.length; i++) {
+              offices[i].office_image = [];
+              for (var j = 0; j < images.length; j++) {
+                if (offices[i].office_id === images[j].image_office) {
+                  offices[i].office_image = images[j].image_filename;
+                }
+              }
+            }
+            for (var i = 0; i < objects.length; i++) {
+              for (var j = 0; j < offices.length; j++) {
+                if (offices[j].office_object === objects[i].object_id) {
+                  objects[i].object_offices.push(offices[j]);
+                  // console.log(objects[i].object_offices);
+                }
+              }
+            }
+            connection.query("SELECT user_id, user_email, user_role, user_firstname, user_lastname, user_ban, user_mobile, user_confirm FROM users", function (error, result, fields) {
+              if (error) throw error;
+              var users = result;
+              for (var i = 0; i < objects.length; i++) {
+                //objects[i].object_author = [];
+                for (var j = 0; j < users.length; j++) {
+                  if (objects[i].object_author === users[j].user_id) {
+                    objects[i].object_author = users[j];
+                  }
+                }
+                for (var k = 0; k < objects[i].object_offices.length; k++) {
+                  //offices[i].office_author = [];
+                  for (var j = 0; j < users.length; j++) {
+                    if (objects[i].object_offices[k].office_author === users[j].user_id) {
+                      objects[i].object_offices[k].office_author = users[j];
+                    }
+                  }
+                }
+              }
+
+              console.log(objects);
+              res.render('moder.jade',{
+                role: res.role,
+                username: res.userfullname,
+                userid: res.userid,
+                objects: objects,
+                objtypes: objtypes,
+                offices: offices,
+                images: images,
+                users: users
+              });
+            });
+          });
         });
       });
-    })
-  });
+    });
+  }else{
+    res.redirect('/');
+  }
 });
 
 app.post('/delobj',function (req,res) {
@@ -639,8 +828,8 @@ app.post('/deluplimage',function (req,res) {
 app.post('/setobject',auth,function (req,res) {
   // console.log('INSERT INTO objects (object_name,object_create,object_author,object_coords,object_adres,object_publish,object_show,object_type)\
   // VALUES ("'+req.body.object_name+'","'+req.body.object_create+'",'+res.userid+',"'+req.body.object_coords+'","'+req.body.object_adres+'",'+req.body.object_publish+','+req.body.object_show+','+req.body.object_type+')');
-  connection.query('INSERT INTO objects (object_name,object_create,object_author,object_coords,object_adres,object_publish,object_show,object_type)\
-  VALUES ("'+encodeURI(req.body.object_name)+'","'+req.body.object_create+'",'+res.userid+',"'+req.body.object_coords+'","'+req.body.object_adres+'",'+req.body.object_publish+','+req.body.object_show+','+req.body.object_type+')',
+  connection.query('INSERT INTO objects (object_name,object_create,object_author,object_coords,object_adres,object_publish,object_show,object_type, object_city)\
+  VALUES ("'+encodeURI(req.body.object_name)+'","'+req.body.object_create+'",'+res.userid+',"'+req.body.object_coords+'","'+req.body.object_adres+'",'+req.body.object_publish+','+req.body.object_show+','+req.body.object_type+','+req.body.object_city+')',
   function (error,result,fields) {
     if (error) throw error;
     res.send(result);
@@ -690,7 +879,7 @@ app.post('/addoffice', auth, function(req,res) {
 app.post('/filtred',function (req,res) {
   console.log(req.body.city);
   var objByCity;
-  connection.query('SELECT object_id FROM objects WHERE object_adres LIKE "%'+req.body.city+'%" ', function (error, result, fields) {
+  connection.query('SELECT object_id FROM objects WHERE object_city = '+req.body.city+' AND object_publish = 1 AND object_show = 1', function (error, result, fields) {// LIKE "%'+req.body.city+'%"
     if (error) throw error;
     var objByCityArr = [];
     if (result.length > 0) {
@@ -716,7 +905,7 @@ app.post('/filtred',function (req,res) {
             });
             officesIdString = officesIdArr.join(',');
             connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover WHERE (office_id IN ('+officesIdString+')) AND (office_area BETWEEN '+req.body.area[0]+' AND '+req.body.area[1]+')\
-            AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+') AND (office_object IN ('+objByCity+'))', function (error,result,fields) {
+            AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+')', function (error,result,fields) { // AND (office_object IN ('+objByCity+'))
               if (error) throw error;
               if (result.length<=0) {
                 res.send({
@@ -730,7 +919,7 @@ app.post('/filtred',function (req,res) {
                   objIds.push(result[i].office_object);
                 }
                 objIdsString = objIds.join(',');
-                connection.query('SELECT * FROM objects WHERE object_id IN('+objIdsString+')', function (error,result,fields) {
+                connection.query('SELECT * FROM objects WHERE object_id IN ("'+objIdsString+'") AND object_publish = 1 AND object_show = 1', function (error,result,fields) { // WHERE object_id IN('+objIdsString+')
                   if (error) throw error;
                   var objects = result;
                   for (var i = 0; i < objects.length; i++) {
@@ -757,35 +946,44 @@ app.post('/filtred',function (req,res) {
         });
       }else{
         connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover  WHERE (office_area BETWEEN '+req.body.area[0]+' AND '+req.body.area[1]+')\
-        AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+') AND (office_object IN ('+objByCity+'))', function (error,result,fields) {
+        AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+')', function (error,result,fields) { // AND (office_object IN ('+objByCity+'))
           if (error) throw error;
+          console.log(result.length);
           if (result.length<=0) {
             res.send({
               count: 0,
-              messege: 'Empty answer, nothing to show'
+              messege: 'Empty offices answer, nothing to show'
             });
           }else{
             var offices = result;
             objIds = [];
-            for (var i = 0; i < result.length; i++) {
-              objIds.push(result[i].office_object);
+            // console.log("offices: ", result.length);
+            for (var i = 0; i < offices.length; i++) {
+              objIds.push(offices[i].office_object);
             }
             objIdsString = objIds.join(',');
-            connection.query('SELECT * FROM objects WHERE object_id IN('+objIdsString+')', function (error,result,fields) {
+            // console.log('objIdsString', objIdsString);
+            connection.query('SELECT * FROM objects WHERE object_id IN ('+objIdsString+') AND object_publish = 1 AND object_show = 1', function (error,result,fields) { // WHERE object_id IN('+objIdsString+')
               if (error) throw error;
               var objects = result;
+              console.log("objects",objects);
               for (var i = 0; i < objects.length; i++) {
                 var ofccount = 0;
+                objects[i].object_offices = [];
                 for (var j = 0; j < offices.length; j++) {
                   if (offices[j].office_object === objects[i].object_id) {
                     ofccount++;
                     var adres = objects[i].object_adres;
                     objects[i].offices_count = ofccount;
                     offices[j].office_adres = adres;
-                    console.log(offices[j].office_name);
+                    // console.log(offices[j].office_name);
+                    objects[i].object_offices.push(offices[j]);
                   }
                 }
+                objects[i].offices_count = ofccount;
+                // console.log("ofccount: ", ofccount);
               }
+              // console.log(objects);
               res.send({
                 objects: objects,
                 offices: offices,

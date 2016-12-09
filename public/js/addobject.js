@@ -84,7 +84,8 @@ $(document).ready(function() {
           object_create: now,
           object_publish: 0,
           object_show: 1,
-          object_type: $('input[name="objectType"]:checked').attr('data-title')
+          object_type: $('input[name="objectType"]:checked').attr('data-title'),
+          object_city: getCookie('city_id')
         }
         $('.step-inform-address').html("Адрес: <span>"+decodeURI(objectData.object_adres)+"</span>");
       }
@@ -218,9 +219,9 @@ $(document).ready(function() {
     e.preventDefault();
     //console.log($(this).attr('href'));
     objectData.Id = $(this).attr('href');
-    objectData.object_name = $(this).parent().parent().parent().find('.kab-item-header h4').text();
-    objectData.object_adres = $(this).parent().parent().parent().find('.kab-item-header p').text();
-    $('.step-inform-address').html("Адрес: <span>"+objectData.object_adres+"</span><span>"+objectData.object_name+"</span>");
+    objectData.object_name = encodeURI($(this).parent().parent().parent().find('.kab-item-header h4').text());
+    objectData.object_adres = encodeURI($(this).parent().parent().parent().find('.kab-item-header p').text());
+    $('.step-inform-address').html("Адрес: <span>"+decodeURI(objectData.object_adres)+"</span><span>"+decodeURI(objectData.object_name)+"</span>");
     $('.kab-create-step-three').fadeIn();
   });
 
@@ -288,5 +289,5 @@ $(document).ready(function() {
     });
   });
 
-  
+
 });

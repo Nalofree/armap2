@@ -75,6 +75,7 @@ $("#login-register .btn-submit").click(function (e) {
             $('.modal-form').hide();
             $('.modal-thanks').show();
             console.log(data);
+            location.reload();
           }else{
             $('.modal-form').hide();
             $('.modal-regerror h4').text('Такая почта уже используется');

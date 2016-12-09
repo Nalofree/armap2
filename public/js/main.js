@@ -121,10 +121,12 @@ if ($(window).width() <= '768') {
 $(".rooms-show").click(function () {
     if ($(this).hasClass("active")) {
         $(this).removeClass("active");
-        $(this).parent().next(".kab-item-table").animate({height: "hide"}, 400);
+        $(this).parent().next(".kab-item-table").animate({height: "hide"}, 200);
+        $(this).parent().parent().animate({'margin-bottom': "45px"}, 200);
     } else {
         $(this).addClass("active");
-        $(this).parent().next(".kab-item-table").animate({height: "show"}, 400);
+        $(this).parent().next(".kab-item-table").animate({height: "show"}, 200);
+        $(this).parent().parent().animate({'margin-bottom': "90px"}, 200);
     }
 });
 
@@ -286,10 +288,10 @@ tableMenu.hide();
 tableMenuBtn.click(function () {
     if ($(this).hasClass('active')) {
         $(this).removeClass('active');
-        $(this).next(tableMenu).animate({height: "hide", padding: "0 10px"}, 400);
+        $(this).next(tableMenu).animate({height: "hide", padding: "0 10px"}, 200);
     } else {
         $(this).addClass('active');
-        $(this).next(tableMenu).animate({height: "show", padding: "10px"}, 400);
+        $(this).next(tableMenu).animate({height: "show", padding: "10px"}, 200);
     }
 });
 
@@ -310,4 +312,7 @@ footerShowBtn.click(function () {
 
 $(document).ready(function () {
   $("#create-tel").mask("+7 (999) 999-9999");
+
+  
+
 });

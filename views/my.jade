@@ -57,8 +57,10 @@ block content
                   span или
                   select#choose-object(name="object[]") Выберите объект
                     option(selected='' value='') Выберите объект
-                    - for (var i = 0; i < objects.length; i++)
-                      option(value= objects[i].object_id, title= decodeURI(objects[i].object_adres))= decodeURI(objects[i].object_name)
+                    
+                    //- - for (var i = 0; i < objects.length; i++)
+                      //- option(value= objects[i].object_id, title= decodeURI(objects[i].object_adres))= decodeURI(objects[i].object_name)
+                      
                 .step-submit
                   a.first-step.step-btn(href='#') Продолжить
             // Шаг 2
@@ -202,71 +204,72 @@ block content
           // Объекты и помещения
           .kab-items
             - for (var i = 0; i < objects.length; i++)
-              article.kab-item
-                section.kab-item-info
-                  .kab-item-img
-                    - var cover = objects[i].object_cover ? objects[i].object_cover : "images/search/result-big.png";
-                    img(src= cover)
-                  .kab-item-desc
-                    section.kab-item-header
-                      h4.nowrap-text= objects[i].object_name
-                      - var adres = decodeURI(objects[i].object_adres).split(',');
-                      - adres.splice(0,2);
-                      p.nowrap-text= adres
-                    section.kab-item-change
-                      .kab-item-edit
-                        a(href='#', class='del-obj', data-title=objects[i].object_id) Удалить
-                        span |
-                        a(href='#', class='edit-obj', data-title=objects[i].object_id) Редактировать
-                      .kab-item-create
-                        a(href= ""+objects[i].object_id) + Добавить помещение
-                  //- .kab-item-last
-                  //-   p Последнее измененное:
-                  //-   a.last-object(href='#')
-                  //-     .last-object-img
-                  //-       img(src='images/search/result-img.png')
-                  //-     .last-object-desc
-                  //-       h4= decodeURI(offices[0].office_name) ? decodeURI(offices[0].office_name) : 'Error!'
-                  //-       p= decodeURI(objects[i].object_name) ? decodeURI(objects[i].object_name) : 'Error!'
-                  //-       section
-                  //-         .last-object-price
-                  //-           p
-                  //-             | Цена за м
-                  //-             sup 2
-                  //-             | : 
-                  //-             br
-                  //-             span= offices[0].office_subprice +' р.'
-                  //-         .last-object-square
-                  //-           p
-                  //-             | Площадь: 
-                  //-             br
-                  //-             span= offices[0].office_area +' м'
-                  //-               sup 2
-                  span.rooms-show
-                // Таблица помещений
-                section.kab-item-table
-                  table
-                    tbody
-                      tr
-                        //- td
-                        //- td Имя
-                        //- td Площадь
-                        //- td
-                        //- td Статус
-                        //- td
-                      - for (var j = 0; j < offices.length; j++)
-                        - if (offices[j].office_object == objects[i].object_id)
+              -if (objects[i].object_offices.length > 0)
+                article.kab-item
+                  section.kab-item-info
+                    .kab-item-img
+                      - var cover = objects[i].object_cover ? objects[i].object_cover : "images/search/result-big.png";
+                      img(src= cover)
+                    .kab-item-desc
+                      section.kab-item-header
+                        h4.nowrap-text= decodeURI(objects[i].object_name)
+                        - var adres = decodeURI(objects[i].object_adres).split(',');
+                        - adres.splice(0,2);
+                        p.nowrap-text= adres
+                      section.kab-item-change
+                        .kab-item-edit
+                          a(href='#', class='del-obj', data-title=objects[i].object_id) Удалить
+                          span |
+                          a(href='#', class='edit-obj', data-title=objects[i].object_id) Редактировать
+                        .kab-item-create
+                          a(href= ""+objects[i].object_id) + Добавить помещение
+                          
+                    .kab-item-last
+                      p Последнее измененное:
+                      a.last-object(href='/office-'+objects[i].object_offices[0].office_id)
+                        .last-object-img
+                          img(src='images/search/result-img.png')
+                        .last-object-desc
+                          h4= decodeURI(objects[i].object_offices[0].office_name) ? decodeURI(objects[i].object_offices[0].office_name) : 'Error!'
+                          p= decodeURI(objects[i].object_name) ? decodeURI(objects[i].object_name) : 'Error!'
+                          section
+                            .last-object-price
+                              p
+                                | Цена за м
+                                sup 2
+                                | : 
+                                br
+                                span= objects[i].object_offices[0].office_subprice +' р.'
+                            .last-object-square
+                              p
+                                | Площадь: 
+                                br
+                                span= objects[i].object_offices[0].office_area +' м'
+                                  sup 2
+                    span.rooms-show
+                  // Таблица помещений
+                  section.kab-item-table
+                    table
+                      tbody
+                        tr
+                          td
+                          td Имя
+                          td Статус
+                          td Площадь
+                          td Цена
+                          td
+                        - for (var j = 0; j < objects[i].object_offices.length; j++)
                           tr
-                            td.table-date= offices[j].office_create
+                            td.table-date= objects[i].object_offices[j].office_create
                             td.table-name
-                              a.nowrap-text(href='#')= decodeURI(offices[j].office_name)
-                              - if (offices[j].office_publish == 0)
+                              a.nowrap-text(href='#')= decodeURI(objects[i].object_offices[j].office_name)
+                              - if (objects[i].object_offices[j].office_publish == 0)
                                 span.status.wait Ожидает модерации
                               - else
                                 span.status.published Опубликовано
                             td.table-time Осталось 7 дней
-                            td.table-square= offices[j].office_area+'кв. м'
-                            td.table-price= offices[j].office_area*offices[j].office_subprice + ' руб.'
+                            td.table-square= objects[i].object_offices[j].office_area+'кв. м'
+                            td.table-price= objects[i].object_offices[j].office_area*objects[i].object_offices[j].office_subprice + ' руб.'
                             td.table-edit
                               a.table-edit-menu-show(href='javascript: void(0);') Редактировать
                               ul.table-edit-menu
@@ -275,26 +278,27 @@ block content
                                 li
                                   a(href='#') Снять с публикации
                                 li
-                                  a(href='#', class='del-ofc', data-title=offices[j].office_id) Удалить
-
-            //- // Пустой объект имеет класс empty
-            //- article.kab-item.empty
-            //-   section.kab-item-info
-            //-     .kab-item-img
-            //-       img(src='images/search/result-big.png')
-            //-     section
-            //-       .kab-item-desc
-            //-         section.kab-item-header
-            //-           h4.nowrap-text ТЦ “Рублёв”
-            //-           p.nowrap-text г. Иркутск, ул. Чехова 19
-            //-         section.kab-item-change
-            //-           .kab-item-edit
-            //-             a(href='#') Удалить
-            //-             span |
-            //-             a(href='#') Редактировать
-            //-       .kab-item-create
-            //-         p Помещений нет
-            //-         a(href='#') + Добавить помещение
+                                  a(href='#', class='del-ofc', data-title=objects[i].object_offices[j].office_id) Удалить
+              -else  
+                // Пустой объект имеет класс empty
+                article.kab-item.empty
+                  section.kab-item-info
+                    .kab-item-img
+                      - var cover = objects[i].object_cover ? objects[i].object_cover : "images/search/result-big.png";
+                      img(src= cover)
+                    section
+                      .kab-item-desc
+                        section.kab-item-header
+                          h4.nowrap-text= decodeURI(objects[i].object_name)
+                          - var adres = decodeURI(objects[i].object_adres).split(',');
+                          p.nowrap-text= adres
+                        section.kab-item-change
+                          .kab-item-edit
+                            a(href='#', class='del-obj', data-title=objects[i].object_id) Удалить
+                            span |
+                            a(href='#', class='edit-obj', data-title=objects[i].object_id) Редактировать
+                      .kab-item-create
+                        a(href= ""+objects[i].object_id) + Добавить помещение
         // Вкладка архив, здесь должны быть удаленные помещения и объекты
         article#kab-archive.fade
         // Вкладка подписки, здесь хз че;)
