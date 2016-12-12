@@ -107,7 +107,7 @@ if (cityId) {
               $("#isyourcity").show();
               $(".close-layout").show();
               $("#mycity").click(function () {
-                setCookie("city_id",data.citys[i].city_id, 365);
+                setCookie("city_id",data.citys[0].city_id, 365);
               });
               $("#notmycity").click(function () {
                 setNewCity();
