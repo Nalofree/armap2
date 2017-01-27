@@ -264,7 +264,8 @@ $(document).ready(function () {
         );
       });
     });
-    $(".citys-form__submit").click(function () {
+    $(".citys-form__submit").click(function (e) {
+      e.preventDefault();
       console.log(cityData);
       $.ajax({
         data: cityData,
