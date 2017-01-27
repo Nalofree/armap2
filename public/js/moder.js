@@ -20,7 +20,7 @@ ymaps.ready(function () {
           console.log(autoccords);
           $(this).hide();
           cityData = {
-            city_name: encodeURI(autoadres),
+            city_name: autoadres,
             city_coords: autoccords.join(","),
           };
           console.log(cityData);

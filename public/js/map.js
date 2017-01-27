@@ -82,7 +82,7 @@ $(document).ready(function () {
         function (res) {
           newCoords = res.geoObjects.get(0).geometry.getCoordinates();
           cityName = res.geoObjects.get(0).getLocalities();
-          cityNameStr = encodeURI(cityName[0]);
+          cityNameStr = cityName[0];
           console.log(cityName, newCoords);
           $.ajax({
             type: 'POST',
@@ -252,7 +252,7 @@ $(document).ready(function () {
               console.log(autoccords);
               $(this).hide();
               cityData = {
-                city_name: encodeURI(autocity),
+                city_name: autocity,
                 city_coords: autoccords.join(","),
               };
               console.log(cityData);

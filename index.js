@@ -232,7 +232,7 @@ app.post('/login',function (req,res) {
         console.log(user);
         connection.query('SELECT * FROM roles WHERE role_id = '+user.user_role, function (error,result,fields) {
           if (error) {throw error; res.send({status:'error'})};
-          req.session.userfullname = decodeURI(user.user_firstname) + ' ' + decodeURI(user.user_lastname);
+          req.session.userfullname = user.user_firstname + ' ' + user.user_lastname;
   				req.session.role = result[0].role_name;
           req.session.userid = user.user_id;
           req.cookies.role = result[0].role_name;

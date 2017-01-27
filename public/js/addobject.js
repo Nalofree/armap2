@@ -79,8 +79,8 @@ $(document).ready(function() {
         // $('.step-inform-adres').text('Адрес: '+autoaddres);
         var now = getTime();
         objectData = {
-          object_adres: encodeURI($('#objadres').val()),
-          object_coords: encodeURI($("#objcoords").val()),
+          object_adres: $('#objadres').val(),
+          object_coords: $("#objcoords").val(),
           object_create: now,
           object_publish: 0,
           object_show: 1,
@@ -222,8 +222,8 @@ $(document).ready(function() {
     e.preventDefault();
     //console.log($(this).attr('href'));
     objectData.Id = $(this).attr('href');
-    objectData.object_name = encodeURI($(this).parent().parent().parent().find('.kab-item-header h4').text());
-    objectData.object_adres = encodeURI($(this).parent().parent().parent().find('.kab-item-header p').text());
+    objectData.object_name = $(this).parent().parent().parent().find('.kab-item-header h4').text();
+    objectData.object_adres = $(this).parent().parent().parent().find('.kab-item-header p').text();
     $('.step-inform-address').html("Адрес: <span>"+objectData.object_adres+"</span><span>"+objectData.object_name+"</span>");
     $('.kab-create-step-three').fadeIn();
   });
