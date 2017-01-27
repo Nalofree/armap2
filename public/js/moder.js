@@ -44,43 +44,205 @@ $(document).ready(function () {
   $(".item-object-more").each(function () {
     var objPublish = $(this).attr('data-title');
     var solution = $(this).find('.item-object-info.change-solution');
-    var status = $(this).find('.object-info-block.object-status');
-    // console.log(objPublish);
+    var objstatus = $(this).find('.object-status');//object-info-block object-status object-published
+    // console.log(status.length);
     if (objPublish == 0) {
-      // $(this).find('.object-info-block').parent().show();
-      status.parent().hide();
-      // console.log();
+      objstatus.parent().hide();
     }else{
       solution.hide();
-      status.parent().show();
+      objstatus.parent().show();
       if(objPublish == 1) {
-        status.addClass('object-published');
-        status.removeClass('object-disabled');
+        objstatus.addClass('object-published');
+        objstatus.removeClass('object-disabled');
       }else{
-        status.addClass('object-disabled');
-        status.removeClass('object-published');
+        objstatus.addClass('object-disabled');
+        objstatus.removeClass('object-published');
       };
     };
     $(this).find('.object-status .change-btn').click(function () {
-      status.hide();
-      solution.show();
+      var objId = $(this).attr('data-title');
+      console.log(objId);
+      $(".close-layout").show();
+      $.ajax({
+        type: 'POST',
+        data: {object_id: objId},
+        url: '/changesolutionobject',
+        success: function (data, status, error) {
+          console.log(data, status, error);
+          objstatus.parent().hide();
+          solution.show();
+          $(".close-layout").hide();
+        },
+        error: function (data, status, error) {
+          console.log(data, status, error);
+          alert("Что-то пошло не так, попробуйте снова");
+          $(".close-layout").hide();
+        }
+      });
     });
     $(this).find('.object-info-block .success-btn').click(function () {
-      status.show();
-      status.addClass('object-published');
-      status.removeClass('object-disabled');
-      solution.hide();
-      // alert('confirm');
+      var objId = $(this).attr('data-title');
+      console.log(objId);
+      $(".close-layout").show();
+      $.ajax({
+        type: 'POST',
+        data: {object_id: objId},
+        url: '/confirmobject',
+        success: function (data, status, error) {
+          console.log(data, status, error);
+          objstatus.addClass('object-published');
+          objstatus.removeClass('object-disabled');
+          $(".object-info-name span").text("Подтвержден");
+          objstatus.parent().show();
+          solution.hide();
+          $(".close-layout").hide();
+        },
+        error: function (data, status, error) {
+          console.log(data, status, error);
+          alert("Что-то пошло не так, попробуйте снова");
+          $(".close-layout").hide();
+        }
+      });
     });
     //$(this).find('.object-status .disable-btn').click(function () {
       $("#modal-object .success-btn").click(function () {
-        // alert(123);
-        status.show();
-        status.addClass('object-disabled');
-        status.removeClass('object-published');
-        solution.hide();
+        var objId = $(this).attr('data-title');
+        console.log(objId);
+        $(".close-layout").show();
+        var comment = $(".modal-comment textarea").val();
+        console.log(comment);
+        $.ajax({
+          type: 'POST',
+          data: {object_id: objId},
+          url: '/unconfirmobject',
+          success: function (data, status, error) {
+            console.log(data, status, error);
+            objstatus.parent().show();
+            objstatus.addClass('object-disabled');
+            objstatus.removeClass('object-published');
+            $(".object-info-name span").text("Отклонён");
+            $(".object-info-name span").text();
+            solution.hide();
+            $(".close-layout").hide();
+          },
+          error: function (data, status, error) {
+            console.log(data, status, error);
+            alert("Что-то пошло не так, попробуйте снова");
+            $(".close-layout").hide();
+          }
+        });
         // $('#modal-object').hide();
       });
     //});
   });
+
+  $(".unconfirmoffice").click(function (e) {
+    e.preventDefault();
+    var ofcId = $(this).attr('data-title');
+    var btn = $(this);
+    $(".close-layout").show();
+
+    $.ajax({
+      type: 'POST',
+      data: {office_id: ofcId},
+      url: '/unconfirmoffice',
+      success: function (data, status, error) {
+        // console.log(data, status, error);
+        btn.parent().removeClass('published');
+        btn.parent().addClass('disabled');
+        btn.parent().parent().find('p.status').removeClass('published');
+        btn.parent().parent().find('p.status').addClass('disabled');
+        btn.parent().parent().find('p.status').text('Отклонено');
+        btn.closest(".item-room-more").animate({height: "hide"}, 800);
+        btn.closest(".item-room-more").prev('.item-desc').removeClass('open');
+        btn.closest(".item-room-more").prev('.item-desc').find(".show-room-info").removeClass('open');
+        btn.closest(".item-room-more").prev('.item-desc').find(".show-room-info").text('Просмотр');
+        btn.closest(".item-room-more").prev('.item-desc').find(".item-show-more").removeClass('published');
+        btn.closest(".item-room-more").prev('.item-desc').find(".item-show-more").addClass('disabled');
+        $(".close-layout").hide();
+      },
+      error: function (data, status, error) {
+        console.log(data, status, error);
+        alert("Что-то пошло не так, попробуйте снова");
+        $(".close-layout").hide();
+      }
+    });
+  });
+
+  $(".confirmoffice").click(function (e) {
+    e.preventDefault();
+    var ofcId = $(this).attr('data-title');
+    var btn = $(this);
+    $(".close-layout").show();
+
+    $.ajax({
+      type: 'POST',
+      data: {office_id: ofcId},
+      url: '/confirmoffice',
+      success: function (data, status, error) {
+        console.log(data, status, error);
+        btn.parent().removeClass('disabled');
+        btn.parent().addClass('published');
+        btn.parent().parent().find('p.status').removeClass('disabled');
+        btn.parent().parent().find('p.status').addClass('published');
+        btn.closest(".item-room-more").animate({height: "hide"}, 800);
+        btn.closest(".item-room-more").prev('.item-desc').removeClass('open');
+        btn.closest(".item-room-more").prev('.item-desc').find(".show-room-info").removeClass('open');
+        btn.closest(".item-room-more").prev('.item-desc').find(".show-room-info").text('Просмотр');
+        btn.closest(".item-room-more").prev('.item-desc').find(".item-show-more").removeClass('disabled');
+        btn.closest(".item-room-more").prev('.item-desc').find(".item-show-more").addClass('published');
+        $(".close-layout").hide();
+      },
+      error: function (data, status, error) {
+        console.log(data, status, error);
+        alert("Что-то пошло не так, попробуйте снова");
+        $(".close-layout").hide();
+      }
+    });
+  });
+
+  $(".banuser").click(function (e) {
+    e.preventDefault();
+    var thisbutton = $(this);
+    var data = {
+      user_id: $(this).attr('data-title')
+    }
+    $.ajax({
+      url: '/userban',
+      type: 'POST',
+      data: data,
+      success: function (data, status, error) {
+        if (data.err) {
+          alert(data.err);
+        }else{
+          thisbutton.text(data.result);
+        }
+      },
+      error: function (data, status, error) {
+        console.log(data, status, error);
+      }
+    });
+  });
+
+  $(".confirmuser").click(function (e) {
+    e.preventDefault();
+    var thisbutton = $(this);
+    var data = {
+      user_id: $(this).attr('data-title')
+    }
+    $.ajax({
+      url: '/confirmuser',
+      type: 'POST',
+      data: data,
+      success: function (data, status, error) {
+        console.log(data, status, error);
+        thisbutton.text(data.result);
+        console.log(data.result);
+      },
+      error: function (data, status, error) {
+        console.log(data, status, error);
+      }
+    });
+  });
+
 });

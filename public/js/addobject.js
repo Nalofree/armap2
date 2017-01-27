@@ -84,9 +84,10 @@ $(document).ready(function() {
           object_create: now,
           object_publish: 0,
           object_show: 1,
-          object_type: $('input[name="objectType"]:checked').attr('data-title'),
+          // object_type: $('input[name="objectType"]:checked').attr('data-title'),
           object_city: getCookie('city_id')
         }
+        // console.log(objectData.object_type);
         $('.step-inform-address').html("Адрес: <span>"+decodeURI(objectData.object_adres)+"</span>");
       }
     }else{
@@ -101,6 +102,8 @@ $(document).ready(function() {
       $('.kab-create-step-three').show();
       objectData.object_name = $('#objname').val();
       //console.log(objectData);
+      objectData.object_type = $('input[name="objectType"]:checked').attr('data-title');
+        console.log(objectData.object_type);
       $(".close-layout").show();
       $.ajax({
         type: 'POST',

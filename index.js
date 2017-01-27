@@ -227,7 +227,7 @@ app.post('/login',function (req,res) {
       var hash = crypto.createHmac('sha256', pass)
                          .update('I love cupcakes')
                          .digest('hex');
-      if (result[0].user_pass === hash && result[0].user_confirm === 1) {
+      if (result[0].user_pass === hash && result[0].user_confirm === 1 && result[0].user_ban === 0) {
         var user = result[0];
         console.log(user);
         connection.query('SELECT * FROM roles WHERE role_id = '+user.user_role, function (error,result,fields) {
@@ -255,6 +255,121 @@ app.post('/login',function (req,res) {
 app.get('/logout',function (req,res) {
   req.session = null;
   res.redirect('/');
+});
+
+app.post('/confirmobject', function (req,res) {
+  connection.query('UPDATE objects SET object_publish = 1 WHERE object_id = '+req.body.object_id,
+  function (error, result, fields) {
+    if (error) throw error;
+    res.send({success: 1});
+  });
+});
+
+app.post('/unconfirmobject', function (req,res) {
+  connection.query('UPDATE objects SET object_publish = 2 WHERE object_id = '+req.body.object_id,
+  function (error, result, fields) {
+    if (error) throw error;
+    res.send({success: 1});
+  });
+});
+
+app.post('/changesolutionobject', function (req,res) {
+  connection.query('UPDATE objects SET object_publish = 0 WHERE object_id = '+req.body.object_id,
+  function (error, result, fields) {
+    if (error) throw error;
+    res.send({success: 1});
+  });
+});
+
+app.post('/objecttoarchive', function (req,res) {
+  connection.query('UPDATE objects SET object_show = 0 WHERE object_id = '+req.body.object_id,
+  function (error, result, fields) {
+    if (error) throw error;
+    res.send({success: 1});
+  });
+});
+
+app.post('/confirmoffice', function (req,res) {
+  connection.query('UPDATE offices SET office_publish = 1 WHERE office_id = '+req.body.office_id,
+  function (error, result, fields) {
+    if (error) throw error;
+    res.send({success: 1});
+  });
+});
+
+app.post('/unconfirmoffice', function (req,res) {
+  connection.query('UPDATE offices SET office_publish = 2 WHERE office_id = '+req.body.office_id,
+  function (error, result, fields) {
+    if (error) throw error;
+    res.send({success: 1});
+  });
+});
+
+app.post('/officetoarchive', function (req,res) {
+  connection.query('UPDATE offices SET office_show = 0 WHERE office_id = '+req.body.office_id,
+  function (error, result, fields) {
+    if (error) throw error;
+    res.send({success: 1});
+  });
+});
+
+app.post('/userban',auth, function (req,res) {
+  if (req.session.role) {
+    if (req.session.role == 'admin') {
+      connection.query('SELECT user_ban, role_name FROM users LEFT JOIN roles ON role_id = user_role WHERE user_id = '+req.body.user_id, function (error, result, fields) {
+        if (result[0].role_name == 'admin') {
+          res.send({err: 'Ошибка доступа. Обратитесь к администратору системы.'})
+        }else{
+          if (result[0].user_ban == 1) {
+            connection.query('UPDATE users SET user_ban = 0 WHERE user_id = '+req.body.user_id,
+            function (error, result, fields) {
+              if (error) throw error;
+              res.send({success: 1, result: 'Заблокировать'});
+            });
+          }else{
+            connection.query('UPDATE users SET user_ban = 1 WHERE user_id = '+req.body.user_id,
+            function (error, result, fields) {
+              if (error) throw error;
+              res.send({success: 1, result: 'Заблокирован'});
+            });
+          }
+        }
+      });
+    }else if(req.session.role == 'moder'){
+      connection.query('SELECT user_ban, role_name FROM users LEFT JOIN roles ON role_id = user_role WHERE user_id = '+req.body.user_id, function (error, result, fields) {
+        console.log(result[0]);
+        if (result[0].role_name == 'admin' || result[0].role_name == 'moder' ) {
+          res.send({err: 'Ошибка доступа. Обратитесь к администратору системы.'})
+        }else{
+          if (result[0].user_ban == 1) {
+            connection.query('UPDATE users SET user_ban = 0 WHERE user_id = '+req.body.user_id,
+            function (error, result, fields) {
+              if (error) throw error;
+              res.send({success: 1, result: 'Заблокировать'});
+            });
+          }else{
+            connection.query('UPDATE users SET user_ban = 1 WHERE user_id = '+req.body.user_id,
+            function (error, result, fields) {
+              if (error) throw error;
+              res.send({success: 1, result: 'Заблокирован'});
+            });
+          }
+        }
+      });
+    }else{
+      res.redirect('/');
+    }
+  }else{
+    res.redirect('/');
+  }
+});
+
+app.post('/confirmuser', function (req,res) {
+  connection.query('UPDATE users SET user_confirm = 1 WHERE user_id = '+req.body.user_id,
+  function (error, result, fields) {
+    if (error) throw error;
+    res.send({success: 1, result: 'Подтверждён'});
+  });
 });
 
 // ofcParams = {
@@ -389,6 +504,7 @@ app.post('/my', function (req,res) {
     if (result.length > 0) {
       for (var i = 0; i < result.length; i++) {
         objByCityArr.push(result[i].object_id);
+        result[i].object_offices = [];
       }
       objByCity = objByCityArr.join(',');
     }
@@ -408,7 +524,6 @@ app.post('/my', function (req,res) {
         offices[i].office_create = day+'.'+month+'.'+year+' '+time;
       }
       for (var i = 0; i < objects.length; i++) {
-        objects[i].object_offices = [];
         for (var j = 0; j < offices.length; j++) {
           if (objects[i].object_id === offices[j].office_object) {
             objects[i].object_offices.push(offices[j]);
@@ -424,21 +539,21 @@ app.post('/my', function (req,res) {
 });
 
 app.get('/object-:object_id', auth, function (req,res) {
-  connection.query('SELECT * FROM objects WHERE object_id = '+req.params.object_id+'', function (error,result,fields) {
+  connection.query('SELECT * FROM objects LEFT JOIN offices ON office_object = object_id LEFT JOIN images ON office_cover = image_id WHERE object_id = '+req.params.object_id+' AND office_show = 1 AND office_object = '+object.object_id, function (error,result,fields) {
     if (error) throw error;
     object = result[0];
-    connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_object = '+object.object_id, function (error,result,fields) {
-      if (error) throw error;
-      // console.log(result);
-      object.object_offices = result;
-      console.log("role",res.role);
+    // connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_show = 1 AND office_object = '+object.object_id, function (error,result,fields) {
+    //   if (error) throw error;
+    //   // console.log(result);
+    //   object.object_offices = result;
+    //   console.log("role",res.role);
       res.render('object.jade',{
         role: res.role,
         username: res.userfullname,
         userid: res.userid,
         object: object
       });
-    });
+    // });
   });
 });
 
@@ -600,6 +715,7 @@ app.get('/moder', auth,function (req,res) {
       var objects = result;
       var objTypeIdsArr = [];
       var objTypeIdsStr;
+      var objAdresArr = [];
       for (var i = 0; i < objects.length; i++) {
         var date = objects[i].object_create,
             day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate(),
@@ -609,7 +725,12 @@ app.get('/moder', auth,function (req,res) {
             minutes = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes(),
             time = hours+':'+minutes;
         objects[i].object_create = day+'.'+month+'.'+year+' '+time;
+        // objects[i].object_adres = objects[i].object_adres
+        objAdresArr = objects[i].object_adres.split(",");
+        objAdresArr.splice(0,1);
+        objects[i].object_adres = objAdresArr.join(',');
         objects[i].object_offices = [];
+        objects[i].object_nopublishofccount = 0;
         objects[i].object_typename = "";
         objTypeIdsArr.push(objects[i].object_id);
       }
@@ -617,49 +738,85 @@ app.get('/moder', auth,function (req,res) {
       connection.query('SELECT objtype_id, objtype_name FROM objtypes', function (error, result, fields) {
         if (error) throw error;
         var objtypes = result;
-        console.log(objtypes);
+        // console.log(objtypes);
         for (var i = 0; i < objects.length; i++) {
           for (var j = 0; j < objtypes.length; j++) {
             if (objtypes[j].objtype_id === objects[i].object_type) {
               objects[i].object_typename = objtypes[j].objtype_name;
+              // console.log(decodeURI(objects[i].object_typename));
+              // console.log("obj_type", objects[i].object_type);
             }
           }
         }
-        connection.query('SELECT office_name, office_phone, office_subprice, office_area, office_height, office_create, office_object, image_filename FROM offices LEFT JOIN images ON image_id = office_cover', function (error, result, fields) {
+        connection.query('SELECT office_name, office_id, office_phone, office_subprice, office_show, office_area, office_height, office_create, office_cover, office_object, image_filename, office_publish, office_author FROM offices LEFT JOIN images ON image_id = office_cover', function (error, result, fields) {
           if (error) throw error;
-          var offices = result;
-          for (var i = 0; i < offices.length; i++) {
-            var date = offices[i].office_create,
+
+          officesIdsArr = [];
+          for (var i = 0; i < result.length; i++) {
+            var date = result[i].office_create,
                 day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate(),
                 month = date.getMonth() < 10 ? '0'+date.getMonth() : date.getMonth(),
                 year = date.getFullYear(),
                 hours = date.getHours() < 10 ? '0'+date.getHours() : date.getHours(),
                 minutes = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes(),
                 time = hours+':'+minutes;
-            offices[i].office_create = day+'.'+month+'.'+year+' '+time;
+            result[i].office_create = day+'.'+month+'.'+year+' '+time;
+            officesIdsArr.push(result[i].office_id);
           }
-          connection.query('SELECT image_id, image_filename FROM images WHERE image_office IS NOT NULL', function (error, result, fields) {
+          var archoffices = [];
+          var offices = [];
+          for (var i = 0; i < result.length; i++) {
+            // result[i]
+            if (result[i].office_show == 1) {
+              offices.push(result[i]);
+            }else{
+              archoffices.push(result[i]);
+            }
+          }
+          officesIdsStr = officesIdsArr.join(",");
+          connection.query('SELECT image_id, image_filename, image_office FROM images WHERE image_office IN ('+officesIdsStr+')', function (error, result, fields) {
             if (error) throw error;
             var images = result;
+            console.log(result);
             for (var i = 0; i < offices.length; i++) {
-              offices[i].office_image = [];
+              offices[i].office_image = "";
+              offices[i].office_images = [];
               for (var j = 0; j < images.length; j++) {
-                if (offices[i].office_id === images[j].image_office) {
+                if (offices[i].office_id == images[j].image_office) {
                   offices[i].office_image = images[j].image_filename;
+                  offices[i].office_images.push(images[j]);
                 }
               }
+              console.log(offices[i].office_image);
             }
+            var nopublishofccount = 0;
             for (var i = 0; i < objects.length; i++) {
+              // objects[i].object_nopublishofccount = 0;
               for (var j = 0; j < offices.length; j++) {
                 if (offices[j].office_object === objects[i].object_id) {
                   objects[i].object_offices.push(offices[j]);
                   // console.log(objects[i].object_offices);
+                  // console.log(offices[j].office_publish);
+                  if (offices[j].office_publish === 0) {
+                    objects[i].object_nopublishofccount++;
+                    nopublishofccount++;
+                  }
                 }
               }
             }
-            connection.query("SELECT user_id, user_email, user_role, user_firstname, user_lastname, user_ban, user_mobile, user_confirm FROM users", function (error, result, fields) {
+
+            for (var i = 0; i < archoffices.length; i++) {
+              archoffices[i].office_image = [];
+              for (var j = 0; j < images.length; j++) {
+                if (archoffices[i].office_id === images[j].image_office) {
+                  archoffices[i].office_image = images[j].image_filename;
+                }
+              }
+            }
+            connection.query("SELECT user_id, user_email, user_role, user_firstname, user_lastname, user_ban, user_mobile, user_confirm, role_name FROM users LEFT JOIN roles ON user_role = role_id", function (error, result, fields) {
               if (error) throw error;
               var users = result;
+              console.log(users);
               for (var i = 0; i < objects.length; i++) {
                 //objects[i].object_author = [];
                 for (var j = 0; j < users.length; j++) {
@@ -676,9 +833,19 @@ app.get('/moder', auth,function (req,res) {
                   }
                 }
               }
+              for (var k = 0; k < archoffices.length; k++) {
+                //offices[i].office_author = [];
+                for (var j = 0; j < users.length; j++) {
+                  if (archoffices[k].office_author === users[j].user_id) {
+                    archoffices[k].office_author = users[j];
+                  }
+                }
+              }
 
-              console.log(objects);
+              // console.log(objects);
+              // console.log(objects);
               res.render('moder.jade',{
+                nopublishofccount: nopublishofccount,
                 role: res.role,
                 username: res.userfullname,
                 userid: res.userid,
@@ -686,7 +853,8 @@ app.get('/moder', auth,function (req,res) {
                 objtypes: objtypes,
                 offices: offices,
                 images: images,
-                users: users
+                users: users,
+                archoffices: archoffices
               });
             });
           });
@@ -743,22 +911,9 @@ app.post('/delobj',function (req,res) {
 });
 
 app.post('/delofc',function (req,res) {
-  // res.send(req.body);
-  connection.query('DELETE FROM offices\
-  WHERE office_id = '+req.body.office_id,
-  function (error,result,fields) {
+  connection.query("UPDATE offices SET office_show = 0", function (error,result,fields) {
     if (error) throw error;
-    connection.query('DELETE FROM images\
-    WHERE image_office = '+req.body.office_id,
-    function (error,result,fields) {
-      if (error) throw error;
-      connection.query('DELETE FROM options_offices\
-      WHERE link_office = '+req.body.office_id,
-      function (error,result,fields) {
-        if (error) throw error;
-        res.send(req.result);
-      });
-    });
+    res.send(req.result);
   });
 });
 
@@ -829,7 +984,7 @@ app.post('/setobject',auth,function (req,res) {
   // console.log('INSERT INTO objects (object_name,object_create,object_author,object_coords,object_adres,object_publish,object_show,object_type)\
   // VALUES ("'+req.body.object_name+'","'+req.body.object_create+'",'+res.userid+',"'+req.body.object_coords+'","'+req.body.object_adres+'",'+req.body.object_publish+','+req.body.object_show+','+req.body.object_type+')');
   connection.query('INSERT INTO objects (object_name,object_create,object_author,object_coords,object_adres,object_publish,object_show,object_type, object_city)\
-  VALUES ("'+encodeURI(req.body.object_name)+'","'+req.body.object_create+'",'+res.userid+',"'+req.body.object_coords+'","'+req.body.object_adres+'",'+req.body.object_publish+','+req.body.object_show+','+req.body.object_type+','+req.body.object_city+')',
+  VALUES ("'+encodeURI(req.body.object_name)+'","'+req.body.object_create+'",'+res.userid+',"'+req.body.object_coords+'","'+req.body.object_adres+'",0,1,'+req.body.object_type+','+req.body.object_city+')',
   function (error,result,fields) {
     if (error) throw error;
     res.send(result);
@@ -905,7 +1060,7 @@ app.post('/filtred',function (req,res) {
             });
             officesIdString = officesIdArr.join(',');
             connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover WHERE (office_id IN ('+officesIdString+')) AND (office_area BETWEEN '+req.body.area[0]+' AND '+req.body.area[1]+')\
-            AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+')', function (error,result,fields) { // AND (office_object IN ('+objByCity+'))
+            AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+') AND office_publish = 1', function (error,result,fields) { // AND (office_object IN ('+objByCity+'))
               if (error) throw error;
               if (result.length<=0) {
                 res.send({
@@ -946,7 +1101,7 @@ app.post('/filtred',function (req,res) {
         });
       }else{
         connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover  WHERE (office_area BETWEEN '+req.body.area[0]+' AND '+req.body.area[1]+')\
-        AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+')', function (error,result,fields) { // AND (office_object IN ('+objByCity+'))
+        AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+') AND office_publish = 1', function (error,result,fields) { // AND (office_object IN ('+objByCity+'))
           if (error) throw error;
           console.log(result.length);
           if (result.length<=0) {

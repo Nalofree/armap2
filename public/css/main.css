@@ -7837,7 +7837,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   position: relative;
   width: 1080px;
   margin: 0 auto;
-  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 3px 10px 1px rgba(0, 0, 0, 0.1);
   z-index: 5;
   border-radius: 0 0 5px 5px;
 }
@@ -8120,6 +8120,11 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 
 .item-object-rooms-list .item-room-more .item-room-block-three .item-three-images .image {
   margin-top: 20px;
+  width: 240px;
+}
+
+.item-object-rooms-list .item-room-more .item-room-block-three .item-three-images .image img {
+  width: 100%;
 }
 
 .item-object-rooms-list .item-room-more .item-room-block-three .photos-settings {
@@ -9156,4 +9161,8 @@ h1 a:hover, h1 a:focus {
     border: 1px solid #dddddd;
     font-size: 13px;
     width: 181px;
+}
+
+.confirmuser, .banuser {
+  cursor: pointer;
 }
