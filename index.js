@@ -205,7 +205,7 @@ app.post('/register',function (req,res) {
       res.send({status: 'error', err: 'email already exist'});
     }else{
       connection.query('INSERT INTO users (user_email,user_pass,user_role,user_firstname,user_lastname,user_ban,user_confirm) \
-      VALUES ("'+user.email+'","'+hash+'",1,"'+encodeURI(user.firstname)+'","'+encodeURI(user.lastname)+'",0,0)',
+      VALUES ("'+user.email+'","'+hash+'",1,"'+user.firstname+'","'+user.lastname+'",0,0)',
       function(error, result, fields) {
         if (error) throw error;
         res.send({status:'success'});
@@ -984,7 +984,7 @@ app.post('/setobject',auth,function (req,res) {
   // console.log('INSERT INTO objects (object_name,object_create,object_author,object_coords,object_adres,object_publish,object_show,object_type)\
   // VALUES ("'+req.body.object_name+'","'+req.body.object_create+'",'+res.userid+',"'+req.body.object_coords+'","'+req.body.object_adres+'",'+req.body.object_publish+','+req.body.object_show+','+req.body.object_type+')');
   connection.query('INSERT INTO objects (object_name,object_create,object_author,object_coords,object_adres,object_publish,object_show,object_type, object_city)\
-  VALUES ("'+encodeURI(req.body.object_name)+'","'+req.body.object_create+'",'+res.userid+',"'+req.body.object_coords+'","'+req.body.object_adres+'",0,1,'+req.body.object_type+','+req.body.object_city+')',
+  VALUES ("'+req.body.object_name+'","'+req.body.object_create+'",'+res.userid+',"'+req.body.object_coords+'","'+req.body.object_adres+'",0,1,'+req.body.object_type+','+req.body.object_city+')',
   function (error,result,fields) {
     if (error) throw error;
     res.send(result);
@@ -999,7 +999,7 @@ app.post('/addoffice', auth, function(req,res) {
     var images = req.body.images.join(',');
     console.log(req.body);
     connection.query('INSERT INTO offices (office_name, office_create, office_author, office_area, office_height, office_subprice, office_tacked, office_cover, office_publish, office_object, office_show, office_phone)\
-    VALUES ("'+encodeURI(req.body.header)+'", "'+req.body.create+'", "'+res.userid+'", "'+req.body.sqare+'", "'+req.body.height+'", "'+req.body.price+'", 0, '+cover+', 0, "'+req.body.object+'", 1, "'+req.body.phone+'")',
+    VALUES ("'+req.body.header+'", "'+req.body.create+'", "'+res.userid+'", "'+req.body.sqare+'", "'+req.body.height+'", "'+req.body.price+'", 0, '+cover+', 0, "'+req.body.object+'", 1, "'+req.body.phone+'")',
       function (error,result,fields) {
         if (error) throw error;
         var options = req.body.meanings.join(',') + ',' + req.body.included.join(',') + ',' + req.body.advanced.join(',') + ',' + req.body.providers.join(',');

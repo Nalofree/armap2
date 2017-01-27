@@ -29,9 +29,9 @@ block content
                 section
                   .item-desc
                     h3.nowrap-text
-                      a(href='/object-'+objects[i].object_id)= decodeURI(objects[i].object_name) ? decodeURI(objects[i].object_name) : 'Error!'
+                      a(href='/object-'+objects[i].object_id)= objects[i].object_name
                     p
-                      - adres = decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!'
+                      - adres = objects[i].object_adres
                       span= adres
                   .item-rooms
                     -for (var j = 0; j < objects[i].object_offices.length; j++)
@@ -40,8 +40,8 @@ block content
                           .item-object-img
                             img(src='images/obj/'+objects[i].object_offices[j].image_filename)
                           .item-object-desc
-                            - var name = decodeURI(objects[i].object_offices[j].office_name) ? decodeURI(objects[i].object_offices[j].office_name) : 'Error!';
-                            - var adres = decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!'
+                            - var name = objects[i].object_offices[j].office_name
+                            - var adres = objects[i].object_adres
                               h4= name
                               p= addres
                               section

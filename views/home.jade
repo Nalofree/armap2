@@ -27,7 +27,7 @@ block content
               .checkbox
                 label
                   input(type='checkbox', data-title= meanings[i].option_id)
-                  - option_name = decodeURI(meanings[i].option_name) ? decodeURI(meanings[i].option_name) : 'error';
+                  - option_name = meanings[i].option_name
                   span= option_name
             //- .checkbox
             //-   label

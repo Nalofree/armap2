@@ -12,7 +12,7 @@ block content
           a.active(href='#') Офис №233, 25м2
         section#obj-header
           section
-            - var name = decodeURI(office.office_name) ? decodeURI(office.office_name) : 'Error!'
+            - var name = office.office_name
             h2= name
             p ТЦ “Рублёв” ул. Чехова д. 19
           section.bookmark-trigger(data-title= office.office_id) Добавить в закладки
@@ -67,21 +67,21 @@ block content
             h3 В арендную плану входит:
             ul
               - for (var i = 0; i < included.length; i++)
-                - var option = decodeURI(included[i].option_name) ? decodeURI(included[i].option_name) : 'Error!';
+                - var option = included[i].option_name
                 li= option
           div
             h3 Доступные провайдеры:
             ul.providers
               div
                 - for (var i = 0; i < providers.length; i++)
-                  - var option = decodeURI(providers[i].option_name) ? decodeURI(providers[i].option_name) : 'Error!';
+                  - var option = providers[i].option_name
                   li= '- '+option
         section.obj-service
           div
             h3 Дополнительные услуги:
             ul
               - for (var i = 0; i < advanced.length; i++)
-                - var option = decodeURI(advanced[i].option_name) ? decodeURI(advanced[i].option_name) : 'Error!';
+                - var option = advanced[i].option_name
                 li= option
         section
           p

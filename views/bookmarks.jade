@@ -30,7 +30,7 @@ block content
                     img(src='images/obj/'+offices[i].image_filename)
                 .bm-item-desc
                   h3
-                    - var name = decodeURI(offices[i].office_name) ? decodeURI(offices[i].office_name) : 'Error!'
+                    - var name = offices[i].office_name
                       a(href='office-'+offices[i].office_id)= name
                   section
                     .bm-item-price

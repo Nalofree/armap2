@@ -87,7 +87,7 @@ block content
                   //-     - moderwait++
                     //- moderwait = objects[i].object_offices.office_publish === 0 ? moderwait+1 : moderwait
                   h3
-                    a.nowrap-text(href='#')= decodeURI(objects[i].object_name) ? decodeURI(objects[i].object_name) : 'Error!'
+                    a.nowrap-text(href='#')= objects[i].object_name
                     - if (objects[i].object_nopublishofccount > 0)
                       span.warning.active= objects[i].object_nopublishofccount
                   p.status.new= (objects[i].object_publish === 0) ? "Новый объект" : " "
@@ -96,9 +96,9 @@ block content
                       - var objimg = objects[i].object_cover != null ? 'images/obj/'+objects[i].object_cover : "images/kabinet/moderation/mod-big.png"
                       img(src=objimg)
                     .description
-                      p.nowrap-text= decodeURI(objects[i].object_name) ? decodeURI(objects[i].object_name) : 'Error!'
-                      p= decodeURI(objects[i].object_typename) ? decodeURI(objects[i].object_typename) : 'Error!'
-                      p= decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!'
+                      p.nowrap-text= objects[i].object_name
+                      p= objects[i].object_typename
+                      p= objects[i].object_adres
                 .item-quantity
                   p= objects[i].object_offices.length + " помещения"
                 .item-more-show
@@ -119,32 +119,32 @@ block content
                     .object-info-name
                       .input-group
                         label(for='object-name') Имя объекта:
-                        input.object-name(type='text', value= decodeURI(objects[i].object_name) ? decodeURI(objects[i].object_name) : 'Error!')
+                        input.object-name(type='text', value= objects[i].object_name
                       .input-group
                         label(for='object-type') Тип объекта:
                         //- input#object-type(type='text')
                         select.object-type
                           - for (var j = 0; j < objtypes.length; j++)
                             - if (objtypes[j].objtype_id ===  objects[i].object_type)
-                              option(selected='selected', value=objtypes[j].objtype_id)= decodeURI(objtypes[j].objtype_name) ? decodeURI(objtypes[j].objtype_name) : 'Error!'
+                              option(selected='selected', value=objtypes[j].objtype_id)= objtypes[j].objtype_name
                             - else
-                              option(selected='', value=objtypes[j].objtype_id)= decodeURI(objtypes[j].objtype_name) ? decodeURI(objtypes[j].objtype_name) : 'Error!'
+                              option(selected='', value=objtypes[j].objtype_id)= objtypes[j].objtype_name
                       .input-group
                         label(for='object-address') Адрес:
-                        input.object-address(type='text', value= decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!', title= decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!')
+                        input.object-address(type='text', value= objects[i].object_adres, title= objects[i].object_adres)
                         .moder-object-address__tooltip
                       a(href='#') Показать на карте
                     .object-info-submit
                       p.user
                         | Добавил пользователь:
-                        - var userFullname = decodeURI(objects[i].object_author.user_firstname + ' ' + objects[i].object_author.user_lastname);
+                        - var userFullname = objects[i].object_author.user_firstname + ' ' + objects[i].object_author.user_lastname;
                         a(href='#')= userFullname
                         // what href??
                       p Такой объект уже существует?
                       select
                         option(selected='') Выберите объект
                         - for (var k = 0; k < objects.length; k++)
-                          option(selected='', value=objects[k].object_id)= decodeURI(objects[k].object_name) ? decodeURI(objects[k].object_name) : 'Error!'
+                          option(selected='', value=objects[k].object_id)= objects[k].object_name
                       .submit-btn
                         button.disable-btn.moder-object_unconfirm(type='button', data-toggle='modal', data-target='#modal-object', data-title=currenObj) Отклонить
                         //objects[i].object_id
@@ -170,10 +170,10 @@ block content
                     .object-info-img
                       img(src=objimg)
                     .object-info-name
-                      h3= decodeURI(objects[i].object_name) ? decodeURI(objects[i].object_name) : 'Error!'
+                      h3= objects[i].object_name
                       span= objects[i].object_publish===1 ? "Подтвержден" : "Отклонен"
-                      p= "Тип объекта: " + decodeURI(objects[i].object_typename) ? decodeURI(objects[i].object_typename) : 'Error!'
-                      p= "Адрес: " + decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!'
+                      p= "Тип объекта: " + objects[i].object_typename
+                      p= "Адрес: " + objects[i].object_adres
                       //- a(href='#') Комментарий модератора
                     .object-info-submit
                       // Открыть подробную информацию о помещениях
@@ -192,7 +192,7 @@ block content
                           //- p в 21:03
                         .item-name
                           h3
-                            a.nowrap-text(href='#')= decodeURI(objects[i].object_offices[m].office_name)
+                            a.nowrap-text(href='#')= objects[i].object_offices[m].office_name
                           - if(objects[i].object_offices[m].office_publish > 0)
                             - if(objects[i].object_offices[m].office_publish > 1)
                               p.status.disabled Отклонено
@@ -202,7 +202,7 @@ block content
                             p.status.wait Ожидает модерации
                         .item-user
                           p Пользователь
-                          a(href='/user-'+objects[i].object_offices[m].office_author.user_id)= decodeURI(objects[i].object_offices[m].office_author.user_firstname) + ' ' + decodeURI(objects[i].object_offices[m].office_author.user_lastname)
+                          a(href='/user-'+objects[i].object_offices[m].office_author.user_id)= objects[i].object_offices[m].office_author.user_firstname + ' ' + objects[i].object_offices[m].office_author.user_lastname
                         //
                           Кнопки в таблице помещений
                           при классе wait помещение Ожидает модерации
@@ -225,37 +225,37 @@ block content
                           .item-room-inputs
                             .input-group
                               label(for='room-name') Название помещения:
-                              input#room-name(type='text', value=decodeURI(objects[i].object_offices[m].office_name))
+                              input#room-name(type='text', value=objects[i].object_offices[m].office_name)
                               //- span
                               //-   a.error(href='#') Х
                               //-   a.edit(href='#') Редактировать
                             .input-group
                               label(for='room-address') Адрес/объект:
-                              input#room-address(type='text',  value=decodeURI(objects[i].object_adres))
+                              input#room-address(type='text',  value=objects[i].object_adres)
                               //- span
                               //-   a.error(href='#') Х
                               //-   a.edit(href='#') Редактировать
                             .input-group
                               label(for='room-tel') Телефон собственника:
-                              input#room-tel(type='text', value=decodeURI(objects[i].object_offices[m].office_phone))
+                              input#room-tel(type='text', value=objects[i].object_offices[m].office_phone)
                               //- span
                               //-   a.error(href='#') Х
                               //-   a.edit(href='#') Редактировать
                             .input-group
                               label(for='room-price') Цена за м2:
-                              input#room-price(type='text', value=decodeURI(objects[i].object_offices[m].office_subprice))
+                              input#room-price(type='text', value=objects[i].object_offices[m].office_subprice)
                               //- span
                               //-   a.error(href='#') Х
                               //-   a.edit(href='#') Редактировать
                             .input-group
                               label(for='room-square') Площадь:
-                              input#room-square(type='text', value=decodeURI(objects[i].object_offices[m].office_area))
+                              input#room-square(type='text', value=objects[i].object_offices[m].office_area)
                               //- span
                               //-   a.error(href='#') Х
                               //-   a.edit(href='#') Редактировать
                             .input-group
                               label(for='room-height') Высота потолков:
-                              input#room-height(type='text', value=decodeURI(objects[i].object_offices[m].office_height))
+                              input#room-height(type='text', value=objects[i].object_offices[m].office_height)
                               //- span
                               //-   a.error(href='#') Х
                               //-   a.edit(href='#') Редактировать
@@ -623,7 +623,7 @@ block content
                     //- p в 21:03
                   .item-name
                     h3
-                      a.nowrap-text(href='#')= decodeURI(archoffices[m].office_name)
+                      a.nowrap-text(href='#')= archoffices[m].office_name
                     - if(archoffices[m].office_publish > 0)
                       - if(archoffices[m].office_publish > 1)
                         p.status.disabled Отклонено
@@ -633,7 +633,7 @@ block content
                       p.status.wait Ожидает модерации
                   .item-user
                     p Пользователь
-                    a(href='/user-'+archoffices[m].office_author.user_id)= decodeURI(archoffices[m].office_author.user_firstname) + ' ' + decodeURI(archoffices[m].office_author.user_lastname)
+                    a(href='/user-'+archoffices[m].office_author.user_id)= archoffices[m].office_author.user_firstname + ' ' + archoffices[m].office_author.user_lastname
                   //
                     Кнопки в таблице помещений
                     при классе wait помещение Ожидает модерации
@@ -669,8 +669,8 @@ block content
                   td= users[i].user_id
                   td= users[i].user_email
                   td= users[i].role_name
-                  td= decodeURI(users[i].user_firstname)
-                  td= decodeURI(users[i].user_lastname)
+                  td= users[i].user_firstname
+                  td= users[i].user_lastname
                   td= users[i].user_mobile
                   td
                     div.btn.banuser(data-title=users[i].user_id)= (users[i].user_ban === 0) ? "Заблокировать" : "Разблокировать"

@@ -59,7 +59,7 @@ block content
                     option(selected='' value='') Выберите объект
                     
                     - for (var i = 0; i < objects.length; i++)
-                      option(value= objects[i].object_id, title= decodeURI(objects[i].object_adres))= decodeURI(objects[i].object_name)
+                      option(value= objects[i].object_id, title= objects[i].object_adres)= objects[i].object_name
                       
                 .step-submit
                   a.first-step.step-btn(href='#') Продолжить
@@ -75,7 +75,7 @@ block content
                       .radio
                         label
                           input(type='radio', name='objectType', data-title= objtypes[i].objtype_id, checked='checked')
-                          div= decodeURI(objtypes[i].objtype_name)
+                          div= objtypes[i].objtype_name
                 label
                   | Введите название:
                   input#objname(type='text')
@@ -124,14 +124,14 @@ block content
                       .checkbox
                         label
                           input(type='checkbox', data-title= ''+meanings[i].option_id,name='meanings')
-                          div= decodeURI(meanings[i].option_name)
+                          div= meanings[i].option_name
                   section.second-item
                     h4 В арендную плату входит:
                     - for (var i = 0; i < included.length; i++)
                       .checkbox
                         label
                           input(type='checkbox', data-title= ''+included[i].option_id,name='included')
-                          div= decodeURI(included[i].option_name)
+                          div= included[i].option_name
                     label
                       | Другое:
                       input(type='text')
@@ -141,7 +141,7 @@ block content
                       .checkbox
                         label
                           input(type='checkbox', data-title= ''+advanced[i].option_id,name='advanced')
-                          div= decodeURI(advanced[i].option_name)
+                          div= advanced[i].option_name
                     label
                       | Другое:
                       input(type='text')
@@ -151,7 +151,7 @@ block content
                       .checkbox
                         label
                           input(type='checkbox', data-title= ''+providers[i].option_id,name='providers')
-                          div= decodeURI(providers[i].option_name)
+                          div= providers[i].option_name
                     label
                       | Другое:
                       input(type='text')
@@ -212,8 +212,8 @@ block content
                       img(src= cover)
                     .kab-item-desc
                       section.kab-item-header
-                        h4.nowrap-text= decodeURI(objects[i].object_name)
-                        - var adres = decodeURI(objects[i].object_adres).split(',');
+                        h4.nowrap-text= objects[i].object_name
+                        - var adres = objects[i].object_adres.split(',');
                         - adres.splice(0,2);
                         p.nowrap-text= adres
                       section.kab-item-change
@@ -230,8 +230,8 @@ block content
                         .last-object-img
                           img(src='images/search/result-img.png')
                         .last-object-desc
-                          h4= decodeURI(objects[i].object_offices[0].office_name) ? decodeURI(objects[i].object_offices[0].office_name) : 'Error!'
-                          p= decodeURI(objects[i].object_name) ? decodeURI(objects[i].object_name) : 'Error!'
+                          h4= objects[i].object_offices[0].office_name
+                          p= objects[i].object_name
                           section
                             .last-object-price
                               p
@@ -262,7 +262,7 @@ block content
                           tr
                             td.table-date= objects[i].object_offices[j].office_create
                             td.table-name
-                              a.nowrap-text(href='#')= decodeURI(objects[i].object_offices[j].office_name)
+                              a.nowrap-text(href='#')= objects[i].object_offices[j].office_name
                               - if (objects[i].object_offices[j].office_publish == 0)
                                 span.status.wait Ожидает модерации
                               - else if (objects[i].object_offices[j].office_publish == 1)
@@ -291,8 +291,8 @@ block content
                     section
                       .kab-item-desc
                         section.kab-item-header
-                          h4.nowrap-text= decodeURI(objects[i].object_name)
-                          - var adres = decodeURI(objects[i].object_adres).split(',');
+                          h4.nowrap-text= objects[i].object_name
+                          - var adres = objects[i].object_adres.split(',');
                           p.nowrap-text= adres
                         section.kab-item-change
                           .kab-item-edit

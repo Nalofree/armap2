@@ -41,7 +41,7 @@ $(document).ready(function () {
       success: function (data, status, error) {
         console.log(data, status, error);
         mapCoords = data.city.city_coords.split(",");
-        $("#city").text(decodeURI(data.city.city_name));
+        $("#city").text(data.city.city_name);
         if ($("#map").length) {
           SetMap(mapCoords).then(function (map) {
             if ($("#search-filter").length) {
@@ -103,8 +103,8 @@ $(document).ready(function () {
                     });
                   });
                 }
-                $("#city").text(decodeURI(data.city.city_name));
-                $(".tooltip-white__quastion-cityname").text(decodeURI(data.city.city_name));
+                $("#city").text(data.city.city_name);
+                $(".tooltip-white__quastion-cityname").text(data.city.city_name);
                 $("#isyourcity").show();
                 $(".close-layout").show();
                 $("#mycity").click(function () {
@@ -168,8 +168,8 @@ $(document).ready(function () {
           if (data.count > 0) {
             for (var i = 0; i < data.objects.length; i++) {
               for (var j = 0; j < data.objects[i].object_offices.length; j++) {
-                var adres = decodeURI(data.objects[i].object_offices[j].office_adres) ? decodeURI(data.objects[i].object_offices[j].office_adres) : 'Error';
-                var name = decodeURI(data.objects[i].object_offices[j].office_name);// ? decodeURI(data.objects[i].object_offices[j].office_name) : 'Error';
+                var adres = data.objects[i].object_offices[j].office_adres;
+                var name = data.objects[i].object_offices[j].office_name;
                 var officeItem = '<article><a href="office-'+data.objects[i].object_offices[j].office_id+'">\
                   <div class="result-img"><img src="images/obj/'+data.objects[i].object_offices[j].image_filename+'"/></div>\
                   <div class="result-desc">\
@@ -200,8 +200,8 @@ $(document).ready(function () {
                   coordsArr[1] = parseFloat(coordss[1]);
                   var officeCountByObject = data.objects[i].offices_count;
                   officeCountByObject = officeCountByObject.toString();
-                  var adres = decodeURI(data.objects[i].object_adres) ? decodeURI(data.objects[i].object_adres) : 'Error!';
-                  var name = decodeURI(data.objects[i].object_name) ? decodeURI(data.objects[i].object_name) : 'Error!';
+                  var adres = data.objects[i].object_adres;
+                  var name = data.objects[i].object_name;
                   placemarks[i] = new ymaps.Placemark(coordsArr,{
                     balloonContentHeader: name,
                     balloonContentBody: adres,
@@ -295,7 +295,7 @@ $(document).ready(function () {
         }else{
           $(".citys-list").empty();
           for (var i = 0; i < data.citys.length; i++) {
-            $(".citys-list").append("<div class='citys-list__item' id='city-"+data.citys[i].city_id+"'>"+decodeURI(data.citys[i].city_name)+"</div>");
+            $(".citys-list").append("<div class='citys-list__item' id='city-"+data.citys[i].city_id+"'>"+data.citys[i].city_name+"</div>");
           }
           $(".citys-list__item").click(function () {
             var cityId = $(this).attr("id").split("-")[1];
