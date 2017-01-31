@@ -101,7 +101,7 @@ block content
                         p= objects[i].object_typename
                         p= objects[i].object_adres
                   .item-quantity
-                    p= objects[i].object_offices ? "нет помещений" : objects[i].object_offices.length + " помещения"
+                    p= objects[i].object_offices ? objects[i].object_offices.length + " помещения" : "нет помещений"
                   .item-more-show
                     // Кнопка посмотреть подробнее
                     a.show-object-info(href='javascript: void(0);')
