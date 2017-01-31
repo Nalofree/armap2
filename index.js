@@ -496,32 +496,35 @@ app.get('/my',auth, function(req,res) {
 });
 
 app.get('/admin', auth, function (req, res) {
-  // res.send('admin');
-  connection.query('SELECT * FROM objtypes', function (error,result,fields) {
-    if (error) throw error;
-    objtypes = result;
-    connection.query('SELECT * FROM citys', function (error,result,fields) {
+  if (res.role == 'moder') {
+    connection.query('SELECT * FROM objtypes', function (error,result,fields) {
       if (error) throw error;
-      citys = result;
-      connection.query('SELECT * FROM options', function (error,result,fields) {
+      objtypes = result;
+      connection.query('SELECT * FROM citys', function (error,result,fields) {
         if (error) throw error;
-        options = result;
-        connection.query('SELECT * FROM objects', function (error,result,fields) {
+        citys = result;
+        connection.query('SELECT * FROM options', function (error,result,fields) {
           if (error) throw error;
-          objects = result;
-          res.render('admin.jade', {
-            role: res.role,
-            username: res.userfullname,
-            userid: res.userid,
-            objtypes: objtypes,
-            citys: citys,
-            options: options,
-            objects: objects
+          options = result;
+          connection.query('SELECT * FROM objects', function (error,result,fields) {
+            if (error) throw error;
+            objects = result;
+            res.render('admin.jade', {
+              role: res.role,
+              username: res.userfullname,
+              userid: res.userid,
+              objtypes: objtypes,
+              citys: citys,
+              options: options,
+              objects: objects
+            });
           });
         });
       });
     });
-  });
+  }else{
+    res.redirect("/");
+  }
 });
 
 app.post('/admin/objtypes', function (req, res) {
