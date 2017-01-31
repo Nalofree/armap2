@@ -109,6 +109,7 @@ $(document).ready(function () {
                 $(".close-layout").show();
                 $("#mycity").click(function () {
                   setCookie("city_id",data.city.city_id, 365);
+                  location.reload();
                 });
                 $("#notmycity").click(function () {
                   setNewCity();
