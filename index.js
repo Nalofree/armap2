@@ -762,153 +762,169 @@ app.get('/moder', auth,function (req,res) {
     connection.query('SELECT object_id, object_name, object_type, object_adres, object_author, object_id, object_cover, object_create, object_city, object_type, object_publish FROM objects WHERE object_city = '+req.cookies.city_id, function (error, result, fields) {
       if (error) throw error;
       var objects = result;
-      var objTypeIdsArr = [];
-      var objTypeIdsStr;
-      var objAdresArr = [];
-      for (var i = 0; i < objects.length; i++) {
-        var date = objects[i].object_create,
-            day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate(),
-            month = date.getMonth() < 10 ? '0'+date.getMonth() : date.getMonth(),
-            year = date.getFullYear(),
-            hours = date.getHours() < 10 ? '0'+date.getHours() : date.getHours(),
-            minutes = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes(),
-            time = hours+':'+minutes;
-        objects[i].object_create = day+'.'+month+'.'+year+' '+time;
-        // objects[i].object_adres = objects[i].object_adres
-        objAdresArr = objects[i].object_adres.split(",");
-        objAdresArr.splice(0,1);
-        objects[i].object_adres = objAdresArr.join(',');
-        objects[i].object_offices = [];
-        objects[i].object_nopublishofccount = 0;
-        objects[i].object_typename = "";
-        objTypeIdsArr.push(objects[i].object_id);
-      }
-      objTypeIdsStr = objTypeIdsArr.join(',');
-      connection.query('SELECT objtype_id, objtype_name FROM objtypes', function (error, result, fields) {
-        if (error) throw error;
-        var objtypes = result;
-        // console.log(objtypes);
+      if (objects > 0) {
+        var objTypeIdsArr = [];
+        var objTypeIdsStr;
+        var objAdresArr = [];
         for (var i = 0; i < objects.length; i++) {
-          for (var j = 0; j < objtypes.length; j++) {
-            if (objtypes[j].objtype_id === objects[i].object_type) {
-              objects[i].object_typename = objtypes[j].objtype_name;
-              // console.log(decodeURI(objects[i].object_typename));
-              // console.log("obj_type", objects[i].object_type);
-            }
-          }
+          var date = objects[i].object_create,
+              day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate(),
+              month = date.getMonth() < 10 ? '0'+date.getMonth() : date.getMonth(),
+              year = date.getFullYear(),
+              hours = date.getHours() < 10 ? '0'+date.getHours() : date.getHours(),
+              minutes = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes(),
+              time = hours+':'+minutes;
+          objects[i].object_create = day+'.'+month+'.'+year+' '+time;
+          // objects[i].object_adres = objects[i].object_adres
+          objAdresArr = objects[i].object_adres.split(",");
+          objAdresArr.splice(0,1);
+          objects[i].object_adres = objAdresArr.join(',');
+          objects[i].object_offices = [];
+          objects[i].object_nopublishofccount = 0;
+          objects[i].object_typename = "";
+          objTypeIdsArr.push(objects[i].object_id);
         }
-        connection.query('SELECT office_name, office_id, office_phone, office_subprice, office_show, office_area, office_height, office_create, office_cover, office_object, image_filename, office_publish, office_author FROM offices LEFT JOIN images ON image_id = office_cover', function (error, result, fields) {
+        objTypeIdsStr = objTypeIdsArr.join(',');
+        connection.query('SELECT objtype_id, objtype_name FROM objtypes', function (error, result, fields) {
           if (error) throw error;
-
-          officesIdsArr = [];
-          for (var i = 0; i < result.length; i++) {
-            var date = result[i].office_create,
-                day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate(),
-                month = date.getMonth() < 10 ? '0'+date.getMonth() : date.getMonth(),
-                year = date.getFullYear(),
-                hours = date.getHours() < 10 ? '0'+date.getHours() : date.getHours(),
-                minutes = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes(),
-                time = hours+':'+minutes;
-            result[i].office_create = day+'.'+month+'.'+year+' '+time;
-            officesIdsArr.push(result[i].office_id);
-          }
-          var archoffices = [];
-          var offices = [];
-          for (var i = 0; i < result.length; i++) {
-            // result[i]
-            if (result[i].office_show == 1) {
-              offices.push(result[i]);
-            }else{
-              archoffices.push(result[i]);
+          var objtypes = result;
+          // console.log(objtypes);
+          for (var i = 0; i < objects.length; i++) {
+            for (var j = 0; j < objtypes.length; j++) {
+              if (objtypes[j].objtype_id === objects[i].object_type) {
+                objects[i].object_typename = objtypes[j].objtype_name;
+                // console.log(decodeURI(objects[i].object_typename));
+                // console.log("obj_type", objects[i].object_type);
+              }
             }
           }
-          officesIdsStr = officesIdsArr.join(",");
-          connection.query('SELECT image_id, image_filename, image_office FROM images WHERE image_office IN ('+officesIdsStr+')', function (error, result, fields) {
+          connection.query('SELECT office_name, office_id, office_phone, office_subprice, office_show, office_area, office_height, office_create, office_cover, office_object, image_filename, office_publish, office_author FROM offices LEFT JOIN images ON image_id = office_cover', function (error, result, fields) {
             if (error) throw error;
-            var images = result;
-            console.log(result);
-            for (var i = 0; i < offices.length; i++) {
-              offices[i].office_image = "";
-              offices[i].office_images = [];
-              for (var j = 0; j < images.length; j++) {
-                if (offices[i].office_id == images[j].image_office) {
-                  offices[i].office_image = images[j].image_filename;
-                  offices[i].office_images.push(images[j]);
-                }
-              }
-              console.log(offices[i].office_image);
-            }
-            var nopublishofccount = 0;
-            for (var i = 0; i < objects.length; i++) {
-              // objects[i].object_nopublishofccount = 0;
-              for (var j = 0; j < offices.length; j++) {
-                if (offices[j].office_object === objects[i].object_id) {
-                  objects[i].object_offices.push(offices[j]);
-                  // console.log(objects[i].object_offices);
-                  // console.log(offices[j].office_publish);
-                  if (offices[j].office_publish === 0) {
-                    objects[i].object_nopublishofccount++;
-                    nopublishofccount++;
-                  }
-                }
-              }
-            }
 
-            for (var i = 0; i < archoffices.length; i++) {
-              archoffices[i].office_image = [];
-              for (var j = 0; j < images.length; j++) {
-                if (archoffices[i].office_id === images[j].image_office) {
-                  archoffices[i].office_image = images[j].image_filename;
-                }
+            officesIdsArr = [];
+            for (var i = 0; i < result.length; i++) {
+              var date = result[i].office_create,
+                  day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate(),
+                  month = date.getMonth() < 10 ? '0'+date.getMonth() : date.getMonth(),
+                  year = date.getFullYear(),
+                  hours = date.getHours() < 10 ? '0'+date.getHours() : date.getHours(),
+                  minutes = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes(),
+                  time = hours+':'+minutes;
+              result[i].office_create = day+'.'+month+'.'+year+' '+time;
+              officesIdsArr.push(result[i].office_id);
+            }
+            var archoffices = [];
+            var offices = [];
+            for (var i = 0; i < result.length; i++) {
+              // result[i]
+              if (result[i].office_show == 1) {
+                offices.push(result[i]);
+              }else{
+                archoffices.push(result[i]);
               }
             }
-            connection.query("SELECT user_id, user_email, user_role, user_firstname, user_lastname, user_ban, user_mobile, user_confirm, role_name FROM users LEFT JOIN roles ON user_role = role_id", function (error, result, fields) {
+            officesIdsStr = officesIdsArr.join(",");
+            connection.query('SELECT image_id, image_filename, image_office FROM images WHERE image_office IN ('+officesIdsStr+')', function (error, result, fields) {
               if (error) throw error;
-              var users = result;
-              console.log(users);
-              for (var i = 0; i < objects.length; i++) {
-                //objects[i].object_author = [];
-                for (var j = 0; j < users.length; j++) {
-                  if (objects[i].object_author === users[j].user_id) {
-                    objects[i].object_author = users[j];
+              var images = result;
+              console.log(result);
+              for (var i = 0; i < offices.length; i++) {
+                offices[i].office_image = "";
+                offices[i].office_images = [];
+                for (var j = 0; j < images.length; j++) {
+                  if (offices[i].office_id == images[j].image_office) {
+                    offices[i].office_image = images[j].image_filename;
+                    offices[i].office_images.push(images[j]);
                   }
                 }
-                for (var k = 0; k < objects[i].object_offices.length; k++) {
-                  //offices[i].office_author = [];
-                  for (var j = 0; j < users.length; j++) {
-                    if (objects[i].object_offices[k].office_author === users[j].user_id) {
-                      objects[i].object_offices[k].office_author = users[j];
+                console.log(offices[i].office_image);
+              }
+              var nopublishofccount = 0;
+              for (var i = 0; i < objects.length; i++) {
+                // objects[i].object_nopublishofccount = 0;
+                for (var j = 0; j < offices.length; j++) {
+                  if (offices[j].office_object === objects[i].object_id) {
+                    objects[i].object_offices.push(offices[j]);
+                    // console.log(objects[i].object_offices);
+                    // console.log(offices[j].office_publish);
+                    if (offices[j].office_publish === 0) {
+                      objects[i].object_nopublishofccount++;
+                      nopublishofccount++;
                     }
                   }
                 }
               }
-              for (var k = 0; k < archoffices.length; k++) {
-                //offices[i].office_author = [];
-                for (var j = 0; j < users.length; j++) {
-                  if (archoffices[k].office_author === users[j].user_id) {
-                    archoffices[k].office_author = users[j];
+
+              for (var i = 0; i < archoffices.length; i++) {
+                archoffices[i].office_image = [];
+                for (var j = 0; j < images.length; j++) {
+                  if (archoffices[i].office_id === images[j].image_office) {
+                    archoffices[i].office_image = images[j].image_filename;
                   }
                 }
               }
+              connection.query("SELECT user_id, user_email, user_role, user_firstname, user_lastname, user_ban, user_mobile, user_confirm, role_name FROM users LEFT JOIN roles ON user_role = role_id", function (error, result, fields) {
+                if (error) throw error;
+                var users = result;
+                console.log(users);
+                for (var i = 0; i < objects.length; i++) {
+                  //objects[i].object_author = [];
+                  for (var j = 0; j < users.length; j++) {
+                    if (objects[i].object_author === users[j].user_id) {
+                      objects[i].object_author = users[j];
+                    }
+                  }
+                  for (var k = 0; k < objects[i].object_offices.length; k++) {
+                    //offices[i].office_author = [];
+                    for (var j = 0; j < users.length; j++) {
+                      if (objects[i].object_offices[k].office_author === users[j].user_id) {
+                        objects[i].object_offices[k].office_author = users[j];
+                      }
+                    }
+                  }
+                }
+                for (var k = 0; k < archoffices.length; k++) {
+                  //offices[i].office_author = [];
+                  for (var j = 0; j < users.length; j++) {
+                    if (archoffices[k].office_author === users[j].user_id) {
+                      archoffices[k].office_author = users[j];
+                    }
+                  }
+                }
 
-              // console.log(objects);
-              // console.log(objects);
-              res.render('moder.jade',{
-                nopublishofccount: nopublishofccount,
-                role: res.role,
-                username: res.userfullname,
-                userid: res.userid,
-                objects: objects,
-                objtypes: objtypes,
-                offices: offices,
-                images: images,
-                users: users,
-                archoffices: archoffices
+                // console.log(objects);
+                // console.log(objects);
+                res.render('moder.jade',{
+                  nopublishofccount: nopublishofccount,
+                  role: res.role,
+                  username: res.userfullname,
+                  userid: res.userid,
+                  objects: objects,
+                  objtypes: objtypes,
+                  offices: offices,
+                  images: images,
+                  users: users,
+                  archoffices: archoffices
+                });
               });
             });
           });
         });
-      });
+      }else{
+        res.render('moder.jade',{
+          // nopublishofccount: nopublishofccount,
+          role: res.role,
+          username: res.userfullname,
+          userid: res.userid,
+          // objects: objects,
+          // objtypes: objtypes,
+          // offices: offices,
+          // images: images,
+          // users: users,
+          // archoffices: archoffices
+        });
+      }
+
     });
   }else{
     res.redirect('/');
