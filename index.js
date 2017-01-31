@@ -144,7 +144,7 @@ app.post('/choosecity',function (req,res) {
 app.post('/getcitybyname',function (req,res) {
   connection.query('SELECT city_id, city_name, city_coords FROM citys WHERE city_name LIKE "%'+req.body.city_name+'%"',function (error,result,fields) {
     if (error) throw error;
-    if (result) {
+    if (result.length > 0) {
       res.send({
         city: result[0],
         count: result.length
