@@ -496,7 +496,7 @@ app.get('/my',auth, function(req,res) {
 });
 
 app.get('/admin', auth, function (req, res) {
-  if (res.role == 'moder') {
+  if (res.role == 'admin') {
     connection.query('SELECT * FROM objtypes', function (error,result,fields) {
       if (error) throw error;
       objtypes = result;
