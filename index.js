@@ -765,7 +765,7 @@ app.get('/moder', auth,function (req,res) {
     connection.query('SELECT object_id, object_name, object_type, object_adres, object_author, object_id, object_cover, object_create, object_city, object_type, object_publish FROM objects WHERE object_city = '+req.cookies.city_id, function (error, result, fields) {
       if (error) throw error;
       var objects = result;
-      if (objects > 0) {
+      if (objects.length > 0) {
         var objTypeIdsArr = [];
         var objTypeIdsStr;
         var objAdresArr = [];
