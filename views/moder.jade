@@ -126,10 +126,10 @@ block content
                           //- input#object-type(type='text')
                           select.object-type
                             - for (var j = 0; j < objtypes.length; j++)
-                              - if (objtypes[j].objtype_id ===  objects[i].object_type)
-                                option(selected='selected', value=objtypes[j].objtype_id)= objtypes[j].objtype_name
+                              - if (objtypes[j].option_id ===  objects[i].object_type)
+                                option(selected='selected', value=objtypes[j].option_id)= objtypes[j].option_name
                               - else
-                                option(selected='', value=objtypes[j].objtype_id)= objtypes[j].objtype_name
+                                option(selected='', value=objtypes[j].option_id)= objtypes[j].option_name
                         .input-group
                           label(for='object-address') Адрес:
                           input.object-address(type='text', value= objects[i].object_adres, title= objects[i].object_adres)

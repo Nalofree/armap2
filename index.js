@@ -788,7 +788,7 @@ app.get('/moder', auth,function (req,res) {
           objTypeIdsArr.push(objects[i].object_id);
         }
         objTypeIdsStr = objTypeIdsArr.join(',');
-        connection.query('SELECT objtype_id, objtype_name FROM objtypes', function (error, result, fields) {
+        connection.query('SELECT option_id, option_name FROM options LEFT JOIN opttypes ON option_type = opttype_id WHERE opttype_name ="meaning"', function (error, result, fields) {
           if (error) throw error;
           var objtypes = result;
           // console.log(objtypes);
