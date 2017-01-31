@@ -495,6 +495,63 @@ app.get('/my',auth, function(req,res) {
   }
 });
 
+app.get('/admin', auth, function (req, res) {
+  // res.send('admin');
+  connection.query('SELECT * FROM objtypes', function (error,result,fields) {
+    if (error) throw error;
+    objtypes = result;
+    connection.query('SELECT * FROM citys', function (error,result,fields) {
+      if (error) throw error;
+      citys = result;
+      connection.query('SELECT * FROM options', function (error,result,fields) {
+        if (error) throw error;
+        options = result;
+        connection.query('SELECT * FROM objects', function (error,result,fields) {
+          if (error) throw error;
+          objects = result;
+          res.render('admin.jade', {
+            role: res.role,
+            username: res.userfullname,
+            userid: res.userid,
+            objtypes: objtypes,
+            citys: citys,
+            options: options,
+            objects: objects
+          });
+        });
+      });
+    });
+  });
+});
+
+app.post('/admin/objtypes', function (req, res) {
+  connection.query('UPDATE objtypes SET objtype_name = "'+req.body.name+'" WHERE objtype_id='+req.body.id, function (error,result,fields) {
+    if (error) throw error;
+    res.redirect('/admin');
+  });
+});
+
+app.post('/admin/citys', function (req, res) {
+  connection.query('UPDATE citys SET city_name = "'+req.body.name+'" WHERE city_id='+req.body.id, function (error,result,fields) {
+    if (error) throw error;
+    res.redirect('/admin');
+  });
+});
+
+app.post('/admin/options', function (req, res) {
+  connection.query('UPDATE options SET option_name = "'+req.body.name+'" WHERE option_id='+req.body.id, function (error,result,fields) {
+    if (error) throw error;
+    res.redirect('/admin');
+  });
+});
+
+app.post('/admin/objects', function (req, res) {
+  connection.query('UPDATE objects SET object_name = "'+req.body.name+'", object_adres = "'+req.body.adres+'" WHERE object_id='+req.body.id, function (error,result,fields) {
+    if (error) throw error;
+    res.redirect('/admin');
+  });
+});
+
 app.post('/my', function (req,res) {
   // connection.query('SELECT * FROM objects WHERE object_adres LIKE "%'+req.body.city+'%" AND object_author ='+res.userid, function (error,result,fields) {
   connection.query('SELECT * FROM objects', function (error,result,fields) {
@@ -539,21 +596,23 @@ app.post('/my', function (req,res) {
 });
 
 app.get('/object-:object_id', auth, function (req,res) {
-  connection.query('SELECT * FROM objects LEFT JOIN offices ON office_object = object_id LEFT JOIN images ON office_cover = image_id WHERE object_id = '+req.params.object_id+' AND office_show = 1 AND office_object = '+object.object_id, function (error,result,fields) {
+  connection.query('SELECT * FROM objects WHERE object_id = '+req.params.object_id+' AND object_show = 1 AND object_publish = 1', function (error,result,fields) {
     if (error) throw error;
     object = result[0];
-    // connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_show = 1 AND office_object = '+object.object_id, function (error,result,fields) {
-    //   if (error) throw error;
-    //   // console.log(result);
-    //   object.object_offices = result;
-    //   console.log("role",res.role);
+    // console.log(result);
+    // connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover WHERE office_show = 1 AND office_object = '+req.params.object_id, function (error,result,fields) {
+    connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover WHERE office_show = 1 AND office_object = '+req.params.object_id, function (error,result,fields) {
+      if (error) throw error;
+      object.object_offices = result;
+      console.log(result);
+      // console.log("role",res.role);
       res.render('object.jade',{
         role: res.role,
         username: res.userfullname,
         userid: res.userid,
         object: object
       });
-    // });
+    });
   });
 });
 
@@ -619,7 +678,6 @@ app.get('/objects', auth, function (req,res) {
   connection.query('SELECT * FROM objects WHERE object_city = '+req.cookies.city_id+' AND object_publish = 1 AND object_show = 1', function (error,result,fields) {
     if (error) throw error;
     var objects = result;
-    console.log(req.cookies.city_name);
     console.log(objects);
     connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id',function (error, result, fields) {
       if (error) throw error;
@@ -632,23 +690,14 @@ app.get('/objects', auth, function (req,res) {
           }
         }
       }
-      // console.log(objects);
       res.render('objects.jade',{
         role: res.role,
         username: res.userfullname,
         userid: res.userid,
         objects: objects
       });
-      // res.send({
-      //   objects: objects
-      // });
     });
   });
-  // res.render('objects.jade',{
-  //   role: res.role,
-  //   username: res.userfullname,
-  //   userid: res.userid
-  // });
 });
 
 // app.post('/objects', function (req, res) {
@@ -1019,7 +1068,7 @@ app.post('/addoffice', auth, function(req,res) {
             connection.query('SELECT * FROM images WHERE image_id IN ('+images+')',function (error,result,fields) {
               if (error) throw error;
               for (var i = 0; i < result.length; i++) {
-                fs.renameSync(__dirname+'/public/uploads/'+result[i].image_filename,__dirname+'/public/images/obj/'+result[i].image_filename);
+                fs.renameSync(__dirname+'/public/uploads/'+result[i].image_filename, __dirname+'/public/images/obj/'+result[i].image_filename);
                 //fs.renameSync('uploads/'+result[i].image_min,'public/images/obj/'+result[i].image_min); adding thumbail should be here
               }
               res.send(result);

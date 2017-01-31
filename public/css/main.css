@@ -9166,3 +9166,21 @@ h1 a:hover, h1 a:focus {
 .confirmuser, .banuser {
   cursor: pointer;
 }
+
+.admin-trig .panel-body{
+  display: none;
+}
+
+.admin-trig .panel-heading {
+  cursor: pointer;
+}
+
+.admin-trig .panel-heading h4{
+  display: inline-block;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.admin-trig .panel-heading:hover h4 {
+  border-bottom: 2px dashed #000;
+}

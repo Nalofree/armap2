@@ -1,16 +1,14 @@
-// alert('moder');
+
 ymaps.ready(function () {
   $(".object-address").keyup(function () {
     $(".moder-object-address__tooltip").show();
-    // $(".citys-form__submit").css("color", "red");//#2c71e7
     $(".moder_confirm").prop('disabled', true);
-    var myGeocoder2 = ymaps.geocode("Россия, "+ $("#city").text() + ',' + $(this).val()),//ymaps.geocode(coords, {kind:"locality"})
+    var myGeocoder2 = ymaps.geocode("Россия, "+ $("#city").text() + ',' + $(this).val()),
     autoadres,
     autoccords;
     console.log("Россия, "+ $("#city").text() + ',' + $(this).val());
     myGeocoder2.then(
       function (res) {
-        // alert(res.geoObjects.get(0).getLocalities());
         autoccords = res.geoObjects.get(0).geometry.getCoordinates();
         autoadres = res.geoObjects.get(0).properties.get('text');
         $(".moder-object-address__tooltip").text(res.geoObjects.get(0).properties.get('text'));
@@ -44,8 +42,7 @@ $(document).ready(function () {
   $(".item-object-more").each(function () {
     var objPublish = $(this).attr('data-title');
     var solution = $(this).find('.item-object-info.change-solution');
-    var objstatus = $(this).find('.object-status');//object-info-block object-status object-published
-    // console.log(status.length);
+    var objstatus = $(this).find('.object-status');
     if (objPublish == 0) {
       objstatus.parent().hide();
     }else{
@@ -104,7 +101,6 @@ $(document).ready(function () {
         }
       });
     });
-    //$(this).find('.object-status .disable-btn').click(function () {
       $("#modal-object .success-btn").click(function () {
         var objId = $(this).attr('data-title');
         console.log(objId);
@@ -131,9 +127,7 @@ $(document).ready(function () {
             $(".close-layout").hide();
           }
         });
-        // $('#modal-object').hide();
       });
-    //});
   });
 
   $(".unconfirmoffice").click(function (e) {
@@ -147,7 +141,6 @@ $(document).ready(function () {
       data: {office_id: ofcId},
       url: '/unconfirmoffice',
       success: function (data, status, error) {
-        // console.log(data, status, error);
         btn.parent().removeClass('published');
         btn.parent().addClass('disabled');
         btn.parent().parent().find('p.status').removeClass('published');
@@ -174,23 +167,23 @@ $(document).ready(function () {
     var ofcId = $(this).attr('data-title');
     var btn = $(this);
     $(".close-layout").show();
-
     $.ajax({
       type: 'POST',
       data: {office_id: ofcId},
       url: '/confirmoffice',
       success: function (data, status, error) {
-        console.log(data, status, error);
-        btn.parent().removeClass('disabled');
-        btn.parent().addClass('published');
-        btn.parent().parent().find('p.status').removeClass('disabled');
-        btn.parent().parent().find('p.status').addClass('published');
+        btn.closest(".item-room").find(".item-show-more").addClass('published');
+        btn.closest(".item-room").find(".item-show-more").removeClass('disabled');
+        btn.closest(".item-room").find('p.status').addClass('published');
+        btn.closest(".item-room").find('p.status').removeClass('disabled');
+        btn.closest(".item-room").find('p.status').text('Опубликовано');
         btn.closest(".item-room-more").animate({height: "hide"}, 800);
-        btn.closest(".item-room-more").prev('.item-desc').removeClass('open');
-        btn.closest(".item-room-more").prev('.item-desc').find(".show-room-info").removeClass('open');
-        btn.closest(".item-room-more").prev('.item-desc').find(".show-room-info").text('Просмотр');
-        btn.closest(".item-room-more").prev('.item-desc').find(".item-show-more").removeClass('disabled');
-        btn.closest(".item-room-more").prev('.item-desc').find(".item-show-more").addClass('published');
+        btn.closest(".item-room").find('.item-desc').removeClass('open');
+        btn.closest(".item-room").find(".show-room-info").removeClass('open');
+        btn.closest(".item-room").find(".show-room-info").text('Снять с публикации');
+        btn.closest(".item-room").find(".item-show-more").addClass('published');
+        btn.closest(".item-room").find(".item-show-more").removeClass('disabled');
+        $(".close-layout").hide();
         $(".close-layout").hide();
       },
       error: function (data, status, error) {

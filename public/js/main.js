@@ -312,7 +312,19 @@ footerShowBtn.click(function () {
 
 $(document).ready(function () {
   $("#create-tel").mask("+7 (999) 999-9999");
+  $(".admin-trig .panel-heading").click(function () {
+    if ($(this).hasClass("show")) {
+      $(this).parent('.admin-trig').find(".panel-body").hide(200);
+      $(this).removeClass("show");
+    }else{
+      $(".admin-trig .panel-body").hide(200);
+      $(".admin-trig .panel-body").removeClass("show");
+      $(this).parent('.admin-trig').find(".panel-body").show(200);
+      $(this).addClass("show");
+    }
+    // $(".admin-trig .panel-body").hide(200);
 
-  
+  });
+
 
 });
