@@ -11,7 +11,7 @@ block content
           //- select.kab-location
           //-   option(selected='') Иркутск
         .kab-settings
-          a.btn-setting(href='#') Настройки
+          //- a.btn-setting(href='#') Настройки
           a.btn-setting(href='/logout') Выйти
       article.kab-tab-panel
         ul(role='tablist')
@@ -21,10 +21,10 @@ block content
             a(href='#mod-archive', aria-controls='mod-archive', role='tab', data-toggle='tab') Архив
           li(role='presentation')
             a(href='#mod-users', aria-controls='mod-users', role='tab', data-toggle='tab') Пользователи
-        .kab-search
-          form
-            input(type='text', placeholder='Поиск...')
-            button(type='submit')
+        //- .kab-search
+        //-   form
+        //-     input(type='text', placeholder='Поиск...')
+        //-     button(type='submit')
       //- .mod-sorting
       //-   .checkbox
       //-     label
@@ -120,11 +120,11 @@ block content
                       .object-info-name
                         .input-group
                           label(for='object-name') Имя объекта:
-                          input.object-name(type='text', value= objects[i].object_name)
+                          input.object-name(type='text', value= objects[i].object_name, disabled)
                         .input-group
                           label(for='object-type') Тип объекта:
                           //- input#object-type(type='text')
-                          select.object-type
+                          select(disabled).object-type
                             - for (var j = 0; j < objtypes.length; j++)
                               - if (objtypes[j].option_id ===  objects[i].object_type)
                                 option(selected='selected', value=objtypes[j].option_id)= objtypes[j].option_name
@@ -132,20 +132,20 @@ block content
                                 option(selected='', value=objtypes[j].option_id)= objtypes[j].option_name
                         .input-group
                           label(for='object-address') Адрес:
-                          input.object-address(type='text', value= objects[i].object_adres, title= objects[i].object_adres)
+                          input.object-address(type='text', value= objects[i].object_adres, title= objects[i].object_adres, disabled)
                           .moder-object-address__tooltip
-                        a(href='#') Показать на карте
+                        //- a(href='#') Показать на карте
                       .object-info-submit
                         p.user
                           | Добавил пользователь:
                           - var userFullname = objects[i].object_author.user_firstname + ' ' + objects[i].object_author.user_lastname;
                           a(href='#')= userFullname
                           // what href??
-                        p Такой объект уже существует?
-                        select
-                          option(selected='') Выберите объект
-                          - for (var k = 0; k < objects.length; k++)
-                            option(selected='', value=objects[k].object_id)= objects[k].object_name
+                        //- p Такой объект уже существует?
+                        //- select
+                        //-   option(selected='', disabled) Выберите объект
+                        //-   - for (var k = 0; k < objects.length; k++)
+                        //-     option(selected='', value=objects[k].object_id)= objects[k].object_name
                         .submit-btn
                           button.disable-btn.moder-object_unconfirm(type='button', data-toggle='modal', data-target='#modal-object', data-title=currenObj) Отклонить
                           //objects[i].object_id
@@ -226,84 +226,84 @@ block content
                             .item-room-inputs
                               .input-group
                                 label(for='room-name') Название помещения:
-                                input#room-name(type='text', value=objects[i].object_offices[m].office_name)
+                                input#room-name(type='text', disabled, value=objects[i].object_offices[m].office_name)
                                 //- span
                                 //-   a.error(href='#') Х
                                 //-   a.edit(href='#') Редактировать
                               .input-group
                                 label(for='room-address') Адрес/объект:
-                                input#room-address(type='text',  value=objects[i].object_adres)
+                                input#room-address(type='text', disabled,  value=objects[i].object_adres)
                                 //- span
                                 //-   a.error(href='#') Х
                                 //-   a.edit(href='#') Редактировать
                               .input-group
                                 label(for='room-tel') Телефон собственника:
-                                input#room-tel(type='text', value=objects[i].object_offices[m].office_phone)
+                                input#room-tel(type='text', disabled, value=objects[i].object_offices[m].office_phone)
                                 //- span
                                 //-   a.error(href='#') Х
                                 //-   a.edit(href='#') Редактировать
                               .input-group
                                 label(for='room-price') Цена за м2:
-                                input#room-price(type='text', value=objects[i].object_offices[m].office_subprice)
+                                input#room-price(type='text', disabled, value=objects[i].object_offices[m].office_subprice)
                                 //- span
                                 //-   a.error(href='#') Х
                                 //-   a.edit(href='#') Редактировать
                               .input-group
                                 label(for='room-square') Площадь:
-                                input#room-square(type='text', value=objects[i].object_offices[m].office_area)
+                                input#room-square(type='text', disabled, value=objects[i].object_offices[m].office_area)
                                 //- span
                                 //-   a.error(href='#') Х
                                 //-   a.edit(href='#') Редактировать
                               .input-group
                                 label(for='room-height') Высота потолков:
-                                input#room-height(type='text', value=objects[i].object_offices[m].office_height)
+                                input#room-height(type='text', disabled, value=objects[i].object_offices[m].office_height)
                                 //- span
                                 //-   a.error(href='#') Х
                                 //-   a.edit(href='#') Редактировать
                             .item-room-disable
                               button.disable-btn(type='button', data-toggle='modal', data-target='#modal-rooms', data-title=objects[i].object_offices[m].office_id) Отклонить
-                              a(href='#') Заблокировать пользователя
-                          .item-room-block-two
-                            section
-                              h3 Назначение:
-                              ul
-                                li Электроэнергия
-                                li Электроэнергия
-                                li Электроэнергия
-                                li Электроэнергия
-                              //- .input-group
-                              //-   input(type='text')
-                              //-   span
-                              //-     a.error(href='#') Х
-                            section
-                              h3 В арендную плату входит:
-                              ul
-                                li Электроэнергия
-                                li Электроэнергия
-                                li Электроэнергия
-                                li Электроэнергия
-                              //- .input-group
-                              //-   input(type='text')
-                              //-   span
-                              //-     a.error(href='#') Х
-                            section
-                              h3 Дополнительные услуги:
-                              ul
-                                li Электроэнергия
-                                li Электроэнергия
-                                li Электроэнергия
-                                li Электроэнергия
-                              //- .input-group
-                              //-   input(type='text')
-                              //-   span
-                              //-     a.error(href='#') Х
-                            section
-                              h3 Доступные провайдеры:
-                              ul
-                                li Электроэнергия
-                                li Электроэнергия
-                                li Электроэнергия
-                                li Электроэнергия
+                              //- a(href='#') Заблокировать пользователя
+                          //- .item-room-block-two
+                          //-   section
+                          //-     h3 Назначение:
+                          //-     ul
+                          //-       li Электроэнергия
+                          //-       li Электроэнергия
+                          //-       li Электроэнергия
+                          //-       li Электроэнергия
+                          //-     //- .input-group
+                          //-     //-   input(type='text')
+                          //-     //-   span
+                          //-     //-     a.error(href='#') Х
+                          //-   section
+                          //-     h3 В арендную плату входит:
+                          //-     ul
+                          //-       li Электроэнергия
+                          //-       li Электроэнергия
+                          //-       li Электроэнергия
+                          //-       li Электроэнергия
+                          //-     //- .input-group
+                          //-     //-   input(type='text')
+                          //-     //-   span
+                          //-     //-     a.error(href='#') Х
+                          //-   section
+                          //-     h3 Дополнительные услуги:
+                          //-     ul
+                          //-       li Электроэнергия
+                          //-       li Электроэнергия
+                          //-       li Электроэнергия
+                          //-       li Электроэнергия
+                          //-     //- .input-group
+                          //-     //-   input(type='text')
+                          //-     //-   span
+                          //-     //-     a.error(href='#') Х
+                          //-   section
+                          //-     h3 Доступные провайдеры:
+                          //-     ul
+                          //-       li Электроэнергия
+                          //-       li Электроэнергия
+                          //-       li Электроэнергия
+                          //-       li Электроэнергия
                               //- .input-group
                               //-   input(type='text')
                               //-   span
@@ -311,23 +311,23 @@ block content
                           .item-room-block-three
                             .item-three-head
                               h3 Загруженные фотографии
-                              button.disable-btn(type='button', data-toggle='modal', data-target='#modal-photo') Отклонить фотографии
+                              //- button.disable-btn(type='button', data-toggle='modal', data-target='#modal-photo') Отклонить фотографии
                             .item-three-images
                               - for (var o = 0; o < objects[i].object_offices[m].office_images.length; o++)
                                 .image
                                   img(src='images/obj/'+objects[i].object_offices[m].office_images[o].image_filename)
                                   .photos-settings
-                                    .checkbox
-                                      label
-                                        input(type='checkbox', name='mainPhoto', value=objects[i].object_offices[m].office_images[o].image_id)
-                                        | Отметить
-                                    .radio
-                                      label
-                                        - if (objects[i].object_offices[m].office_cover == objects[i].object_offices[m].office_images[o].image_id)
-                                          input(type='radio', name='mainPhoto', checked=true, value=objects[i].object_offices[m].office_images[o].image_id)
-                                        - else
-                                          input(type='radio', name='mainPhoto', checked=false, value=objects[i].object_offices[m].office_images[o].image_id)
-                                        | Главная
+                                    //- .checkbox
+                                    //-   label
+                                    //-     input(type='checkbox', name='mainPhoto', value=objects[i].object_offices[m].office_images[o].image_id)
+                                    //-     | Отметить
+                                    //- .radio
+                                    //-   label
+                                    //-     - if (objects[i].object_offices[m].office_cover == objects[i].object_offices[m].office_images[o].image_id)
+                                    //-       input(type='radio', name='mainPhoto', checked=true, value=objects[i].object_offices[m].office_images[o].image_id)
+                                    //-     - else
+                                    //-       input(type='radio', name='mainPhoto', checked=false, value=objects[i].object_offices[m].office_images[o].image_id)
+                                    //-     | Главная
                           .item-room-block-four
                             //- .reset
                             //-   a.reset-btn(href='#') Отменить изменения

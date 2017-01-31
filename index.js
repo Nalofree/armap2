@@ -895,6 +895,7 @@ app.get('/moder', auth,function (req,res) {
                   }
                 }
 
+
                 // console.log(objects);
                 // console.log(objects);
                 res.render('moder.jade',{

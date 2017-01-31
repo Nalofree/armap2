@@ -10,7 +10,7 @@ block content
           a.nickname.pro(href='/my')= username
         .kab-settings
           a.btn-create-object.href(href='#my-objects') создать объявление
-          a.btn-setting(href='#') Настройки
+          //- a.btn-setting(href='#') Настройки
           a.btn-setting(href='#') Выйти
       // Вкладки
       article.kab-tab-panel
@@ -19,21 +19,21 @@ block content
             a(href='#my-objects', aria-controls='my-objects', role='tab', data-toggle='tab') Мои объекты
           li(role='presentation')
             a(href='#kab-archive', aria-controls='kab-archive', role='tab', data-toggle='tab') Архив
-          li(role='presentation')
-            a(href='#kab-subscription', aria-controls='kab-subscription', role='tab', data-toggle='tab') Подписка
-        .kab-search
-          form
-            input(type='text', placeholder='Поиск...')
-            button(type='submit')
+          //- li(role='presentation')
+          //-   a(href='#kab-subscription', aria-controls='kab-subscription', role='tab', data-toggle='tab') Подписка
+        //- .kab-search
+        //-   form
+        //-     input(type='text', placeholder='Поиск...')
+        //-     button(type='submit')
       .tab-content
         // Мои помещения и объекты
         article#my-objects.kab-objects.active.fade.in
           .kab-sorting
             .sorting-one
-              p
-                | Показывать:
-                a.active(href='#') Объекты
-                a(href='#') Объявления
+              //- p
+                //- | Показывать:
+                //- a.active(href='#') Объекты
+                //- a(href='#') Объявления
             .sorting-two
               //p
                 //| Сортировать по
@@ -110,9 +110,9 @@ block content
                   .input-group
                     label(for='create-tel') Телефон собственника:
                     input#create-tel(type='text')
-                    span
-                      a(href='#') Подтвердите
-                      | телефон
+                    //- span
+                    //-   a(href='#') Подтвердите
+                    //-   | телефон
                   .input-group
                     label(for='create-height') Высота потолков:
                     input#create-height(type='text',placeholder='Циры, например 2.6')
@@ -132,9 +132,9 @@ block content
                         label
                           input(type='checkbox', data-title= ''+included[i].option_id,name='included')
                           div= included[i].option_name
-                    label
-                      | Другое:
-                      input(type='text')
+                    //- label
+                    //-   | Другое:
+                    //-   input(type='text')
                   section.second-item
                     h4 Дополнительные услуги:
                     - for (var i = 0; i < advanced.length; i++)
@@ -142,9 +142,9 @@ block content
                         label
                           input(type='checkbox', data-title= ''+advanced[i].option_id,name='advanced')
                           div= advanced[i].option_name
-                    label
-                      | Другое:
-                      input(type='text')
+                    //- label
+                    //-   | Другое:
+                    //-   input(type='text')
                   section.second-item
                     h4 Доступные провайдеры:
                     - for (var i = 0; i < providers.length; i++)
@@ -152,9 +152,9 @@ block content
                         label
                           input(type='checkbox', data-title= ''+providers[i].option_id,name='providers')
                           div= providers[i].option_name
-                    label
-                      | Другое:
-                      input(type='text')
+                    //- label
+                    //-   | Другое:
+                    //-   input(type='text')
                 article.add-photos
                   .add-photos-desc
                     h4 Загрузите фотографии
@@ -192,9 +192,9 @@ block content
                     //-         | Главная
                     //-     a(href='#') Удалить
               .step-submit
-                a.step-btn(href='#') Проверить объявление
+                //- a.step-btn(href='#') Проверить объявление
                 a.third-step.step-btn(href='#') Опубликовать
-                a.back(href='#') Назад
+                //- a.back(href='#') Назад
             // Шаг 4
             section.kab-create-step-complite
               h3 Готово
@@ -275,10 +275,10 @@ block content
                             td.table-edit
                               a.table-edit-menu-show(href='javascript: void(0);') Редактировать
                               ul.table-edit-menu
-                                li
-                                  a(href='#') Изменить
-                                li
-                                  a(href='#') Снять с публикации
+                                //- li
+                                //-   a(href='#') Изменить
+                                //- li
+                                //-   a(href='#') Снять с публикации
                                 li
                                   a(href='#', class='del-ofc', data-title=objects[i].object_offices[j].office_id) Удалить
               -else  

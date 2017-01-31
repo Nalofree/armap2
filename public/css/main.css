@@ -5034,7 +5034,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   border: 1px solid #f5584e;
   color: #f5584e;
   text-transform: uppercase;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
   border-radius: 3px;
   transition: all .2s ease-out;
@@ -6926,7 +6926,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   background: #1759c9;
 }
 
-.kab-create-obj .kab-create-step-three .step-submit .step-btn:first-of-type {
+/*.kab-create-obj .kab-create-step-three .step-submit .step-btn:first-of-type {
   background: transparent;
   color: #5e5e5e;
   border-color: #a1a1a1;
@@ -6938,7 +6938,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .kab-create-obj .kab-create-step-three .step-submit .step-btn:first-of-type:hover {
   color: #454545;
   border-color: #888888;
-}
+}*/
 
 .kab-create-obj .kab-create-step-three .step-submit .back {
   border: none;
