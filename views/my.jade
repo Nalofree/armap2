@@ -271,7 +271,7 @@ block content
                                 span.status.disabled Отклонено
                             td.table-time Осталось 7 дней
                             td.table-square= objects[i].object_offices[j].office_area+'кв. м'
-                            td.table-price= (objects[i].object_offices[j].office_area*objects[i].object_offices[j].office_subprice).toFixed(3) + ' руб.'
+                            td.table-price= (objects[i].object_offices[j].office_area*objects[i].object_offices[j].office_subprice).toFixed(2) + ' руб.'
                             td.table-edit
                               a.table-edit-menu-show(href='javascript: void(0);') Редактировать
                               ul.table-edit-menu
