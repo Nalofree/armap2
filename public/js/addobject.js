@@ -150,10 +150,22 @@ $(document).ready(function() {
     var string = $(this).val();
     $(this).val(string.replace(/[^\d\\.]+/g,""));
     // parseFloat($(this).val())
-    var totalPrice = $('#create-square').val() * $('#create-price').val();
-    totalPrice = totalPrice.toFixed(2);
+    var totalPrice = getTotalPrice($('#create-square').val(), $('#create-price').val());
+    // totalPrice = totalPrice.toFixed(2);
     $('.comp-price').text(totalPrice);
   });
+
+  $('.comp-price').text(getTotalPrice($('#create-square').val(), $('#create-price').val()));
+
+  function getTotalPrice(area, subprice) {
+    var totalPrice;
+    if (area && subprice) {
+      totalPrice = parseFloat(area) * parseFloat(subprice);
+    }else{
+      totalPrice = 0;
+    }
+    return totalPrice.toFixed(2);
+  }
 
   $('.third-step.step-btn').click(function (e) {
     e.preventDefault();
@@ -236,6 +248,8 @@ $(document).ready(function() {
             data.append( 'uplimage', value );
         }
     });
+    var officeid = $(this).attr('data-title') != '' ? $(this).attr('data-title') : false;
+    data.append('officeid', officeid);
     console.log(files);
     console.log(data);
     $(".close-layout").show();
@@ -251,39 +265,11 @@ $(document).ready(function() {
         console.log(data);
         // $('.add-photos-items').empty();
         for (var i = 0; i < data.length; i++) {
-          $('.add-photos-items').append('<div class="add-photos-item"><img src="/uploads/'+data[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data[i].image_id+'" data-title="'+data[i].image_id+'">Главная</label></div><a href="#" class="deluplimage">Удалить</a></div></div>');
+          $('.add-photos-items').append('<div class="add-photos-item"><img src="/uploads/'+data[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data[i].image_id+'" data-title="'+data[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data[i].image_id+'">Удалить</a></div></div>');
         }
         $('#setimages').val('');
         $(".close-layout").hide();
-        $('.deluplimage').click(function (e) {
-          e.preventDefault();
-          console.log($(this).parent().parent().children('img').attr('src'));
-          var imgWhereString = [];
-          $('.add-photos-item img').each(function () {
-            imgWhereString.push($(this).attr('src').split('/')[2]);
-          });
-          imgWhereString = imgWhereString.join('","');
-          var imgData = {path:$(this).parent().parent().children('img').attr('src'),imgWhereString:imgWhereString};
-          var deletedItem = $(this).parent().parent();
-          $.ajax({
-            url: '/deluplimage',
-            type: 'post',
-            data: imgData,
-            success: function (data) {
-              console.log(data);
-              // $('.add-photos-items').empty();
-              // for (var i = 0; i < data.length; i++) {
-              //   $('.add-photos-items').append('<div class="add-photos-item"><img src="/uploads/'+data[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto">Главная</label></div><a href="#" class="deluplimage">Удалить</a></div></div>');
-              // }
-              deletedItem.hide();
-              $(".close-layout").hide();
-            },
-            error: function (data) {
-              console.log(data);
-              $(".close-layout").hide();
-            }
-          });
-        });
+
       },
       error: function (data) {
         console.log(data);
@@ -292,5 +278,35 @@ $(document).ready(function() {
     });
   });
 
+  $('.add-photos-items').on('click','.deluplimage', function (e) {
+    e.preventDefault();
+    console.log($(this).parent().parent().children('img').attr('src'));
+    var imgWhereString = [];
+    $('.add-photos-item img').each(function () {
+      imgWhereString.push($(this).attr('src').split('/')[2]);
+    });
+    imgWhereString = imgWhereString.join('","');
+    var imgData = {path:$(this).parent().parent().children('img').attr('src'),imgWhereString:imgWhereString};
+    var deletedItem = $(this).parent().parent();
+    imgData.imageid = $(this).attr('data-title') != '' ? $(this).attr('data-title') : false;
+    $.ajax({
+      url: '/deluplimage',
+      type: 'post',
+      data: imgData,
+      success: function (data) {
+        console.log(data);
+        // $('.add-photos-items').empty();
+        // for (var i = 0; i < data.length; i++) {
+        //   $('.add-photos-items').append('<div class="add-photos-item"><img src="/uploads/'+data[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto">Главная</label></div><a href="#" class="deluplimage">Удалить</a></div></div>');
+        // }
+        deletedItem.hide();
+        $(".close-layout").hide();
+      },
+      error: function (data) {
+        console.log(data);
+        $(".close-layout").hide();
+      }
+    });
+  });
 
 });

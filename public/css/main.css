@@ -8880,7 +8880,7 @@ h1 a:hover, h1 a:focus {
 }
 
 /*Контейнер*/
-.container {
+/*.container {
   width: 1170px;
   height: auto;
   margin: 0 auto;
@@ -8902,7 +8902,7 @@ h1 a:hover, h1 a:focus {
   .container {
     width: 100%;
   }
-}
+}*/
 
 .obj-addr-autoshow {
   display: none;
@@ -9009,7 +9009,7 @@ h1 a:hover, h1 a:focus {
   text-align: center;
 }
 
-.btn {
+/*.btn {
   background-color: #fff;
   color: #5e5e5e;
   border: 1px solid #a1a1a1;
@@ -9018,7 +9018,7 @@ h1 a:hover, h1 a:focus {
   padding: 0 20px;
   font-weight: 400;
   text-transform: none;
-}
+}*/
 
 .btn+.btn {
   margin-left: 20px;
@@ -9184,4 +9184,12 @@ h1 a:hover, h1 a:focus {
 
 .admin-trig .panel-heading:hover h4 {
   border-bottom: 2px dashed #000;
+}
+
+.result-img img, .last-object-img img {
+  width: 100%;
+}
+
+textarea {
+   resize: none;
 }

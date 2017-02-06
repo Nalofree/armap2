@@ -1,0 +1,173 @@
+extends layout
+block content
+  article#kabinet.container
+    -if (office)
+      h4= "Редактирование "
+        b= office.office_name
+      .row
+        .col-md-6
+          .panel.panel-primary
+            .panel-heading= "Основная информация"
+            .panel-body          
+              form(action="/editofc-"+office.office_id, method="POST", name="editofcmain", id="editofcmain")
+                .form-group
+                  label.control-label(for='name') Название*
+                  input.form-control(type='text', name='name' placeholder='holder', value=office.office_name)
+                .form-group
+                  label.control-label(for='name') Описание
+                  textarea.form-control( name='description' placeholder='Описание', value=office.office_description, resize=false)
+                .form-group
+                  label.control-label(for='name') Объект недвижимости*
+                  select.form-control(name='object')
+                    - for (var i = 0; i < objects.length; i++)
+                      - if (objects[i].object_id == office.office_object)
+                        option(value=objects[i].object_id, selected)= objects[i].object_name
+                      -else
+                        option(value=objects[i].object_id)= objects[i].object_name
+                .form-group
+                  label.control-label(for='name') Площадь*
+                  input#create-square.form-control(type='text', name='area' placeholder='Например 27.3', value=office.office_area)
+                .form-group
+                  label.control-label(for='name') Высота потолков
+                  input#create-height.form-control(type='text', name='height' placeholder='Например 2.7', value=office.office_height)
+                .form-group
+                  label.control-label(for='name') Цена за квадратный метр*
+                  input#create-price.form-control(type='text', name='subprice' placeholder='Например 650', value=office.office_subprice)
+                  span Цена за всю площадь: 
+                  span.comp-price= '0'
+                  span &nbsp;руб.
+                .form-group
+                  label.control-label(for='name') Телефон собственника*
+                  input#create-tel.form-control(type='text', name='phone' placeholder='+7 (111) 111-1111', value=office.office_phone)
+                .form-group
+                  input#editofcmainsubmit.btn.btn-primary(type='submit', data-title=office.office_id )
+          .panel.panel-primary
+            .panel-heading= "Основная информация"
+            .panel-body
+              h4 Назаначения
+              form(action="/editofc-"+office.office_id, method="POST", name="editofcoptions")
+                -for (var i = 0; i < meanings.length; i++)
+                  .checkbox
+                    label
+                      - if (linkedopts.indexOf(meanings[i].option_id) != -1)
+                        input.setoption(type="checkbox", name="meanings", value=meanings[i].option_id, checked, data-title=meanings[i].option_id)
+                      -else
+                        input.setoption(type="checkbox", name="meanings", value=meanings[i].option_id, data-title=meanings[i].option_id)
+                      p= meanings[i].option_name
+                h4 Услуги, входящие в арендную плату
+                -for (var i = 0; i < includes.length; i++)
+                  .checkbox
+                    label
+                      - if (linkedopts.indexOf(includes[i].option_id) != -1)
+                        input.setoption(type="checkbox", name="includes", value=includes[i].option_id, checked, data-title=includes[i].option_id)
+                      -else
+                        input.setoption(type="checkbox", name="includes", value=includes[i].option_id, data-title=includes[i].option_id)
+                      p= includes[i].option_name
+                h4 Дополнительные услуги
+                -for (var i = 0; i < advanceds.length; i++)
+                  .checkbox
+                    label
+                      - if (linkedopts.indexOf(advanceds[i].option_id) != -1)
+                        input.setoption(type="checkbox", name="advanceds", value=advanceds[i].option_id, checked, data-title=advanceds[i].option_id)
+                      -else
+                        input.setoption(type="checkbox", name="advanceds", value=advanceds[i].option_id, data-title=advanceds[i].option_id)
+                      p= advanceds[i].option_name
+                h4 Провайдеры
+                -for (var i = 0; i < providers.length; i++)
+                  .checkbox
+                    label
+                      - if (linkedopts.indexOf(providers[i].option_id) != -1)
+                        input.setoption(type="checkbox", name="providers", value=providers[i].option_id, checked, data-title=providers[i].option_id)
+                      -else
+                        input.setoption(type="checkbox", name="providers", value=providers[i].option_id, data-title=providers[i].option_id)
+                      p= providers[i].option_name
+                //- .form-group
+                //-   input.btn.btn-primary(type='submit')
+        .col-md-6
+          .panel.panel-primary
+            .panel-heading= "Изображения"
+            .panel-body
+              //- .form-group
+              //-   label(for='images') Name
+              //-   input.form-control(type='file', name='images')
+              //- .form-group
+              //-   input.btn.btn-primary(type='submit', value='Зашрузить')
+              //- - if (images)
+              //-   -for (var i = 0; i < images.length; i++)
+              //-     .col-md-6.col-sm-12
+              //-       .thumbnail.edit-ofc-images
+              //-         img(src="images/obj/"+images[i].image_filename, alt="alt")
+              //-         .caption
+              //-           - if (office.office_cover == images[i].image_id) 
+              //-             span.btn.btn-primary(data-title=images[i].image_id) Главная
+              //-           - else
+              //-             span.btn.btn-default(data-title=images[i].image_id) Главная
+              //-           span.btn.btn-danger(data-title=images[i].image_id) Удалить
+              
+              article.add-photos
+                .add-photos-desc
+                  h4 Загрузите фотографии
+                  //- p Вы можете загрузить не более 8-ми фотографий
+                  //- p Размер файла не должен превышать 1MB
+                  //- p Пожалуйста не загружайте фотографии с различным текстом. бла бла бла Lorem ipsum dolor sit amet, consectetur adipisicing elit. At neque beatae consequatur, eos ipsam numquam recusandae harum quod illum veniam?
+                  //input(type='file')
+                  form(method='post', enctype='multipart/form-data', action='/uploadimage')
+                    //| File: 
+                    input(type='file', name='uplimage', multiple='multiple', id='setimages', accept="image/*,image/jpeg", data-title=office.office_id)
+                    //input(type='submit', value='Upload')
+                    .add-photos-items
+                      - if (images)
+                        -for (var i = 0; i < images.length; i++)
+                          .add-photos-item
+                            img(src="/images/obj/"+images[i].image_filename, alt="" width='180')
+                            .photos-settings
+                              .radio
+                                label(for="mainPhoto")
+                                  - if (images[i].image_id == office.office_cover)
+                                    input(type="radio", name="mainPhoto", id="mainPhoto-"+images[i].image_id, value=images[i].image_id, data-title=images[i].image_id)
+                                  -else
+                                    input(type="radio", name="mainPhoto", id="mainPhoto-"+images[i].image_id, value=images[i].image_id, data-title=images[i].image_id, checked)
+                                  | Главная
+                              a.deluplimage(href="#", data-title=images[i].image_id) Удалить
+                    hr
+                    input.btn.btn-primary.set-images(type='submit', data-title=office.office_id)
+                //-     .col-md-6.col-sm-12
+                //-       .thumbnail.edit-ofc-images
+                //-         img(src="images/obj/"+images[i].image_filename, alt="alt")
+                //-         .caption
+                //-           - if (office.office_cover == images[i].image_id) 
+                //-             span.btn.btn-primary(data-title=images[i].image_id) Главная
+                //-           - else
+                //-             span.btn.btn-default(data-title=images[i].image_id) Главная
+                //-           span.btn.btn-danger(data-title=images[i].image_id) Удалить
+              
+              //- - for (var i = 0; i < office.images.length; i++)
+                //- office.images[i]
+                //- p= office.images[i].filename
+              //- form(action="/editofc-"+office.office_id, method="POST", name="editofc")
+              //-   .form-group
+              //-     label.control-label(for='name') Название
+              //-     input.form-control(type='text', name='name' placeholder='holder', value=office.office_name)
+              //-   .form-group
+              //-     label.control-label(for='name') Описание
+              //-     textarea.form-control( name='description' placeholder='Описание', value=office.office_description)
+              //-   .form-group
+              //-     label.control-label(for='name') Площадь
+              //-     input#create-square.form-control(type='text', name='area' placeholder='Например 27.3', value=office.office_area)
+              //-   .form-group
+              //-     label.control-label(for='name') Высота потолков
+              //-     input#create-height.form-control(type='text', name='height' placeholder='Например 2.7', value=office.office_height)
+              //-   .form-group
+              //-     label.control-label(for='name') Цена за квадратный метр
+              //-     input#create-price.form-control(type='text', name='subprice' placeholder='Например 650', value=office.office_subprice)
+              //-     span Цена за всю площадь: 
+              //-     span.comp-price= '0'
+              //-     span &nbsp;руб.
+              //-   .form-group
+              //-     label.control-label(for='name') Телефон собственника
+              //-     input#create-tel.form-control(type='text', name='phone' placeholder='+7 (111) 111-1111', value=office.office_phone)
+              //-   .form-group
+              //-     input.btn.btn-primary(type='submit')
+    -else
+      p Нет такого помещения
+          

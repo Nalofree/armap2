@@ -228,7 +228,7 @@ block content
                       p Последнее измененное:
                       a.last-object(href='/office-'+objects[i].object_offices[0].office_id)
                         .last-object-img
-                          img(src='images/search/result-img.png')
+                          img(src='images/obj/'+objects[i].object_offices[0].image_filename)
                         .last-object-desc
                           h4= objects[i].object_offices[0].office_name
                           p= objects[i].object_name
@@ -275,8 +275,8 @@ block content
                             td.table-edit
                               a.table-edit-menu-show(href='javascript: void(0);') Редактировать
                               ul.table-edit-menu
-                                //- li
-                                //-   a(href='#') Изменить
+                                li
+                                  a(href='/editofc-'+objects[i].object_offices[j].office_id) Изменить
                                 //- li
                                 //-   a(href='#') Снять с публикации
                                 li

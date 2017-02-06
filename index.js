@@ -452,7 +452,7 @@ app.get('/my',auth, function(req,res) {
           for (var i = 0; i < objects.length; i++) {
             objects[i].object_offices = [];
           }
-          connection.query('SELECT * FROM offices WHERE office_author ='+res.userid+' ORDER BY office_create ASC', function (error,result,fields) {
+          connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_author ='+res.userid+' ORDER BY office_create ASC', function (error,result,fields) {
             if (error) throw error;
             var offices = result;
             for (var i = 0; i < offices.length; i++) {
@@ -494,6 +494,99 @@ app.get('/my',auth, function(req,res) {
     res.redirect('/');
   }
 });
+
+app.get('/editofc-:officeid', auth, function (req, res) {
+  // req.session.role = result[0].role_name;
+  // req.session.userid = user.user_id;
+  // req.cookies.role = result[0].role_name;
+  // req.cookies.userid = user.user_id;
+  connection.query('SELECT * FROM offices WHERE office_author ='+req.session.userid+' AND office_id='+req.params.officeid, function (error,result,fields) {
+    if (error) throw error;
+    if (result.length > 0) {
+      var office = result[0];
+      connection.query('SELECT * FROM images WHERE image_office ='+office.office_id, function (error,result,fields) {
+        if (error) throw error;
+        // images = result;
+        if (result.length > 0) {
+          images = result;
+        }else{
+          images = false;
+        }
+        connection.query('SELECT * FROM options '/* LEFT JOIN options_offices ON link_option = option_id*/ +'LEFT JOIN opttypes ON option_type = opttype_id'/* WHERE link_office = '+office.office_id*/, function (error,result,fields) {
+          if (error) throw error;
+          var options;
+          if (result.length > 0) {
+            options = result;
+            var meanings = [], includes = [], advanceds = [], providers = [];
+            for (var i = 0; i < options.length; i++) {
+              if (options[i].opttype_name == 'meaning') {
+                meanings.push(options[i]);
+              }
+              if (options[i].opttype_name == 'included') {
+                includes.push(options[i]);
+              }
+              if (options[i].opttype_name == 'advanced') {
+                advanceds.push(options[i]);
+              }
+              if (options[i].opttype_name == 'providers') {
+                providers.push(options[i]);
+              }
+            }
+          }else{
+            options = false
+          }
+          connection.query('SELECT link_option FROM options_offices WHERE link_office = '+office.office_id, function (error,result,fields) {
+            if (error) throw error;
+            var linkedopts = [];
+            // console.log("linkedopts: "+typeof(linkedopts));
+            for (var i = 0; i < result.length; i++) {
+              linkedopts.push(result[i].link_option);
+            }
+            // linkedopts = linkedopts.join(' ');
+            console.log("linkedopts: "+linkedopts);
+            // console.log(result[0]);
+            connection.query('SELECT object_name, object_id FROM objects', function (error,result,fields) {
+              if (error) throw error;
+              objects = result;
+              res.render('editofc.jade', {office: office, images: images, meanings: meanings, includes: includes, advanceds: advanceds, providers: providers, linkedopts: linkedopts, objects: objects});
+            });
+          });
+        });
+      });
+      // res.send({office: result});
+    }else{
+      res.render('editofc.jade', {office: false});
+    }
+
+  });
+});
+
+app.post('/editofcmain-:oficeid', function (req, res) {
+  connection.query('UPDATE offices SET office_name = "'+req.body.name+'", office_description = "'+req.body.description+'", office_object = "'+req.body.object+'", office_area = "'+req.body.area+'", office_height = "'+req.body.height+'", office_subprice = "'+req.body.subprice+'", office_totalptice = "'+req.body.totalprice+'", office_phone = "'+req.body.phone+'" WHERE office_id = '+req.params.oficeid+'', function (error, result, fields) {
+    if (error) throw error;
+    connection.query('SELECT * FROM offices WHERE office_id = '+req.params.oficeid+'', function (error, result, fields) {
+      if (error) throw error;
+      res.send({office: result[0]});
+    });
+  });
+});
+
+app.post('/editofcoptions-:officeid', function (req, res) {
+  // res.send(req.body);
+  if (req.body.val == 1) {
+    // res.send('add');
+    connection.query('INSERT INTO options_offices (link_option, link_office) VALUES ('+req.body.optionid+', '+req.params.officeid+')', function (error, result, fields) {
+      if (error) throw error;
+      res.send('add');
+    });
+  }else{
+    connection.query('DELETE from options_offices WHERE link_option='+req.body.optionid, function (error, result, fields) {
+      if (error) throw error;
+      res.send('remove');
+    });
+    // res.send('remove');
+  }
+})
 
 app.get('/admin', auth, function (req, res) {
   if (res.role == 'admin') {
@@ -998,8 +1091,8 @@ app.post('/uploadimage',upload.array('uplimage'),function (req,res,next) {
       'resize': '50%'
     }
     // console.log(req.files[i]);
-    //watermark.embedWatermark(__dirname+'/public/uploads/'+req.files[i].filename, options);
-    // console.log(__dirname+'\\uploads\\'+req.files[i].filename);
+    // watermark.embedWatermark(__dirname+'/public/uploads/'+req.files[i].filename, options);
+    // console.log(__dirname+'/uploads/'+req.files[i].filename);
     // // files[i].originalname;
     // im.identify('uploads/'+req.files[i].filename, function(err, features){
     //   if (err) throw err;
@@ -1024,6 +1117,7 @@ app.post('/uploadimage',upload.array('uplimage'),function (req,res,next) {
       connection.query('SELECT * FROM images WHERE image_filename IN ("'+imgWhereString+'")',function (error,result,fields) {
         if (error) throw error;
         images = result;
+        // console.log(req.body);
         res.send(images);
       });
     });
@@ -1043,9 +1137,42 @@ app.post('/deluplimage',function (req,res) {
       connection.query('SELECT * FROM images WHERE image_filename IN ("'+req.body.imgWhereString+'")',function (error,result,fields) {
         if (error) throw error;
         images = result;
-        res.send(images);
+
+        if (req.body.imageid) {
+          connection.query('DELETE FROM images WHERE image_id ='+req.body.imageid, function (error,result,fields) {
+            if (error) throw error
+            res.send(images);
+          });
+        }
       });
     });
+  });
+});
+
+app.post('/setuplimage', function (req,res) {
+  // res.send(req.body);
+  images = req.body.imageids.join(',');
+  connection.query('UPDATE images SET image_office = '+req.body.ofcid+' WHERE image_id IN ('+images+')', function (error,result,fields) {
+    if (error) throw error;
+    // res.send('restext');
+    connection.query('UPDATE offices SET office_cover = '+req.body.mainimg+' WHERE office_id = '+req.body.ofcid, function (error,result,fields) {
+      if (error) throw error;
+      connection.query('SELECT * FROM images WHERE image_id IN ('+images+')',function (error,result,fields) {
+        if (error) throw error;
+        for (var i = 0; i < result.length; i++) {
+          // fs.exists(__dirname+'/public/uploads/'+result[i].image_filename, (exists) => {
+            // console.log(exists ? 'it\'s there' : 'no passwd!');
+            if (fs.existsSync(__dirname+'/public/uploads/'+result[i].image_filename)) {
+              fs.renameSync(__dirname+'/public/uploads/'+result[i].image_filename, __dirname+'/public/images/obj/'+result[i].image_filename);
+            }
+          // });
+          // fs.renameSync(__dirname+'/public/uploads/'+result[i].image_filename, __dirname+'/public/images/obj/'+result[i].image_filename);
+          //fs.renameSync('uploads/'+result[i].image_min,'public/images/obj/'+result[i].image_min); adding thumbail should be here
+        }
+        res.send(result);
+      });
+      // res.send('restext');
+    })
   });
 });
 
