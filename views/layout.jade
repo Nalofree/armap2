@@ -44,7 +44,7 @@ html(lang='ru')
       header#header
         // Меню в самом верху
         article#head-top-line
-          nav.top-line.container
+          nav.top-line
             ul#head-top-menu
               li
                 a.show-footer.href(href='#footer')= 'Контакты'
@@ -163,14 +163,14 @@ html(lang='ru')
                 p Вход в систему
               .modal-body
                 form#login-form(name='login_form', action='/', method='POST')
-                  .input-group
+                  .form-group
                     label
                       | Почта
-                      input(type='email', required='', name='login_email', id='login_email')
-                  .input-group
+                    input.form-control(type='email', required='', name='login_email', id='login_email')
+                  .form-group
                     label
                       | Пароль
-                      input(type='password', required='', name='login_pass', id='login_pass')
+                    input.form-control(type='password', required='', name='login_pass', id='login_pass')
                   input.btn-submit(type='submit', value='Отправить')
               .modal-footer
                 span или
