@@ -991,6 +991,7 @@ app.get('/moder', auth,function (req,res) {
 
                 // console.log(objects);
                 // console.log(objects);
+
                 res.render('moder.jade',{
                   nopublishofccount: nopublishofccount,
                   role: res.role,
@@ -1003,6 +1004,18 @@ app.get('/moder', auth,function (req,res) {
                   users: users,
                   archoffices: archoffices
                 });
+                // res.send({
+                //   nopublishofccount: nopublishofccount,
+                //   role: res.role,
+                //   username: res.userfullname,
+                //   userid: res.userid,
+                //   objects: objects,
+                //   objtypes: objtypes,
+                //   offices: offices,
+                //   images: images,
+                //   users: users,
+                //   archoffices: archoffices
+                // });
               });
             });
           });
@@ -1020,6 +1033,19 @@ app.get('/moder', auth,function (req,res) {
           // users: users,
           // archoffices: archoffices
         });
+
+        // res.send({
+        //   // nopublishofccount: nopublishofccount,
+        //   role: res.role,
+        //   username: res.userfullname,
+        //   userid: res.userid,
+        //   // objects: objects,
+        //   // objtypes: objtypes,
+        //   // offices: offices,
+        //   // images: images,
+        //   // users: users,
+        //   // archoffices: archoffices
+        // });
       }
 
     });

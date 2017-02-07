@@ -4889,6 +4889,10 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   height: auto;
 }
 
+.sp-slide {
+  overflow: hidden;
+}
+
 @media screen and (max-width: 768px) {
   #object #obj-description #obj-slider .sp-thumbnails-container {
     display: none;

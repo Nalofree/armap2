@@ -13,6 +13,8 @@ block content
         .kab-settings
           //- a.btn-setting(href='#') Настройки
           a.btn-setting(href='/logout') Выйти
+          div
+              
       article.kab-tab-panel
         ul(role='tablist')
           li.active(role='presentation')
@@ -46,7 +48,7 @@ block content
       // Контент вкладок
       .tab-content
         // Объекты и помещения на модерацию
-        #mod-objects.mod-object-list.active.fade.in
+        #mod-objects.mod-object-list.tab-pane.active(role='tabpanel')
           .mod-sorting
             .checkbox
               label
@@ -217,7 +219,7 @@ block content
                             - var showClass = "disabled"
                           - var officeId = objects[i].object_offices[m].office_id;
                           .item-show-more(class= showClass)
-                            a.btn.unconfirmoffice.published(href='#', data-title=officeId) Снять с публикации
+                            a.btn.btn-default.unconfirmoffice.published(href='#', data-title=officeId) Снять с публикации
                             //- a.disabled-history(href='#', data-title=officeId) Посмотреть историю
                             a.show-room-info(href='javascript: void(0);', data-title=officeId) Просмотр
                         // Подробная информация о помещении
@@ -613,72 +615,91 @@ block content
                     //-         a(href='#') Отмена
                     //-         a.success-btn(href='#') Отправить
             // Архив
-          #mod-archive.mod-object-list.fade
-            .item-object-rooms-list
-              -if (archoffices)
-                - for (var m = 0; m < archoffices.length; m++)
-                  .item-room
-                    .item-desc
-                      .item-time
-                        p= archoffices[m].office_create
-                        //- p 21 июнь 2014
-                        //- p в 21:03
-                      .item-name
-                        h3
-                          a.nowrap-text(href='#')= archoffices[m].office_name
-                        - if(archoffices[m].office_publish > 0)
-                          - if(archoffices[m].office_publish > 1)
-                            p.status.disabled Отклонено
-                          - else
-                            p.status.published Опубликовано
-                        - else
-                          p.status.wait Ожидает модерации
-                      .item-user
-                        p Пользователь
+        #mod-archive.mod-object-list.tab-pane(role='tabpanel')
+          //- .item-object-rooms-list
+          -if (archoffices)
+            - for (var m = 0; m < archoffices.length; m++)
+              .panel
+                .panel-body
+                  .row
+                    .col-md-3.col-sm-3.col-xs-6
+                      img.img-responsive(src="/images/obj/"+archoffices[m].office_image)
+                    .col-md-9.col-sm-9.col-xs-6
+                      p
+                        a(href="office-"+archoffices[m].office_id)= archoffices[m].office_name
+                      p= archoffices[m].office_create
+                      p
                         a(href='/user-'+archoffices[m].office_author.user_id)= archoffices[m].office_author.user_firstname + ' ' + archoffices[m].office_author.user_lastname
-                      //
-                        Кнопки в таблице помещений
-                        при классе wait помещение Ожидает модерации
-                        при классе published помещение Опубликовано
-                        при классе disabled помещение Отклонено
                       - if (archoffices[m].office_publish == 0)
-                        - var showClass = "wait"
+                        p.lead= "Ожидает модерации"
                       - else if (archoffices[m].office_publish == 1)
-                        - var showClass = "published"
+                        p= "Опубликовано"
                       - else
-                        - var showClass = "disabled"
-                      - var officeId = archoffices[m].office_id;
-                      .item-show-more(class= showClass)
-                        a.btn.unconfirmoffice.published(href='#', data-title=officeId) Снять с публикации
-                        //- a.disabled-history(href='#', data-title=officeId) Посмотреть историю
-                        a.show-room-info(href='javascript: void(0);', data-title=officeId) Просмотр
-          // Пользователи
-          #mod-users.mod-object-list.fade
-            table.table(width="100%")
-              thead
-                tr
-                  th= "Ид"
-                  th= "Почта/логин"
-                  th= "Роль"
-                  th= "Имя"
-                  th= "Фамилия"
-                  th= "Мобильный"
-                  th= "Бан"
-                  th= "Подтвержден"
-              tbody
-                - if (users)
-                  -for (var i = 0; i < users.length; i++)
-                    tr
-                      td= users[i].user_id
-                      td= users[i].user_email
-                      td= users[i].role_name
-                      td= users[i].user_firstname
-                      td= users[i].user_lastname
-                      td= users[i].user_mobile
-                      td
-                        div.btn.banuser(data-title=users[i].user_id)= (users[i].user_ban === 0) ? "Заблокировать" : "Разблокировать"
-                      td
-                        div.btn.confirmuser(data-title=users[i].user_id)= (users[i].user_confirm === 0) ? "Подтвердить" : "Подтвержден"
+                        p= "Отклонено"
+                      .btn.btn-primary.recuveofc(data-title=archoffices[m].office_author.user_id) Восстановить из архива
+                  //- p= archoffices[m].office_image
+                //- .item-room
+                //-   .item-desc
+                //-     .item-time
+                //-       p= archoffices[m].office_create
+                //-       //- p 21 июнь 2014
+                //-       //- p в 21:03
+                //-     .item-name
+                //-       h3
+                //-         a.nowrap-text(href='#')= archoffices[m].office_name
+                //-       - if(archoffices[m].office_publish > 0)
+                //-         - if(archoffices[m].office_publish > 1)
+                //-           p.status.disabled Отклонено
+                //-         - else
+                //-           p.status.published Опубликовано
+                //-       - else
+                //-         p.status.wait Ожидает модерации
+                //-     .item-user
+                //-       p Пользователь
+                //-       a(href='/user-'+archoffices[m].office_author.user_id)= archoffices[m].office_author.user_firstname + ' ' + archoffices[m].office_author.user_lastname
+                //-     //
+                //-       Кнопки в таблице помещений
+                //-       при классе wait помещение Ожидает модерации
+                //-       при классе published помещение Опубликовано
+                //-       при классе disabled помещение Отклонено
+                //-     - if (archoffices[m].office_publish == 0)
+                //-       - var showClass = "wait"
+                //-     - else if (archoffices[m].office_publish == 1)
+                //-       - var showClass = "published"
+                //-     - else
+                //-       - var showClass = "disabled"
+                //-     - var officeId = archoffices[m].office_id;
+                //-     .item-show-more(class= showClass)
+                //-       a.btn.btn-default.unconfirmoffice.published(href='#', data-title=officeId) Снять с публикации
+                //-       //- a.disabled-history(href='#', data-title=officeId) Посмотреть историю
+                //-       a.show-room-info(href='javascript: void(0);', data-title=officeId) Просмотр
+        // Пользователи
+        #mod-users.mod-object-list.tab-pane(role='tabpanel')
+          table.table(width="100%")
+            thead
+              tr
+                th= "Ид"
+                th= "Почта/логин"
+                th= "Роль"
+                th= "Имя"
+                th= "Фамилия"
+                th= "Мобильный"
+                th= "Бан"
+                th= "Подтвержден"
+            tbody
+              - if (users)
+                -for (var i = 0; i < users.length; i++)
+                  tr
+                    td= users[i].user_id
+                    td= users[i].user_email
+                    td= users[i].role_name
+                    td= users[i].user_firstname
+                    td= users[i].user_lastname
+                    td= users[i].user_mobile
+                    td
+                      div.btn.btn-default.banuser(data-title=users[i].user_id)= (users[i].user_ban === 0) ? "Заблокировать" : "Разблокировать"
+                    td
+                      div.btn.btn-default.confirmuser(data-title=users[i].user_id)= (users[i].user_confirm === 0) ? "Подтвердить" : "Подтвержден"
                 
     // Модальные окна при отклонениях
     .mod-modals

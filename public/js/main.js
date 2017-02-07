@@ -283,7 +283,10 @@ footerBtn.click(function () {
 //Меню таблицы в ЛК
 var tableMenuBtn = $('.table-edit-menu-show'),
     tableMenu = $('.table-edit-menu');
-
+$('.kab-tab-panel a').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+});
 tableMenu.hide();
 tableMenuBtn.click(function () {
     if ($(this).hasClass('active')) {
