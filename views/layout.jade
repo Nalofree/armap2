@@ -78,9 +78,8 @@ html(lang='ru')
         article#head-main-menu
           section.container
             div
-              h1
-                a(href='/') Аренда в Иркутске
-              p Коммерческая недвижимость от собственников
+               a(href='/')
+                 img.mainlogo(src="/images/Logo_01.png", alt="")
             nav#main-menu
               ul
                 li
@@ -382,15 +381,14 @@ html(lang='ru')
                 h4 Заказать звонок
                 p Оставьте ваши контакты и мы поможем вам найти  подходящее помещ
               .modal-body
-                form#form-call-me
-                  .input-group
-                    label
-                      | ФИО
-                      input(type='text', required='')
-                  .input-group
-                    label
-                      | Телефон
-                      input(type='tel', required='')
+                form(action='/sendmail', method='POST')#form-call-me
+                  .form-group
+                    label ФИО
+                    input.form-control(name='name', type='text', required='')
+                  .form-group
+                    label Телефон
+                    input.form-control(name='phone', type='tel', required='')
+                  input(type="hidden", name='email', value='nalofree@gmail.com')
                   button.btn-submit(type='submit') Отправить
             // Появляется при успешком заполнении формы
             .modal-thanks
@@ -399,73 +397,73 @@ html(lang='ru')
                   span(aria-hidden='true')
                 h4 Спасибо!
                 p Заявка отправлена
-              .modal-thanks-recomended
-                article
-                  a(href='#')
-                    .result-img
-                      img(src='images/search/result-img.png')
-                    .result-desc
-                      h4 Офис № 241
-                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
-                      section
-                        .result-price
-                          p
-                            | Цена за м
-                            sup 2
-                            | : 
-                            br
-                            span 2000 р.
-                        .result-square
-                          p
-                            | Площадь: 
-                            br
-                            span
-                              | 50 м
-                              sup 2
-                article
-                  a(href='#')
-                    .result-img
-                      img(src='images/search/result-img.png')
-                    .result-desc
-                      h4 Офис № 241 Офис № 241 Офис № 241
-                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
-                      section
-                        .result-price
-                          p
-                            | Цена за м
-                            sup 2
-                            | : 
-                            br
-                            span 2000 р.
-                        .result-square
-                          p
-                            | Площадь: 
-                            br
-                            span
-                              | 50 м
-                              sup 2
-                article
-                  a(href='#')
-                    .result-img
-                      img(src='images/search/result-img.png')
-                    .result-desc
-                      h4 Офис № 241
-                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
-                      section
-                        .result-price
-                          p
-                            | Цена за м
-                            sup 2
-                            | : 
-                            br
-                            span 2000 р.
-                        .result-square
-                          p
-                            | Площадь: 
-                            br
-                            span
-                              | 50 м
-                              sup 2
+              //- .modal-thanks-recomended
+              //-   article
+              //-     a(href='#')
+              //-       .result-img
+              //-         img(src='images/search/result-img.png')
+              //-       .result-desc
+              //-         h4 Офис № 241
+              //-         p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+              //-         section
+              //-           .result-price
+              //-             p
+              //-               | Цена за м
+              //-               sup 2
+              //-               | : 
+              //-               br
+              //-               span 2000 р.
+              //-           .result-square
+              //-             p
+              //-               | Площадь: 
+              //-               br
+              //-               span
+              //-                 | 50 м
+              //-                 sup 2
+              //-   article
+              //-     a(href='#')
+              //-       .result-img
+              //-         img(src='images/search/result-img.png')
+              //-       .result-desc
+              //-         h4 Офис № 241 Офис № 241 Офис № 241
+              //-         p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+              //-         section
+              //-           .result-price
+              //-             p
+              //-               | Цена за м
+              //-               sup 2
+              //-               | : 
+              //-               br
+              //-               span 2000 р.
+              //-           .result-square
+              //-             p
+              //-               | Площадь: 
+              //-               br
+              //-               span
+              //-                 | 50 м
+              //-                 sup 2
+              //-   article
+              //-     a(href='#')
+              //-       .result-img
+              //-         img(src='images/search/result-img.png')
+              //-       .result-desc
+              //-         h4 Офис № 241
+              //-         p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+              //-         section
+              //-           .result-price
+              //-             p
+              //-               | Цена за м
+              //-               sup 2
+              //-               | : 
+              //-               br
+              //-               span 2000 р.
+              //-           .result-square
+              //-             p
+              //-               | Площадь: 
+              //-               br
+              //-               span
+              //-                 | 50 м
+              //-                 sup 2
       // Окно появляется при уходе со страницы
       #end-visit.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
         .modal-dialog
@@ -474,88 +472,88 @@ html(lang='ru')
               button.close(data-dismiss='modal', aria-label='close')
                 span(aria-hidden='true')
               h4 Спасибо за посещение!
-              p Рекомендуем к просмотру
-            .modal-body
-              section.bm-item
-                .bm-item-img
-                  a(href='object.html')
-                    img(src='images/search/result-big.png')
-                .bm-item-desc
-                  h3
-                    a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
-                  section
-                    .bm-item-price
-                      p
-                        | Цена за м
-                        sup 2
-                        | : 
-                        span 2000 р.
-                    .bm-item-square
-                      p
-                        | Площадь: 
-                        span
-                          | 50 м
-                          sup 2
-              section.bm-item
-                .bm-item-img
-                  a(href='object.html')
-                    img(src='images/search/result-big.png')
-                .bm-item-desc
-                  h3
-                    a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
-                  section
-                    .bm-item-price
-                      p
-                        | Цена за м
-                        sup 2
-                        | : 
-                        span 2000 р.
-                    .bm-item-square
-                      p
-                        | Площадь: 
-                        span
-                          | 50 м
-                          sup 2
-              section.bm-item
-                .bm-item-img
-                  a(href='object.html')
-                    img(src='images/search/result-big.png')
-                .bm-item-desc
-                  h3
-                    a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
-                  section
-                    .bm-item-price
-                      p
-                        | Цена за м
-                        sup 2
-                        | : 
-                        span 2000 р.
-                    .bm-item-square
-                      p
-                        | Площадь: 
-                        span
-                          | 50 м
-                          sup 2
-              section.bm-item
-                .bm-item-img
-                  a(href='object.html')
-                    img(src='images/search/result-big.png')
-                .bm-item-desc
-                  h3
-                    a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
-                  section
-                    .bm-item-price
-                      p
-                        | Цена за м
-                        sup 2
-                        | : 
-                        span 2000 р.
-                    .bm-item-square
-                      p
-                        | Площадь: 
-                        span
-                          | 50 м
-                          sup 2
+            //-   p Рекомендуем к просмотру
+            //- .modal-body
+            //-   section.bm-item
+            //-     .bm-item-img
+            //-       a(href='object.html')
+            //-         img(src='images/search/result-big.png')
+            //-     .bm-item-desc
+            //-       h3
+            //-         a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
+            //-       section
+            //-         .bm-item-price
+            //-           p
+            //-             | Цена за м
+            //-             sup 2
+            //-             | : 
+            //-             span 2000 р.
+            //-         .bm-item-square
+            //-           p
+            //-             | Площадь: 
+            //-             span
+            //-               | 50 м
+            //-               sup 2
+            //-   section.bm-item
+            //-     .bm-item-img
+            //-       a(href='object.html')
+            //-         img(src='images/search/result-big.png')
+            //-     .bm-item-desc
+            //-       h3
+            //-         a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
+            //-       section
+            //-         .bm-item-price
+            //-           p
+            //-             | Цена за м
+            //-             sup 2
+            //-             | : 
+            //-             span 2000 р.
+            //-         .bm-item-square
+            //-           p
+            //-             | Площадь: 
+            //-             span
+            //-               | 50 м
+            //-               sup 2
+            //-   section.bm-item
+            //-     .bm-item-img
+            //-       a(href='object.html')
+            //-         img(src='images/search/result-big.png')
+            //-     .bm-item-desc
+            //-       h3
+            //-         a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
+            //-       section
+            //-         .bm-item-price
+            //-           p
+            //-             | Цена за м
+            //-             sup 2
+            //-             | : 
+            //-             span 2000 р.
+            //-         .bm-item-square
+            //-           p
+            //-             | Площадь: 
+            //-             span
+            //-               | 50 м
+            //-               sup 2
+            //-   section.bm-item
+            //-     .bm-item-img
+            //-       a(href='object.html')
+            //-         img(src='images/search/result-big.png')
+            //-     .bm-item-desc
+            //-       h3
+            //-         a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
+            //-       section
+            //-         .bm-item-price
+            //-           p
+            //-             | Цена за м
+            //-             sup 2
+            //-             | : 
+            //-             span 2000 р.
+            //-         .bm-item-square
+            //-           p
+            //-             | Площадь: 
+            //-             span
+            //-               | 50 м
+            //-               sup 2
       script(src="http://ip-jobs.staff-base.spb.ru/ip.cgi")
       script(src='js/jquery.maskedinput.js')
       script(src='js/animsition.min.js')

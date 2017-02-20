@@ -238,4 +238,22 @@ $(document).ready(function () {
     });
   });
 
+  $(".recuveofc").click(function (e) {
+    e.preventDefault();
+    ofcid = $(this).attr('data-title');
+    // alert(ofcid);
+    $.ajax({
+      url: '/recuveofc',
+      type: 'POST',
+      data: {ofcid: ofcid},
+      success: function (data, status, error) {
+        console.log(data, status, error);
+        $(this).closest('div.panel').hide();
+      },
+      error: function (data, status, error) {
+        console.log(data, status, error);
+      },
+    });
+  });
+
 });

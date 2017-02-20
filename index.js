@@ -14,6 +14,7 @@ var express = require('express'),
     watermark = require('image-watermark'),
     im = require('imagemagick'),
     requestIp = require('request-ip');
+    // nodemailer = require('nodemailer');
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -27,6 +28,16 @@ var storage = multer.diskStorage({
     cb(null, 'upload-'+Date.now() + '.' + ex);
   }
 });
+
+// https://nodemailer.com/about/
+
+// var transporter = nodemailer.createTransport({
+//     service: 'Yandex',
+//     auth: {
+//         user: 'arenda.38@yandex.ru',
+//         pass: 'yourpass'
+//     }
+// });
 
 var upload = multer({ storage: storage });
 
@@ -124,6 +135,19 @@ function auth(req, res, next) {
 //     coords: coords
 //   });
 // });
+
+app.post('/sendmail', function (req,res) {
+  res.send(req.body);
+  maildata = {};
+  maildata.email = req.body.email;
+  // console.log(maildata);
+  if (maildata.email) {
+    maildata.name = req.body.name ? req.body.email : "без имени";
+    maildata.phone = req.body.phone ? req.body.phone : "не указан";
+  }else{
+    res.send('send mail error');
+  }
+});
 
 app.post('/choosecity',function (req,res) {
   connection.query('SELECT city_id, city_name FROM citys',function (error,result,fields) {
@@ -455,6 +479,8 @@ app.get('/my',auth, function(req,res) {
           connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_author ='+res.userid+' ORDER BY office_create ASC', function (error,result,fields) {
             if (error) throw error;
             var offices = result;
+            var showoffices = [];
+            var archoffices = [];
             for (var i = 0; i < offices.length; i++) {
               var date = offices[i].office_create,
                 day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate(),
@@ -464,13 +490,22 @@ app.get('/my',auth, function(req,res) {
                 minutes = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes(),
                 time = hours+':'+minutes;
               offices[i].office_create = day+'.'+month+'.'+year+' '+time;
+              if (offices[i].office_show == 1) {
+                showoffices.push(offices[i]);
+              }else{
+                archoffices.push(offices[i]);
+              }
+            }
+            console.log(showoffices);
+            for (var i = 0; i < showoffices.length; i++) {
               for (var j = 0; j < objects.length; j++) {
-                if (offices[i].office_object === objects[j].object_id) {
-                  objects[j].object_offices.push(offices[i]);
-                  offices[i].office_adres = objects[j].object_adres;
+                if (showoffices[i].office_object === objects[j].object_id) {
+                  objects[j].object_offices.push(showoffices[i]);
+                  showoffices[i].office_adres = objects[j].object_adres;
                 }
               }
             }
+
             // console.log(objects);
             // console.log(meanings[2].option_id);
             console.log(res.role);
@@ -484,7 +519,8 @@ app.get('/my',auth, function(req,res) {
               meanings: meanings,
               included: included,
               advanced: advanced,
-              providers: providers
+              providers: providers,
+              archoffices: archoffices
             });
           })
         });
@@ -851,6 +887,14 @@ app.get('/bookmarks', auth, function (req,res) {
       count: 0
     });
   }
+});
+
+app.post('/recuveofc', function (req, res) {
+  // res.send(req.body.ofcid);
+  connection.query("UPDATE offices SET office_show = 1", function (error,result,fields) {
+    if (error) throw error;
+    res.send(req.result);
+  });
 });
 
 app.get('/moder', auth,function (req,res) {

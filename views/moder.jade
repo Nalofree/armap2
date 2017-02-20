@@ -313,23 +313,23 @@ block content
                           .item-room-block-three
                             .item-three-head
                               h3 Загруженные фотографии
-                              //- button.disable-btn(type='button', data-toggle='modal', data-target='#modal-photo') Отклонить фотографии
+                              button.disable-btn(type='button', data-toggle='modal', data-target='#modal-photo') Отклонить фотографии
                             .item-three-images
                               - for (var o = 0; o < objects[i].object_offices[m].office_images.length; o++)
                                 .image
                                   img(src='images/obj/'+objects[i].object_offices[m].office_images[o].image_filename)
                                   .photos-settings
-                                    //- .checkbox
-                                    //-   label
-                                    //-     input(type='checkbox', name='mainPhoto', value=objects[i].object_offices[m].office_images[o].image_id)
-                                    //-     | Отметить
-                                    //- .radio
-                                    //-   label
-                                    //-     - if (objects[i].object_offices[m].office_cover == objects[i].object_offices[m].office_images[o].image_id)
-                                    //-       input(type='radio', name='mainPhoto', checked=true, value=objects[i].object_offices[m].office_images[o].image_id)
-                                    //-     - else
-                                    //-       input(type='radio', name='mainPhoto', checked=false, value=objects[i].object_offices[m].office_images[o].image_id)
-                                    //-     | Главная
+                                    .checkbox
+                                      label
+                                        input(type='checkbox', name='mainPhoto', value=objects[i].object_offices[m].office_images[o].image_id)
+                                        | Отметить
+                                    .radio
+                                      label
+                                        - if (objects[i].object_offices[m].office_cover == objects[i].object_offices[m].office_images[o].image_id)
+                                          input(type='radio', name='mainPhoto', checked=true, value=objects[i].object_offices[m].office_images[o].image_id)
+                                        - else
+                                          input(type='radio', name='mainPhoto', checked=false, value=objects[i].object_offices[m].office_images[o].image_id)
+                                        | Главная
                           .item-room-block-four
                             //- .reset
                             //-   a.reset-btn(href='#') Отменить изменения
@@ -636,7 +636,7 @@ block content
                         p= "Опубликовано"
                       - else
                         p= "Отклонено"
-                      .btn.btn-primary.recuveofc(data-title=archoffices[m].office_author.user_id) Восстановить из архива
+                      .btn.btn-primary.recuveofc(data-title=archoffices[m].office_id) Восстановить из архива
                   //- p= archoffices[m].office_image
                 //- .item-room
                 //-   .item-desc
@@ -726,16 +726,12 @@ block content
                   label
                     input(type='checkbox')
                     | Ненадлежащее качество
-                .checkbox
-                  label
-                    input(type='checkbox')
-                    | Причина 2
               .modal-comment
                 p Комментарий модератора:
                 textarea(placeholder='Комментарий...')
                 .mobal-btns
-                  a.disable-btn(href='#') Отмена
-                  button.success-btn(type='submit') Готово
+                  a.disable-btn(href='#', aria-label="close",data-dismiss="modal") Отмена
+                  button.success-btn(type='submit', aria-label="close",data-dismiss="modal") Готово
       // Модальные окно при отклонении помещения
       #modal-rooms.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
         .modal-dialog
@@ -795,10 +791,6 @@ block content
                   label
                     input(type='checkbox', value= 'Ненадлежащее качество')
                     | Ненадлежащее качество
-                .checkbox
-                  label
-                    input(type='checkbox', value= 'Причина 2')
-                    | Причина 2
               .modal-comment
                 p Комментарий модератора:
                 textarea(placeholder='Комментарий...')

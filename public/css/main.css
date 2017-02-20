@@ -2623,10 +2623,21 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   z-index: 1;
 }
 
+.mainlogo {
+    width: 100%;
+    margin-top: 5px;
+    margin-left: -74px;
+}
+
 @media screen and (max-width: 768px) {
   #header #head-main-menu {
     width: 90%;
     border-radius: 0 0 5px 0;
+  }
+  .mainlogo {
+    width: 43%;
+    margin-top: -4px;
+    margin-left: -25px;
   }
 }
 
@@ -2634,6 +2645,11 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   #header #head-main-menu {
     width: 80%;
     height: 65px;
+  }
+  .mainlogo {
+    width: 100%;
+    margin-top: 5px;
+    margin-left: -25px;
   }
 }
 

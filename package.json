@@ -34,6 +34,7 @@
     "multer": "^1.2.0",
     "multiparty": "^4.1.2",
     "mysql": "^2.11.1",
+    "nodemailer": "^3.0.2",
     "nodemon": "^1.9.2",
     "promise": "^7.1.1",
     "request-ip": "^1.2.2"
