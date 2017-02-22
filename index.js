@@ -1152,6 +1152,8 @@ app.post('/delofc',function (req,res) {
 app.post('/uploadimage',upload.array('uplimage'),function (req,res,next) {
   var valuesString = [],
       imgWhereString = [];
+      console.log(req.files);
+      console.log(eq.files.length);
   for (var i = 0; i < req.files.length; i++) {
     var options = {
       'text':'text',
@@ -1202,7 +1204,7 @@ app.post('/deluplimage',function (req,res) {
   console.log(filename);
   connection.query('DELETE FROM images WHERE image_filename = "'+filename+'"',function (error,result,fields) {
     if (error) throw error;
-    fs.unlink('public'+req.body.path, (err) => {
+    fs.unlink('/public'+req.body.path, (err) => {
       if (err) throw err;
       console.log('successfully deleted public'+req.body.path);
       connection.query('SELECT * FROM images WHERE image_filename IN ("'+req.body.imgWhereString+'")',function (error,result,fields) {
