@@ -264,12 +264,12 @@ $(document).ready(function() {
       success: function (data) {
         console.log(data);
         // $('.add-photos-items').empty();
-        for (var i = 0; i < data.length; i++) {
+        for (var i = 0; i < data.images.length; i++) {
           // $('.add-photos-items').append("<a href=/uploads/"+data[i].image_filename+">"+data[i].image_filename+"</a>");
           // $('.add-photos-items').append("<img src=/uploads/"+data[i].image_filename+">");
 
           // $('.add-photos-items').append('<div class="add-photos-item"><img src="/uploads/'+data[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data[i].image_id+'" data-title="'+data[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data[i].image_id+'">Удалить</a></div></div>');
-          console.log(data[i].image_filename);
+          console.log(data.images[i].image_filename);
           // $('.add-photos-item img').hide().attr('src',"/uploads/"+data[i].image_filename).fadeIn();
           // $('.add-photos-item img').fadeOut(800, function () {
           //   $('.add-photos-item img').attr('src',"/uploads/"+data[i].image_filename).fadeIn().delay(2000);
