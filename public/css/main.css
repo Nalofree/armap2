@@ -9213,3 +9213,11 @@ h1 a:hover, h1 a:focus {
 textarea {
    resize: none;
 }
+
+.add-photos-item-image {
+  width: 180px;
+  height: 120px;
+  background-color: #eee;
+  background-repeat: no-repeat;
+  background-size: cover;
+}

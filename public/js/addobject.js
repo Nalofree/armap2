@@ -267,7 +267,7 @@ $(document).ready(function() {
         for (var i = 0; i < data.images.length; i++) {
           // var new_img = new Image();
           // new_img.width = 180;
-          // new_img.src = "/uploads/"+data.images[i].image_filename;
+          // new_img.src = "http://irkutsk-arenda.ru:8080/uploads/"+data.images[i].image_filename;
           //  $('.add-photos-items').append(new_img);
 
           // var image = $('<img></img>');
@@ -275,23 +275,18 @@ $(document).ready(function() {
           // $('.add-photos-items').append(image);
 
           //////////////////////////////////////////////////////////////////////
-          image = new Image();
-          image.src = "/uploads/"+data.images[i].image_filename;
-          image.width = 180;
-          holder = new Image();
-          holder.src = "/images/kabinet/1.png";
-          holder.width = 180;
-          image.onload = function () {
-              $('.add-photos-items').append(image);
-              console.log('Loading is done!');
-          };
-          image.onerror = function (err) {
-            // console.log(err);
-            $('.add-photos-items').append(holder);
-            console.log('That image is not available!');
-          }
-
-          console.log('Loading...');
+          // image = new Image();
+          // image.src = "/uploads/"+data.images[i].image_filename;
+          // image.width = 180;
+          // image.onload = function () {
+          //     $('.add-photos-items').append(image);
+          // };
+          // image.onerror = function (err) {
+          //   console.log(err);
+          //   $('.add-photos-items').append('<p>That image is not available.</p>');
+          // }
+          //
+          // $('.add-photos-items').append('<p>Loading...</p>');
           //////////////////////////////////////////////////////////////////////
 
           // window.document.body.appendChild(new_img);
@@ -302,6 +297,24 @@ $(document).ready(function() {
           //     // error
           //     console.log('loading error');
           // });
+          var photoItem;
+          photoItem = $('<div class="add-photos-item" data-title='+data.images[i].image_id+'><div class="add-photos-item-image" data-title='+data.images[i].image_id+' style="background-image: url(/uploads/'+ data.images[i].image_filename +')" ></div><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data.images[i].image_id+'" data-title="'+data.images[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data.images[i].image_id+'">Удалить</a></div></div>');
+          // photoItem.children('.add-photos-item-image').css("background-image", "url(data:image/png;base64, /uploads/" + data.images[i].image_filename + ")");
+          var imageName = data.images[i].image_filename;
+          var imageId = data.images[i].image_id;
+          console.log(photoItem);
+          // $('.add-photos-items').on('click','.add-photos-item-image[data-title='+imageId+']',function () {
+          //   $(this).css("background-image", "url('/uploads/" + imageName + "')");
+          //   alert(123);
+          // })
+          $('.add-photos-items').append(photoItem);
+
+          // $("div.add-photos-item-image[data-title="+data.images[i].image_id+"]").ready(function () {
+          //   $(this).css("background-image", "url(data:image/png;base64, /uploads/" + data.images[i].image_filename + ")");
+          // });
+          //.css("background-image", "url(data:image/png;base64, /uploads/" + data.images[i].image_filename + ")");
+
+
           //.children('img').attr('src','/uploads/'+data.images[i].image_filename);
           // $('.add-photos-items').append("<a href=/uploads/"+data.images[i].image_filename+">"+data.images[i].image_filename+"</a>");
           // $('.add-photos-items').append("<img src=/uploads/"+data.images[i].image_filename+" width=180>");
