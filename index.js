@@ -1153,7 +1153,7 @@ app.post('/uploadimage',upload.array('uplimage'),function (req,res,next) {
   var valuesString = [],
       imgWhereString = [];
       console.log(req.files);
-      console.log(eq.files.length);
+      console.log(req.files.length);
   for (var i = 0; i < req.files.length; i++) {
     var options = {
       'text':'text',
