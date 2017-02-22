@@ -39,7 +39,7 @@ var storage = multer.diskStorage({
 //     }
 // });
 
-var upload = multer({ storage: storage });
+var upload = multer({ storage: storage }).array('uplimage');
 
 var watermarkOptions = {
     'text' : 'rentozavr-rf',
@@ -1149,51 +1149,59 @@ app.post('/delofc',function (req,res) {
   });
 });
 
-app.post('/uploadimage',upload.array('uplimage'),function (req,res,next) {
-  var valuesString = [],
-      imgWhereString = [];
-  for (var i = 0; i < req.files.length; i++) {
-    var options = {
-      'text':'text',
-      'color':'#fff',
-      'dstPath': 'uploads/w_'+req.files[i].filename,
-      'override-image': true,
-      'resize': '50%'
+app.post('/uploadimage',function (req,res) {
+  upload(req, res, function (err) {
+    if (err) {
+      // An error occurred when uploading
+      // return
+      res.send('Upload error')
     }
-    // console.log(req.files[i]);
-    // watermark.embedWatermark(__dirname+'/public/uploads/'+req.files[i].filename, options);
-    // console.log(__dirname+'/uploads/'+req.files[i].filename);
-    // // files[i].originalname;
-    // im.identify('uploads/'+req.files[i].filename, function(err, features){
-    //   if (err) throw err;
-    //   console.log(features);
-    //   // { format: 'JPEG', width: 3904, height: 2622, depth: 8 }
-    // });
+    var valuesString = [],
+        imgWhereString = [];
+    for (var i = 0; i < req.files.length; i++) {
+      var options = {
+        'text':'text',
+        'color':'#fff',
+        'dstPath': 'uploads/w_'+req.files[i].filename,
+        'override-image': true,
+        'resize': '50%'
+      }
+      // console.log(req.files[i]);
+      // watermark.embedWatermark(__dirname+'/public/uploads/'+req.files[i].filename, options);
+      // console.log(__dirname+'/uploads/'+req.files[i].filename);
+      // // files[i].originalname;
+      // im.identify('uploads/'+req.files[i].filename, function(err, features){
+      //   if (err) throw err;
+      //   console.log(features);
+      //   // { format: 'JPEG', width: 3904, height: 2622, depth: 8 }
+      // });
 
-    //add watermark
+      //add watermark
 
-    //make a thumbail
+      //make a thumbail
 
-    valuesString.push('("'+req.files[i].filename+'")');
-    imgWhereString.push(req.files[i].filename);
-    console.log(req.files[i].filename);
-  }
-  console.log(req.files);
-  valuesString = valuesString.join(',');
-  imgWhereString = imgWhereString.join('","')
-  if (valuesString.length > 0) {
-    connection.query('INSERT INTO images (image_filename) VALUES '+valuesString,function (error,result,fields) {
-      if (error) throw error;
-      connection.query('SELECT * FROM images WHERE image_filename IN ("'+imgWhereString+'")',function (error,result,fields) {
+      valuesString.push('("'+req.files[i].filename+'")');
+      imgWhereString.push(req.files[i].filename);
+      console.log(req.files[i].filename);
+    }
+    console.log(req.files);
+    valuesString = valuesString.join(',');
+    imgWhereString = imgWhereString.join('","')
+    if (valuesString.length > 0) {
+      connection.query('INSERT INTO images (image_filename) VALUES '+valuesString,function (error,result,fields) {
         if (error) throw error;
-        images = result;
-        // console.log(req.body);
-        res.send(images);
+        connection.query('SELECT * FROM images WHERE image_filename IN ("'+imgWhereString+'")',function (error,result,fields) {
+          if (error) throw error;
+          images = result;
+          // console.log(req.body);
+          res.send(images);
+        });
       });
-    });
-  }else{
-    res.send('Nothing to upload');
-  }
+    }else{
+      res.send('Nothing to upload');
+    }
+  })
+
 });
 
 app.post('/deluplimage',function (req,res) {
