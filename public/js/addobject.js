@@ -267,6 +267,10 @@ $(document).ready(function() {
         for (var i = 0; i < data.length; i++) {
           $('.add-photos-items').append('<div class="add-photos-item"><img src="/uploads/'+data[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data[i].image_id+'" data-title="'+data[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data[i].image_id+'">Удалить</a></div></div>');
         }
+        // setInterval(function(){
+        //   $("#block").load("index.php #block");
+        // }, 300);
+
         $('#setimages').val('');
         $(".close-layout").hide();
 
@@ -299,7 +303,7 @@ $(document).ready(function() {
         // for (var i = 0; i < data.length; i++) {
         //   $('.add-photos-items').append('<div class="add-photos-item"><img src="/uploads/'+data[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto">Главная</label></div><a href="#" class="deluplimage">Удалить</a></div></div>');
         // }
-        deletedItem.hide();
+        deletedItem.remove();
         $(".close-layout").hide();
       },
       error: function (data) {
