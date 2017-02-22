@@ -270,18 +270,24 @@ $(document).ready(function() {
           // new_img.src = "http://irkutsk-arenda.ru:8080/uploads/"+data.images[i].image_filename;
           //  $('.add-photos-items').append(new_img);
 
-          image = new Image();
-          image.src = "/uploads/"+data.images[i].image_filename;
-          image.width = 180;
-          image.onload = function () {
-              $('.add-photos-items').append(image);
-          };
-          image.onerror = function (err) {
-            console.log(err);
-            $('.add-photos-items').append('<p>That image is not available.</p>');
-          }
+          var image = $('<img></img>');
+          image.attr('src', "/uploads/"+data.images[i].image_filename);
+          $('.add-photos-items').append(image);
 
-          $('.add-photos-items').append('<p>Loading...</p>');
+          //////////////////////////////////////////////////////////////////////
+          // image = new Image();
+          // image.src = "/uploads/"+data.images[i].image_filename;
+          // image.width = 180;
+          // image.onload = function () {
+          //     $('.add-photos-items').append(image);
+          // };
+          // image.onerror = function (err) {
+          //   console.log(err);
+          //   $('.add-photos-items').append('<p>That image is not available.</p>');
+          // }
+          //
+          // $('.add-photos-items').append('<p>Loading...</p>');
+          //////////////////////////////////////////////////////////////////////
 
           // window.document.body.appendChild(new_img);
           // $('.add-photos-items').append('<div class="add-photos-item"><img src="/uploads/'+data[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data[i].image_id+'" data-title="'+data[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data[i].image_id+'">Удалить</a></div></div>');
