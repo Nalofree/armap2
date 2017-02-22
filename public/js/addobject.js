@@ -265,7 +265,7 @@ $(document).ready(function() {
         console.log(data);
         // $('.add-photos-items').empty();
         for (var i = 0; i < data.length; i++) {
-          $('.add-photos-items').append("<a href=/uploads/"+data[i].image_filename+">"+data[i].image_filename+"</a>");
+          // $('.add-photos-items').append("<a href=/uploads/"+data[i].image_filename+">"+data[i].image_filename+"</a>");
           // $('.add-photos-items').append("<img src=/uploads/"+data[i].image_filename+">");
 
           // $('.add-photos-items').append('<div class="add-photos-item"><img src="/uploads/'+data[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data[i].image_id+'" data-title="'+data[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data[i].image_id+'">Удалить</a></div></div>');

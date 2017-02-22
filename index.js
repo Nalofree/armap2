@@ -1189,7 +1189,7 @@ app.post('/uploadimage',upload.array('uplimage'),function (req,res,next) {
         if (error) throw error;
         images = result;
         console.log(images);
-        res.send(images);
+        res.send({images: images});
       });
     });
   }else{
