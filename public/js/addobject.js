@@ -255,7 +255,7 @@ $(document).ready(function() {
     $(".close-layout").show();
     $.ajax({
       url: '/uploadimage',
-      type: 'POST',
+      type: 'GET',
       data: data,
       cache: false,
       dataType: 'json',
