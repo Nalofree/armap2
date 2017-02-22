@@ -267,11 +267,11 @@ $(document).ready(function() {
         for (var i = 0; i < data.length; i++) {
           $('.add-photos-items').append('<div class="add-photos-item"><img src="/uploads/'+data[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data[i].image_id+'" data-title="'+data[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data[i].image_id+'">Удалить</a></div></div>');
         }
-        $('.add-photos-items').fadeOut();
-        $('.add-photos-items').fadeIn();
-        // setInterval(function(){
-        //   $("#block").load("index.php #block");
-        // }, 300);
+
+        setTimeout(function(){
+          $('.add-photos-items').fadeOut();
+          $('.add-photos-items').fadeIn();
+        }, 500);
 
         $('#setimages').val('');
         $(".close-layout").hide();
