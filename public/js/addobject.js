@@ -278,12 +278,16 @@ $(document).ready(function() {
           image = new Image();
           image.src = "/uploads/"+data.images[i].image_filename;
           image.width = 180;
+          holder = new Image();
+          holder.src = "/images/kabinet/1.png";
+          holder.width = 180;
           image.onload = function () {
               $('.add-photos-items').append(image);
               console.log('Loading is done!');
           };
           image.onerror = function (err) {
             // console.log(err);
+            $('.add-photos-items').append(holder);
             console.log('That image is not available!');
           }
 
