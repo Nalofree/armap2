@@ -267,7 +267,7 @@ $(document).ready(function() {
         for (var i = 0; i < data.images.length; i++) {
           var new_img = new Image();
           new_img.width = 180;
-          new_img.src = "/uploads/"+data.images[i].image_filename;
+          new_img.src = "http://irkutsk-arenda.ru:8080/uploads/"+data.images[i].image_filename;
            $('.add-photos-items').append(new_img)
           // window.document.body.appendChild(new_img);
           // $('.add-photos-items').append('<div class="add-photos-item"><img src="/uploads/'+data[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data[i].image_id+'" data-title="'+data[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data[i].image_id+'">Удалить</a></div></div>');
