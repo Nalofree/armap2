@@ -266,7 +266,7 @@ $(document).ready(function() {
         // $('.add-photos-items').empty();
         for (var i = 0; i < data.images.length; i++) {
           // $('.add-photos-items').append('<div class="add-photos-item"><img src="/uploads/'+data[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data[i].image_id+'" data-title="'+data[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data[i].image_id+'">Удалить</a></div></div>');
-          $('<div class="add-photos-item"><img src="/uploads/'+data[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data.images[i].image_id+'" data-title="'+data.images[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data.images[i].image_id+'">Удалить</a></div></div>').load(function () {
+          $('<div class="add-photos-item"><img src="/uploads/'+data.images[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data.images[i].image_id+'" data-title="'+data.images[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data.images[i].image_id+'">Удалить</a></div></div>').load(function () {
             $('.add-photos-items').append($(this));
           }).error(function(){
               // error
