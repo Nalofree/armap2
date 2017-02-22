@@ -1149,7 +1149,7 @@ app.post('/delofc',function (req,res) {
   });
 });
 
-app.get('/uploadimage',upload.array('uplimage'),function (req,res,next) {
+app.post('/uploadimage',upload.array('uplimage'),function (req,res,next) {
   var valuesString = [],
       imgWhereString = [];
   for (var i = 0; i < req.files.length; i++) {
