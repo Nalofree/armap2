@@ -267,26 +267,27 @@ $(document).ready(function() {
         for (var i = 0; i < data.images.length; i++) {
           // var new_img = new Image();
           // new_img.width = 180;
-          // new_img.src = "http://irkutsk-arenda.ru:8080/uploads/"+data.images[i].image_filename;
+          // new_img.src = "/uploads/"+data.images[i].image_filename;
           //  $('.add-photos-items').append(new_img);
 
-          var image = $('<img></img>');
-          image.attr('src', "/uploads/"+data.images[i].image_filename);
-          $('.add-photos-items').append(image);
+          // var image = $('<img></img>');
+          // image.attr('src', "/uploads/"+data.images[i].image_filename);
+          // $('.add-photos-items').append(image);
 
           //////////////////////////////////////////////////////////////////////
-          // image = new Image();
-          // image.src = "/uploads/"+data.images[i].image_filename;
-          // image.width = 180;
-          // image.onload = function () {
-          //     $('.add-photos-items').append(image);
-          // };
-          // image.onerror = function (err) {
-          //   console.log(err);
-          //   $('.add-photos-items').append('<p>That image is not available.</p>');
-          // }
-          //
-          // $('.add-photos-items').append('<p>Loading...</p>');
+          image = new Image();
+          image.src = "/uploads/"+data.images[i].image_filename;
+          image.width = 180;
+          image.onload = function () {
+              $('.add-photos-items').append(image);
+              console.log('Loading is done!');
+          };
+          image.onerror = function (err) {
+            // console.log(err);
+            console.log('That image is not available!');
+          }
+
+          console.log('Loading...');
           //////////////////////////////////////////////////////////////////////
 
           // window.document.body.appendChild(new_img);
