@@ -216,7 +216,7 @@ block content
                   section.kab-item-info
                     .kab-item-img
                       - var cover = objects[i].object_cover ? objects[i].object_cover : "images/search/result-big.png";
-                      img(src= cover)
+                      img(src= 'uploads/'+cover, width = "100%")
                     .kab-item-desc
                       section.kab-item-header
                         h4.nowrap-text= objects[i].object_name
@@ -294,7 +294,7 @@ block content
                   section.kab-item-info
                     .kab-item-img
                       - var cover = objects[i].object_cover ? objects[i].object_cover : "images/search/result-big.png";
-                      img(src= cover)
+                      img(src= 'uploads/'+cover, width = "100%")
                     section
                       .kab-item-desc
                         section.kab-item-header

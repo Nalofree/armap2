@@ -140,7 +140,7 @@ $(document).ready(function() {
         console.log(data);
         for (var i = 0; i < data.images.length; i++) {
           $('.add-obj-photos-items').empty();
-          $('.add-obj-photos-items').append('<div class="add-obj-photos-item"><img src="/uploads/'+data.images[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data.images[i].image_id+'" data-title="'+data.images[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data.images[i].image_id+'">Удалить</a></div></div>');
+          $('.add-obj-photos-items').append('<div class="add-obj-photos-item"><img src="/uploads/'+data.images[i].image_filename+'" alt="" width=180>/div>');
           objimagefield = data.images[i].image_id;
         }
         $('#setimages').val('');

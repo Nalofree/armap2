@@ -469,12 +469,13 @@ app.get('/my',auth, function(req,res) {
           // result[i]
         }
         console.log("city_id", req.cookies.city_id);
-        connection.query('SELECT object_id,object_name,object_adres,object_cover\
-         FROM objects WHERE object_city = '+req.cookies.city_id, function (error,result,fields) {
+        connection.query('SELECT object_id,object_name,object_adres,object_cover, image_filename \
+         FROM objects LEFT JOIN images ON image_id = object_cover WHERE object_city = '+req.cookies.city_id, function (error,result,fields) {
           if (error) throw error;
           var objects = result;
           for (var i = 0; i < objects.length; i++) {
             objects[i].object_offices = [];
+            objects[i].object_cover = objects[i].image_filename;
           }
           connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_author ='+res.userid+' ORDER BY office_create ASC', function (error,result,fields) {
             if (error) throw error;
