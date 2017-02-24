@@ -6362,6 +6362,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 #kabinet .kab-items .kab-item.empty .kab-item-info section .kab-item-desc .kab-item-header {
   border: none;
   padding: 0;
+  padding-left: 25px;
 }
 
 @media screen and (max-width: 992px) {
@@ -6793,7 +6794,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 .kab-create-obj .kab-create-step-three .add-photos {
-  width: 1088px;
+  width: 1058px;
   height: 315px;
   margin-left: -20px;
   padding: 20px 2px 20px 50px;
@@ -6827,7 +6828,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 .kab-create-obj .kab-create-step-three .add-photos-desc {
-  width: 350px;
+  width: 340px;
 }
 
 @media screen and (max-width: 1200px) {
