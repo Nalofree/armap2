@@ -807,10 +807,14 @@ app.get('/office-:office_id', auth, function (req,res) {
 });
 
 app.get('/objects', auth, function (req,res) {
-  connection.query('SELECT * FROM objects WHERE object_city = '+req.cookies.city_id+' AND object_publish = 1 AND object_show = 1', function (error,result,fields) {
+  connection.query('SELECT * FROM objects INNER JOIN images ON image_id = object_cover WHERE object_city = '+req.cookies.city_id+' AND object_publish = 1 AND object_show = 1', function (error,result,fields) {
     if (error) throw error;
     var objects = result;
-    console.log(objects);
+    for (var i = 0; i < objects.length; i++) {
+      objects[i].object_cover = objects[i].image_filename;
+      console.log(objects[i].image_filename);
+    }
+
     connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id',function (error, result, fields) {
       if (error) throw error;
       var offices = result;
@@ -1252,9 +1256,16 @@ app.post('/setuplimage', function (req,res) {
 app.post('/setobject',auth,function (req,res) {
   // console.log('INSERT INTO objects (object_name,object_create,object_author,object_coords,object_adres,object_publish,object_show,object_type)\
   // VALUES ("'+req.body.object_name+'","'+req.body.object_create+'",'+res.userid+',"'+req.body.object_coords+'","'+req.body.object_adres+'",'+req.body.object_publish+','+req.body.object_show+','+req.body.object_type+')');
-  connection.query('INSERT INTO objects (object_name,object_create,object_author,object_coords,object_adres,object_publish,object_show,object_type, object_city)\
-  VALUES ("'+req.body.object_name+'","'+req.body.object_create+'",'+res.userid+',"'+req.body.object_coords+'","'+req.body.object_adres+'",0,1,'+req.body.object_type+','+req.body.object_city+')',
+  connection.query('INSERT INTO objects (object_name,object_create,object_author,object_coords,object_adres,object_publish,object_show,object_type, object_city, object_cover)\
+  VALUES ("'+req.body.object_name+'","'+req.body.object_create+'",'+res.userid+',"'+req.body.object_coords+'","'+req.body.object_adres+'",0,1,'+req.body.object_type+','+req.body.object_city+','+req.body.object_cover+')',
   function (error,result,fields) {
+    if (error) throw error;
+    res.send(result);
+  });
+});
+
+app.post('/setobjectimage', function (req,res) {
+  connection.query('UPDATE objects SET object_cover = '+req.body.object_cover+' WHERE object_id = '+req.body.object_id, function (error, result, fields) {
     if (error) throw error;
     res.send(result);
   });

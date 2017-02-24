@@ -9225,3 +9225,20 @@ textarea {
   background-repeat: no-repeat;
   background-size: cover;
 }
+
+.add-obj-photos {
+  display: flex;
+  flex-wrap: wrap;
+  /*flex: */
+}
+
+.add-obj-photos-items, .photos-settings {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center
+}
+
+.deluplimage {
+  margin-top: 0px;
+}

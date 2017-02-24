@@ -24,7 +24,7 @@ block content
               section.item
                 .item-img
                   a(href='/object-'+objects[i].object_id)
-                    - var cover = objects[i].object_cover ? 'images/obj/'+objects[i].object_cover : 'images/object/1.png';
+                    - var cover = objects[i].object_cover ? 'uploads/'+objects[i].object_cover : 'images/object/1.png';
                     img(src= cover, width = '100%')
                 section
                   .item-desc
@@ -49,12 +49,12 @@ block content
                                   p
                                     | Цена за м
                                     sup 2
-                                    | : 
+                                    | :
                                     br
                                     span= objects[i].object_offices[j].office_subprice+' р.'
                                 .item-object-square
                                   p
-                                    | Площадь: 
+                                    | Площадь:
                                     br
                                     span= objects[i].object_offices[j].office_area+' м'
                                       sup 2

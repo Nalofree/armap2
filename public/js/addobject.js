@@ -66,14 +66,32 @@ $(document).ready(function() {
     }
   });
 
+  var objimagefield = 0;
+
   $('.first-step').click(function (e) {
     e.preventDefault();
-    if ($("#choose-object").val() != '' || $("#objcoords").val() != '') {
+    if (($("#choose-object").val() != '' || $("#objcoords").val() != '') && $('input#setobjimages').val()) {
       $('.kab-create-step-one').hide();//.animate({'display':'none'},500);
       if ($("#choose-object").val() != '') {
         $("#objcoords").val('');
         $('#objadres').val('');
         $('.kab-create-step-three').fadeIn();
+        var objdata = {
+          object_id: $("#choose-object").val(),
+          object_cover: objimagefield
+        }
+        console.log(objdata);
+        $.ajax({
+          url: '/setobjectimage',
+          data: objdata,
+          type: 'POST',
+          success: function (data, status, error) {
+            console.log(data, status, error);
+          },
+          error: function (data, status, error) {
+            console.log(data, status, error);
+          }
+        });
       }else{
         $('.kab-create-step-two').fadeIn();
         // $('.step-inform-adres').text('Адрес: '+autoaddres);
@@ -85,14 +103,54 @@ $(document).ready(function() {
           object_publish: 0,
           object_show: 1,
           // object_type: $('input[name="objectType"]:checked').attr('data-title'),
+          object_cover: objimagefield,
           object_city: getCookie('city_id')
         }
-        // console.log(objectData.object_type);
+        console.log(objectData);
         $('.step-inform-address').html("Адрес: <span>"+objectData.object_adres+"</span>");
+
       }
     }else{
       alert('Заполните поля');
     }
+  });
+
+  $('#setobjimages').change(function (e) {
+    files = this.files;
+    var data = new FormData();
+    $.each( files, function( key, value ){
+        if ((value.type).indexOf('image') >= 0) {
+            data.append( 'uplimage', value );
+        }
+    });
+    var officeid = $(this).attr('data-title') != '' ? $(this).attr('data-title') : false;
+    data.append('officeid', officeid);
+    console.log(files);
+    console.log(data);
+    $(".close-layout").show();
+    $.ajax({
+      url: '/uploadimage',
+      type: 'POST',
+      data: data,
+      cache: false,
+      dataType: 'json',
+      processData: false,
+      contentType: false,
+      success: function (data) {
+        console.log(data);
+        for (var i = 0; i < data.images.length; i++) {
+          $('.add-obj-photos-items').empty();
+          $('.add-obj-photos-items').append('<div class="add-obj-photos-item"><img src="/uploads/'+data.images[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data.images[i].image_id+'" data-title="'+data.images[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data.images[i].image_id+'">Удалить</a></div></div>');
+          objimagefield = data.images[i].image_id;
+        }
+        $('#setimages').val('');
+        $(".close-layout").hide();
+      },
+      error: function (data) {
+        console.log(data);
+        $(".close-layout").hide();
+      }
+    });
   });
 
   $('.second-step').click(function (e) {
@@ -244,9 +302,9 @@ $(document).ready(function() {
     files = this.files;
     var data = new FormData();
     $.each( files, function( key, value ){
-        if ((value.type).indexOf('image') >= 0) {
-            data.append( 'uplimage', value );
-        }
+      if ((value.type).indexOf('image') >= 0) {
+        data.append( 'uplimage', value );
+      }
     });
     var officeid = $(this).attr('data-title') != '' ? $(this).attr('data-title') : false;
     data.append('officeid', officeid);
@@ -259,82 +317,15 @@ $(document).ready(function() {
       data: data,
       cache: false,
       dataType: 'json',
-      processData: false, // Не обрабатываем файлы (Don't process the files)
-      contentType: false, // Так jQuery скажет серверу что это строковой запрос
+      processData: false,
+      contentType: false,
       success: function (data) {
         console.log(data);
-        // $('.add-photos-items').empty();
         for (var i = 0; i < data.images.length; i++) {
-          // var new_img = new Image();
-          // new_img.width = 180;
-          // new_img.src = "http://irkutsk-arenda.ru:8080/uploads/"+data.images[i].image_filename;
-          //  $('.add-photos-items').append(new_img);
-
-          // var image = $('<img></img>');
-          // image.attr('src', "/uploads/"+data.images[i].image_filename);
-          // $('.add-photos-items').append(image);
-
-          //////////////////////////////////////////////////////////////////////
-          // image = new Image();
-          // image.src = "/uploads/"+data.images[i].image_filename;
-          // image.width = 180;
-          // image.onload = function () {
-          //     $('.add-photos-items').append(image);
-          // };
-          // image.onerror = function (err) {
-          //   console.log(err);
-          //   $('.add-photos-items').append('<p>That image is not available.</p>');
-          // }
-          //
-          // $('.add-photos-items').append('<p>Loading...</p>');
-          //////////////////////////////////////////////////////////////////////
-
-          // window.document.body.appendChild(new_img);
           $('.add-photos-items').append('<div class="add-photos-item"><img src="/uploads/'+data.images[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data.images[i].image_id+'" data-title="'+data.images[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data.images[i].image_id+'">Удалить</a></div></div>');
-          // $('<div class="add-photos-item"><img src="http://irkutsk-arenda.ru:8080/uploads/'+data.images[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data.images[i].image_id+'" data-title="'+data.images[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data.images[i].image_id+'">Удалить</a></div></div>').load(function () {
-          //   $('.add-photos-items').append($(this));
-          // }).error(function(){
-          //     // error
-          //     console.log('loading error');
-          // });
-          // var photoItem;
-          // photoItem = $('<div class="add-photos-item" data-title='+data.images[i].image_id+'><div class="add-photos-item-image" data-title='+data.images[i].image_id+' style="background-image: url(/uploads/'+ data.images[i].image_filename +')" ></div><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data.images[i].image_id+'" data-title="'+data.images[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data.images[i].image_id+'">Удалить</a></div></div>');
-          // photoItem.children('.add-photos-item-image').css("background-image", "url(data:image/png;base64, /uploads/" + data.images[i].image_filename + ")");
-          // var imageName = data.images[i].image_filename;
-          // var imageId = data.images[i].image_id;
-          // console.log(photoItem);
-          // $('.add-photos-items').on('click','.add-photos-item-image[data-title='+imageId+']',function () {
-          //   $(this).css("background-image", "url('/uploads/" + imageName + "')");
-          //   alert(123);
-          // })
-          // $('.add-photos-items').append(photoItem);
-
-          // $("div.add-photos-item-image[data-title="+data.images[i].image_id+"]").ready(function () {
-          //   $(this).css("background-image", "url(data:image/png;base64, /uploads/" + data.images[i].image_filename + ")");
-          // });
-          //.css("background-image", "url(data:image/png;base64, /uploads/" + data.images[i].image_filename + ")");
-
-
-          //.children('img').attr('src','/uploads/'+data.images[i].image_filename);
-          // $('.add-photos-items').append("<a href=/uploads/"+data.images[i].image_filename+">"+data.images[i].image_filename+"</a>");
-          // $('.add-photos-items').append("<img src=/uploads/"+data.images[i].image_filename+" width=180>");
-
-          // $('.add-photos-items').append('<div class="add-photos-item"><img src="/uploads/'+data[i].image_filename+'" alt="" width=180><div class="photos-settings"><div class="radio"><label for="mainPhoto"><input type="radio" name="mainPhoto" value="'+data[i].image_id+'" data-title="'+data[i].image_id+'">Главная</label></div><a href="#" class="deluplimage"  data-title="'+data[i].image_id+'">Удалить</a></div></div>');
-          // console.log(data.images[i].image_filename);
-          // $('.add-photos-item img').hide().attr('src',"/uploads/"+data[i].image_filename).fadeIn();
-          // $('.add-photos-item img').fadeOut(800, function () {
-          //   $('.add-photos-item img').attr('src',"/uploads/"+data[i].image_filename).fadeIn().delay(2000);
-          // });
         }
-
-        // setTimeout(function(){
-        //   $('.add-photos-items').fadeOut();
-        //   $('.add-photos-items').fadeIn();
-        // }, 500);
-
         $('#setimages').val('');
         $(".close-layout").hide();
-
       },
       error: function (data) {
         console.log(data);
