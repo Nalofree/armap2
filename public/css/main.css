@@ -2575,6 +2575,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
           justify-content: flex-start;
   padding: 0;
   list-style: none;
+  margin-bottom: 1px;
 }
 
 #header #head-top-line nav ul li a {
@@ -7206,7 +7207,8 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   color: #383838;
   text-transform: uppercase;
   padding-right: 24px;
-  background: url("../images/kabinet/settings.png") no-repeat right;
+  /*background: url("../images/kabinet/settings.png") no-repeat right;*/
+  background: url("../images/kabinet/logout.png") no-repeat right;
   transition: all .2s linear;
   margin-left: 50px;
 }
@@ -8517,6 +8519,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 .modal-dialog .modal-body .input-group {
+  display: block;
   margin: 10px 0;
 }
 
