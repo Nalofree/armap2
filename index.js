@@ -808,7 +808,7 @@ app.get('/office-:office_id', auth, function (req,res) {
 });
 
 app.get('/objects', auth, function (req,res) {
-  connection.query('SELECT * FROM objects INNER JOIN images ON image_id = object_cover WHERE object_city = '+req.cookies.city_id+' AND object_publish = 1 AND object_show = 1', function (error,result,fields) {
+  connection.query('SELECT * FROM objects LEFT JOIN images ON image_id = object_cover WHERE object_city = '+req.cookies.city_id+' AND object_publish = 1 AND object_show = 1', function (error,result,fields) {
     if (error) throw error;
     var objects = result;
     for (var i = 0; i < objects.length; i++) {
