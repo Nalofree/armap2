@@ -70,7 +70,7 @@ $(document).ready(function() {
 
   $('.first-step').click(function (e) {
     e.preventDefault();
-    if (($("#choose-object").val() != '' || $("#objcoords").val() != '') && $('input#setobjimages').val()) {
+    if (($("#choose-object").val() != '' || $("#objcoords").val() != '')) {
       $('.kab-create-step-one').hide();//.animate({'display':'none'},500);
       if ($("#choose-object").val() != '') {
         $("#objcoords").val('');
