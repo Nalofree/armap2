@@ -734,7 +734,7 @@ app.get('/object-:object_id', auth, function (req,res) {
     object = result[0];
     // console.log(result);
     // connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover WHERE office_show = 1 AND office_object = '+req.params.object_id, function (error,result,fields) {
-    connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover WHERE office_show = 1 AND office_object = '+req.params.object_id, function (error,result,fields) {
+    connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover WHERE office_publish = 1 AND office_show = 1 AND office_object = '+req.params.object_id, function (error,result,fields) {
       if (error) throw error;
       object.object_offices = result;
       console.log(result);
@@ -1377,7 +1377,7 @@ app.post('/filtred',function (req,res) {
                         objects[i].object_offices.push(offices[j]);
                       }
                     }
-                    objects[i].offices_count = ofccount;
+                    objects[i].offices_count = objects[i].object_offices.length;
                     // console.log("ofccount: ", ofccount);
                   }
                   res.send({
@@ -1427,7 +1427,7 @@ app.post('/filtred',function (req,res) {
                     objects[i].object_offices.push(offices[j]);
                   }
                 }
-                objects[i].offices_count = ofccount;
+                objects[i].offices_count = objects[i].object_offices.length;
                 // console.log("ofccount: ", ofccount);
               }
               // console.log(objects);

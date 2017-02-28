@@ -199,7 +199,7 @@ $(document).ready(function () {
                   var coordsArr = [];
                   coordsArr[0] = parseFloat(coordss[0]);
                   coordsArr[1] = parseFloat(coordss[1]);
-                  var officeCountByObject = data.objects[i].offices_count;
+                  var officeCountByObject = data.objects[i].object_offices.length;
                   officeCountByObject = officeCountByObject.toString();
                   var adres = data.objects[i].object_adres;
                   var name = data.objects[i].object_name;
