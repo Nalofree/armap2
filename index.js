@@ -816,7 +816,7 @@ app.get('/objects', auth, function (req,res) {
       console.log(objects[i].image_filename);
     }
 
-    connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id where office_show = 1',function (error, result, fields) {
+    connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id where office_show = 1 AND office_publish = 1',function (error, result, fields) {
       if (error) throw error;
       var offices = result;
       for (var i = 0; i < objects.length; i++) {
