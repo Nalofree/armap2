@@ -83,7 +83,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 var geolocation = function(req,res,next) {
   var surceIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress,
       ip, coords, randNum;
-  //ip = surceIp.replace(/^.*:/, '');
+  // ip = surceIp.replace(/^.*:/, '');
   ip = "188.168.22.110";
   var geo;
   if (geoip.lookup(ip)) {
@@ -816,7 +816,7 @@ app.get('/objects', auth, function (req,res) {
       console.log(objects[i].image_filename);
     }
 
-    connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id',function (error, result, fields) {
+    connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id where office_show = 1',function (error, result, fields) {
       if (error) throw error;
       var offices = result;
       for (var i = 0; i < objects.length; i++) {
