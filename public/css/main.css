@@ -5716,6 +5716,10 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   overflow: hidden;
 }
 
+.item-object-img img {
+  width: 100%;
+}
+
 #objects #obj-items.style-line .item .item-rooms .item-object-desc {
   width: 150px;
   height: auto;
