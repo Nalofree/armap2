@@ -827,10 +827,10 @@ app.get('/objects', auth, function (req,res) {
           }
         }
       }
-      for (var i = 0; i < objects.length; i++) {
+      for (var i = objects.length-1; i >= 0; i--) {
         if (objects[i].object_offices.length <= 0) {
           console.log('выпилить объект нафик - ' + objects[i].object_id);
-          objects.splice(i, 1)
+          objects.splice(i, 1);
         }
       }
       res.render('objects.jade',{
