@@ -1379,7 +1379,7 @@ app.post('/filtred',function (req,res) {
                     }
                     objects[i].offices_count = ofccount;
                     // console.log("ofccount: ", ofccount);
-                  
+                  }
                   res.send({
                     objects: objects,
                     offices: offices,
