@@ -1366,15 +1366,20 @@ app.post('/filtred',function (req,res) {
                   var objects = result;
                   for (var i = 0; i < objects.length; i++) {
                     var ofccount = 0;
+                    objects[i].object_offices = [];
                     for (var j = 0; j < offices.length; j++) {
                       if (offices[j].office_object === objects[i].object_id) {
                         ofccount++;
+                        var adres = objects[i].object_adres;
                         objects[i].offices_count = ofccount;
-                        offices[j].office_adres = objects[i].object_adres;
-                        console.log(offices[j].office_adres);
+                        offices[j].office_adres = adres;
+                        // console.log(offices[j].office_name);
+                        objects[i].object_offices.push(offices[j]);
                       }
                     }
-                  }
+                    objects[i].offices_count = ofccount;
+                    // console.log("ofccount: ", ofccount);
+                  
                   res.send({
                     objects: objects,
                     offices: offices,
