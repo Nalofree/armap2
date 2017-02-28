@@ -1347,7 +1347,7 @@ app.post('/filtred',function (req,res) {
             });
             officesIdString = officesIdArr.join(',');
             connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover WHERE (office_id IN ('+officesIdString+')) AND (office_area BETWEEN '+req.body.area[0]+' AND '+req.body.area[1]+')\
-            AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+') AND office_publish = 1', function (error,result,fields) { // AND (office_object IN ('+objByCity+'))
+            AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+') AND office_publish = 1 AND office_show = 1', function (error,result,fields) { // AND (office_object IN ('+objByCity+'))
               if (error) throw error;
               if (result.length<=0) {
                 res.send({
@@ -1388,7 +1388,7 @@ app.post('/filtred',function (req,res) {
         });
       }else{
         connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover  WHERE (office_area BETWEEN '+req.body.area[0]+' AND '+req.body.area[1]+')\
-        AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+') AND office_publish = 1', function (error,result,fields) { // AND (office_object IN ('+objByCity+'))
+        AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+') AND office_publish = 1 AND office_show = 1', function (error,result,fields) { // AND (office_object IN ('+objByCity+'))
           if (error) throw error;
           console.log(result.length);
           if (result.length<=0) {
