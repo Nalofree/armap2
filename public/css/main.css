@@ -9255,3 +9255,50 @@ textarea {
 .deluplimage {
   margin-top: 0px;
 }
+
+#header #head-main-menu section .main-logo {
+  position: relative;
+  display: inline-block;
+  height: 75px;
+}
+
+#header #head-main-menu section .main-logo-img {
+  position: relative;
+  display: inline-block;
+  height: 75px;
+  width: 60px;
+  float: left;
+  margin-right: 0;
+}
+
+#header #head-main-menu section .main-logo-img img {
+  position: relative;
+  /*display: inline-block;*/
+  top: 10px;
+}
+
+#header #head-main-menu section .main-logo-text {
+  position: relative;
+  display: inline-block;
+  height: 75px;
+  width: 150px;
+  color: #fff;
+  float: left;
+  padding-top: 3px;
+}
+
+#header #head-main-menu section .main-logo-text-name {
+  display: inline-block;
+  font-size: 50px;
+  line-height: 50px;
+  font-weight: 600;
+}
+
+#header #head-main-menu section .main-logo-text-description {
+  display: inline-block;
+  font-size: 16px;
+  width: 200px;
+  margin-top: -3px;
+  padding-left: 3px;
+  /*font-weight: 600;*/
+}

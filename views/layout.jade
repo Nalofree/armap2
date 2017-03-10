@@ -78,8 +78,14 @@ html(lang='ru')
         article#head-main-menu
           section.container
             div
-               a(href='/')
-                 img.mainlogo(src="/images/Logo_01.png", alt="")
+              a.main-logo(href='/')
+                //-  img.mainlogo(src="/images/Logo_01.png", alt="")
+                .main-logo-img
+                  img(src="/images/Logo_01.png", alt="")
+                .main-logo-text
+                  span.main-logo-text-name Рентазавр
+                  br
+                  span.main-logo-text-description Аренда без комиссий
             nav#main-menu
               ul
                 li
