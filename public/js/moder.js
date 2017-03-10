@@ -240,15 +240,16 @@ $(document).ready(function () {
 
   $(".recuveofc").click(function (e) {
     e.preventDefault();
-    ofcid = $(this).attr('data-title');
+    var ofcid = $(this).attr('data-title');
     // alert(ofcid);
+    var button = $(this);
     $.ajax({
       url: '/recuveofc',
       type: 'POST',
       data: {ofcid: ofcid},
       success: function (data, status, error) {
         console.log(data, status, error);
-        $(this).closest('div.panel').hide();
+        button.closest('.archice-item').fadeOut();
       },
       error: function (data, status, error) {
         console.log(data, status, error);

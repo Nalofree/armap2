@@ -215,8 +215,8 @@ block content
                 article.kab-item
                   section.kab-item-info
                     .kab-item-img
-                      - var cover = objects[i].object_cover ? objects[i].object_cover : "images/search/result-big.png";
-                      img(src= 'uploads/'+cover, width = "100%")
+                      - var cover = objects[i].object_cover ? 'uploads/'+objects[i].object_cover : "images/search/result-big.png";
+                      img(src= cover, width = "100%")
                     .kab-item-desc
                       section.kab-item-header
                         h4.nowrap-text= objects[i].object_name
@@ -312,19 +312,19 @@ block content
         article#kab-archive.fade
           -if (archoffices)
             - for (var m = 0; m < archoffices.length; m++)
-              .panel
+              .panel.archice-item
                 .panel-body
                   .row
                     .col-md-3.col-sm-3.col-xs-6
-                      img.img-responsive(src="/images/obj/"+archoffices[m].office_image)
+                      img.img-responsive(src="/images/obj/"+archoffices[m].image_filename)
                     .col-md-9.col-sm-9.col-xs-6
                       p
                         a(href="office-"+archoffices[m].office_id)= archoffices[m].office_name
                       p= archoffices[m].office_create
                       p
-                        a(href='/user-'+archoffices[m].office_author.user_id)= archoffices[m].office_author.user_firstname + ' ' + archoffices[m].office_author.user_lastname
+                        a(href='/user-'+archoffices[m].office_author.user_id)= archoffices[m].office_author + ' ' + archoffices[m].office_author
                       - if (archoffices[m].office_publish == 0)
-                        p.lead= "Ожидает модерации"
+                        p= "Ожидает модерации"
                       - else if (archoffices[m].office_publish == 1)
                         p= "Опубликовано"
                       - else

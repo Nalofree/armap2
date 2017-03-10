@@ -15,9 +15,18 @@ $(document).ready(function() {
   var objectData={};
   var officeData = {};
 
+  $('.close-layout').click(function () {
+    $('.close-layout').fadeOut();
+    $('.kab-create-step-one').fadeOut();
+    $('.kab-create-step-two').fadeOut();
+    $('.kab-create-step-three').fadeOut();
+    $('.kab-create-step-complite').fadeOut();
+  });
+
   $('.btn-create-object').click(function (e) {
     e.preventDefault();
-    $('.kab-create-step-one').toggle();
+    $('.kab-create-step-one').fadeIn();
+    $('.close-layout').fadeIn();
     $('input').val('');
     $('input:checkbox').removeAttr('checked');
     $('select').prop('selectedIndex',0);
@@ -71,11 +80,12 @@ $(document).ready(function() {
   $('.first-step').click(function (e) {
     e.preventDefault();
     if (($("#choose-object").val() != '' || $("#objcoords").val() != '')) {
-      $('.kab-create-step-one').hide();//.animate({'display':'none'},500);
+      $('.kab-create-step-one').fadeOut();//.animate({'display':'none'},500);
       if ($("#choose-object").val() != '') {
         $("#objcoords").val('');
         $('#objadres').val('');
         $('.kab-create-step-three').fadeIn();
+        $('.close-layout').fadeIn();
         var objdata = {
           object_id: $("#choose-object").val(),
           object_cover: objimagefield
@@ -95,6 +105,7 @@ $(document).ready(function() {
       }else{
         $('.kab-create-step-two').fadeIn();
         // $('.step-inform-adres').text('Адрес: '+autoaddres);
+        $('.close-layout').fadeIn();
         var now = getTime();
         objectData = {
           object_adres: $('#objadres').val(),
@@ -156,8 +167,9 @@ $(document).ready(function() {
   $('.second-step').click(function (e) {
     e.preventDefault();
     if ($('#objname').val() != '') {
-      $('.kab-create-step-two').hide();//.animate({'display':'none'},500);
-      $('.kab-create-step-three').show();
+      $('.kab-create-step-two').fadeOut();//.animate({'display':'none'},500);
+      $('.kab-create-step-three').fadeIn();
+      $('.close-layout').fadeIn();
       objectData.object_name = $('#objname').val();
       //console.log(objectData);
       objectData.object_type = $('input[name="objectType"]:checked').attr('data-title');
@@ -268,9 +280,11 @@ $(document).ready(function() {
         data: officeData,
         success: function (data) {
           console.log('success '+data);
-          $('.kab-create-step-three').hide();
-          $('body,html').animate({"scrollTop":0},"slow");
+          $('.kab-create-step-three').fadeOut();
+          // $('body,html').animate({"scrollTop":0},"slow");
           $('.kab-create-step-complite').fadeIn();
+          $('.close-layout').fadeIn();
+
           $('input').val('');
           $('input:checkbox').removeAttr('checked');
           $('select').prop('selectedIndex',0);
@@ -296,6 +310,7 @@ $(document).ready(function() {
     objectData.object_adres = $(this).parent().parent().parent().find('.kab-item-header p').text();
     $('.step-inform-address').html("Адрес: <span>"+objectData.object_adres+"</span><span>"+objectData.object_name+"</span>");
     $('.kab-create-step-three').fadeIn();
+    $('.close-layout').fadeIn();
   });
 
   $('#setimages').change(function (e) {

@@ -902,7 +902,7 @@ app.get('/bookmarks', auth, function (req,res) {
 
 app.post('/recuveofc', function (req, res) {
   // res.send(req.body.ofcid);
-  connection.query("UPDATE offices SET office_show = 1", function (error,result,fields) {
+  connection.query("UPDATE offices SET office_show = 1 WHERE office_id = "+req.body.ofcid, function (error,result,fields) {
     if (error) throw error;
     res.send(req.result);
   });
@@ -1154,7 +1154,7 @@ app.post('/delobj',function (req,res) {
 });
 
 app.post('/delofc',function (req,res) {
-  connection.query("UPDATE offices SET office_show = 0", function (error,result,fields) {
+  connection.query("UPDATE offices SET office_show = 0 WHERE office_id = "+req.body.office_id, function (error,result,fields) {
     if (error) throw error;
     res.send(req.result);
   });

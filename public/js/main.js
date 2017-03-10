@@ -46,7 +46,7 @@ $(document).ready(function () {
     $('a[href*=#].href').bind("click", function (e) {
         var anchor = $(this);
         $('html, body').stop().animate({
-            scrollTop: $(anchor.attr('href')).offset().top
+            // scrollTop: $(anchor.attr('href')).offset().top
         }, 1000);
         e.preventDefault();
     });
@@ -144,27 +144,27 @@ $(".rooms-show").click(function () {
  });*/
 
 //Анимация перехода страниц для скрытия смены шапки
-$(".animsition").animsition({
-    inClass: 'fade-in',
-    outClass: 'fade-out',
-    inDuration: 1500,
-    outDuration: 800,
-    linkElement: '.animsition-link',
-    loading: true,
-    loadingParentElement: 'body',
-    loadingClass: 'animsition-loading',
-    loadingInner: '',
-    timeout: false,
-    timeoutCountdown: 5000,
-    onLoadEvent: true,
-    browser: ['animation-duration', '-webkit-animation-duration'],
-    overlay: false,
-    overlayClass: 'animsition-overlay-slide',
-    overlayParentElement: 'body',
-    transition: function (url) {
-        window.location.href = url;
-    }
-});
+// $(".animsition").animsition({
+//     inClass: 'fade-in',
+//     outClass: 'fade-out',
+//     inDuration: 1500,
+//     outDuration: 800,
+//     linkElement: '.animsition-link',
+//     loading: true,
+//     loadingParentElement: 'body',
+//     loadingClass: 'animsition-loading',
+//     loadingInner: '',
+//     timeout: false,
+//     timeoutCountdown: 5000,
+//     onLoadEvent: true,
+//     browser: ['animation-duration', '-webkit-animation-duration'],
+//     overlay: false,
+//     overlayClass: 'animsition-overlay-slide',
+//     overlayParentElement: 'body',
+//     transition: function (url) {
+//         window.location.href = url;
+//     }
+// });
 
 //Мобильное меню
 var mobileMenu = $(".menu-items");
