@@ -290,26 +290,26 @@ block content
                                 //--   a(href='#') Снять с публикации
                                 li
                                   a(href='#', class='del-ofc', data-title=objects[i].object_offices[j].office_id) Удалить
-              -else
-                //- Пустой объект имеет класс empty
-                article.kab-item.empty
-                  section.kab-item-info
-                    .kab-item-img
-                      - var cover = objects[i].object_cover ? objects[i].object_cover : "images/search/result-big.png";
-                      img(src= 'uploads/'+cover, width = "100%")
-                    section
-                      .kab-item-desc
-                        section.kab-item-header
-                          h4.nowrap-text= objects[i].object_name
-                          - var adres = objects[i].object_adres.split(',');
-                          p.nowrap-text= adres
-                        section.kab-item-change
-                          .kab-item-edit
-                            //-- a(href='#', class='del-obj', data-title=objects[i].object_id) Удалить
-                            //-- span |
-                            //-- a(href='#', class='edit-obj', data-title=objects[i].object_id) Редактировать
-                      .kab-item-create
-                        a(href= ""+objects[i].object_id) + Добавить помещение
+              //- -else
+              //-   //- Пустой объект имеет класс empty
+              //-   article.kab-item.empty
+              //-     section.kab-item-info
+              //-       .kab-item-img
+              //-         - var cover = objects[i].object_cover ? objects[i].object_cover : "images/search/result-big.png";
+              //-         img(src= 'uploads/'+cover, width = "100%")
+              //-       section
+              //-         .kab-item-desc
+              //-           section.kab-item-header
+              //-             h4.nowrap-text= objects[i].object_name
+              //-             - var adres = objects[i].object_adres.split(',');
+              //-             p.nowrap-text= adres
+              //-           section.kab-item-change
+              //-             .kab-item-edit
+              //-               //-- a(href='#', class='del-obj', data-title=objects[i].object_id) Удалить
+              //-               //-- span |
+              //-               //-- a(href='#', class='edit-obj', data-title=objects[i].object_id) Редактировать
+              //-         .kab-item-create
+              //-           a(href= ""+objects[i].object_id) + Добавить помещение
         //- Вкладка архив, здесь должны быть удаленные помещения и объекты
         article#kab-archive.fade
           -if (archoffices)

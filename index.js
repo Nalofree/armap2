@@ -323,14 +323,14 @@ app.get('/confirmme-:confirmlinkhash', function (req,res) {
         connection.query('UPDATE users SET user_confirm = 1 WHERE confirmhash = "'+req.params.confirmlinkhash+'"' ,function (error, result, fields) {
           if (error) throw error;
           // res.send({mes: "Активация прошла успешно, срасибо за регистрацию!"});
-          res.render('confirmme.jade', {mes: "Активация прошла успешно, срасибо за регистрацию!"});
+          res.render('confirmme.jade', {mes: "Активация прошла успешно, срасибо за регистрацию! Авторизуйтесь для перехода в личный кабинет"});
         })
       }else{
         res.render('confirmme.jade', {mes: "Профиль уже активирован, срасибо за регистрацию!"});
         // res.send({mes: "Профиль уже активирован, срасибо за регистрацию!"});
       }
     }else{
-      res.render('confirmme.jade', {mes: "Такого пользхователя не существует!"});
+      res.render('confirmme.jade', {mes: "Такого пользователя не существует!"});
     }
 
   })
@@ -604,6 +604,18 @@ app.get('/my',auth, function(req,res) {
                 }
               }
             }
+
+            // for (var i = objects.length; i >= 0; i--) {
+            //   if (objects[i]) {
+            //     if (objects[i].object_offices.length <= 0) {
+            //       objects.slice(i);
+            //     }
+            //   }
+            //   // if (objects[i].object_offices.length == 0) {
+            //   //   objects.slice(i);
+            //   // }
+            //   console.log(i);
+            // }
 
             // console.log(objects);
             // console.log(meanings[2].option_id);
@@ -901,7 +913,7 @@ app.get('/office-:office_id', auth, function (req,res) {
                 advanced: advanced,
                 providers: providers
               });
-            });            
+            });
           });
         });
       });

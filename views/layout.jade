@@ -58,18 +58,28 @@ html(lang='ru')
             -if (role)
               ul#head-log-in
                 li
+                  a(href="/my").btn.btn-danger.add-objava + Добавить объявление
+                li
                   - if (role == "user")
                     a(href='/my')= username + " | "
+                      //- span.blue-text ЛИЧНЫЙ КАБИНЕТ
+                      //- |  |  
                   - if (role == "admin")
                     a(href='/admin')= username + " | "
+                      //- span.blue-text >>ЛИЧНЫЙ КАБИНЕТ<<
+                      //- |  |  
                   - if (role == "moder")
                     a(href='/moder')= username + " | "
+                      //- span.blue-text ЛИЧНЫЙ КАБИНЕТ
+                      //- |  |  
                   //- + role
                 li
                   //- button(type='button', data-toggle='modal', data-target='#end-visit', class='end-visit') Выйти
                   a(href="/logout",class='logout') Выйти
             -else
               ul#head-log-in
+                li
+                  div(type='button', data-toggle='modal', data-target='#header-login').btn.btn-danger.add-objava + Добавить объявление
                 li
                   button(type='button', data-toggle='modal', data-target='#header-register') Регистрация
                 li
@@ -86,7 +96,7 @@ html(lang='ru')
                 .main-logo-text
                   span.main-logo-text-name Рентазавр
                   br
-                  span.main-logo-text-description Аренда без комиссий
+                  span.main-logo-text-description Аренда без комиссии
             nav#main-menu
               ul
                 li
@@ -119,7 +129,7 @@ html(lang='ru')
                 li
                   a(href='#') Арендодателям
                 li
-                  button(type='button', data-toggle='modal', data-target='#header-register') Войти
+                  button(type='button', data-toggle='modal', data-target='#header-login') Войти
       // main content
       main
         block content
@@ -154,7 +164,7 @@ html(lang='ru')
             section
               h3 Хотите разместить своё объявление на сайте?
               p Количество бесплатных мест ограничено!
-              a(href='#') Зарегистрироваться
+              a(href='#', data-toggle='modal', data-target='#header-login') Зарегистрироваться
       // modals
       // Окно входа в систему
       #header-login.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
@@ -288,14 +298,14 @@ html(lang='ru')
                     label
                       | Пароль
                       input(type='password', required='', id='reg_pass', name='reg_pass', placeholder=' от 8 до 60 латинских букв и цифр' )
-                  input.btn-submit(type='submit', value='Отправить')
+                  input.btn-submit(type='submit', value='Зарегистрироваться')
               .modal-footer
                 //- span или
                 //- .modal-social
                 //-   a.vk(href='#')
                 //-   a.fb(href='#')
                 //-   a.ok(href='#')
-                button(type='button', data-toggle='modal', data-target='#modal-object') Уже зарегистрированы?
+                button(type='button', data-toggle='modal', data-target='#header-login') Уже зарегистрированы?
             // Появляется при успешком заполнении формы
             .modal-regerror
               .modal-regerror-header
