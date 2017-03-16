@@ -1369,6 +1369,13 @@ app.post('/setobject',auth,function (req,res) {
   });
 });
 
+app.post('/objectautolist',function (req,res) {
+  connection.query('SELECT * FROM objects WHERE object_adres LIKE "%'+req.body.adres+'%" ', function (error, result, fields) {
+    if (error) throw error;
+    res.send({objects: result});
+  })
+})
+
 app.post('/setobjectimage', function (req,res) {
   connection.query('UPDATE objects SET object_cover = '+req.body.object_cover+' WHERE object_id = '+req.body.object_id, function (error, result, fields) {
     if (error) throw error;

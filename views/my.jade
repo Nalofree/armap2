@@ -51,16 +51,18 @@ block content
                     | Введите адрес:
                     input(type='text')#objadres
                     .obj-addr-autoshow
+                      p.adres
+                      .objects-list
                     input(type='hidden')#objcoords
-                    span
-                      | ТЦ “Рублёв”
-                      a(href='#') Другой объект?
-                  span или
-                  select#choose-object(name="object[]") Выберите объект
-                    option(selected='' value='') Выберите объект
-
-                    - for (var i = 0; i < objects.length; i++)
-                      option(value= objects[i].object_id, title= objects[i].object_adres)= objects[i].object_name
+                    //- span
+                    //-   | ТЦ “Рублёв”
+                    //-   a(href='#') Другой объект?
+                  //- span или
+                  //- select#choose-object(name="object[]") Выберите объект
+                  //-   option(selected='' value='') Выберите объект
+                  //- 
+                  //-   - for (var i = 0; i < objects.length; i++)
+                  //-     option(value= objects[i].object_id, title= objects[i].object_adres)= objects[i].object_name
 
                 .step-submit
                   a.first-step.step-btn(href='#') Продолжить

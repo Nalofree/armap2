@@ -9313,3 +9313,12 @@ textarea {
   padding-left: 3px;
   /*font-weight: 600;*/
 }
+
+.objects-list > div:hover, .obj-addr-autoshow > p.adres:hover {
+  background-color: #0087c1;
+  color: #fff;
+}
+
+.objects-list > div, .obj-addr-autoshow > p.adres {
+  padding: 3px;
+}

@@ -33,30 +33,73 @@ $(document).ready(function() {
   });
 
   $('#objadres').keyup(function(){
-  	var myGeocoder = ymaps.geocode($("#city").text()+', '+$(this).val()),
-  	autoaddres,
-  	autoccordinates,
-    objectId,
-    objectName;
-  	myGeocoder.then(
-  	  function (res) {
-  	  	autoaddres = res.geoObjects.get(0).properties.get('text');
-  	  	//console.log(autoaddres);
-        $('.obj-addr-autoshow').show();
-			  $('.obj-addr-autoshow').text(autoaddres);
-  	    autoccordinates = res.geoObjects.get(0).geometry.getCoordinates();
-  	    //console.log(autoccordinates);
-        $("#objcoords").val(autoccordinates);
-        $("#choose-object").val('');
-        $('.obj-addr-autoshow').click(function () {
-          $('#objadres').val(autoaddres);
-          $('.obj-addr-autoshow').hide();
-        });
-  	  },
-  	  function (err) {
-  	      console.log(err);
-  	  }
-  	);
+    $('.obj-addr-autoshow').hide();
+    $(".obj-addr-autoshow .objects-list").empty();
+    $(".obj-addr-autoshow .adres").empty();
+    if ($(this).val().length > 3) {
+      var myGeocoder = ymaps.geocode($("#city").text()+', '+$(this).val()),
+    	autoaddres,
+    	autoccordinates,
+      objectId,
+      objectName;
+    	myGeocoder.then(
+    	  function (res) {
+    	  	autoaddres = res.geoObjects.get(0).properties.get('text');
+    	  	//console.log(autoaddres);
+          $('.obj-addr-autoshow').show();
+  			  $('.obj-addr-autoshow p.adres').text(autoaddres);
+          $.ajax({
+            url: '/objectautolist',
+            type: 'POST',
+            data: {adres: autoaddres},
+            success: function (data, status, error) {
+              console.log(data, status, error);
+              for (var i = 0; i < data.objects.length; i++) {
+                $('.obj-addr-autoshow .objects-list').append("<p></p><div data-title="+data.objects[i].object_id+"><p><b>"+data.objects[i].object_name+"</b><br><small>"+data.objects[i].object_adres+"</small></p></div>");
+                // console.log('append');
+              }
+            },
+            error: function (data, status, error) {
+              console.log(data, status, error);
+            }
+          });
+    	    autoccordinates = res.geoObjects.get(0).geometry.getCoordinates();
+    	    //console.log(autoccordinates);
+          $("#objcoords").val(autoccordinates);
+          $("#choose-object").val('');
+          $('.obj-addr-autoshow p.adres').click(function () {
+            $('#objadres').val(autoaddres);
+            $('.obj-addr-autoshow').hide();
+          });
+          $(".obj-addr-autoshow .objects-list div").click(function () {
+            // if ($(this).val() != '') {
+              $("#objcoords").val('');
+              $('#objadres').val('');
+              // $('.kab-create-step-two').fadeIn();
+              console.log($(this).val());
+              objectData.Id = $(this).attr('data-title');
+              objectData.object_name = $(this).find('b').text();
+              objectData.object_adres = $(this).find('small').text();
+              $('.step-inform-address').html("Адрес: <span>"+objectData.object_adres+"</span><span>"+objectData.object_name+"</span>");
+              $('.kab-create-step-one').fadeOut();
+              $('.kab-create-step-three').fadeIn();
+              $('.close-layout').fadeIn();
+              $('.obj-addr-autoshow').hide();
+              $(".obj-addr-autoshow .objects-list").empty();
+              $(".obj-addr-autoshow .adres").empty();
+              // autoaddres =
+            // }else{
+              // $('.kab-create-step-three').fadeIn();
+            // }
+          });
+    	  },
+    	  function (err) {
+    	      console.log(err);
+    	  }
+    	);
+    }else{
+      $('.obj-addr-autoshow').hide();
+    }
   });
 
   $("#choose-object").change(function () {
@@ -218,7 +261,15 @@ $(document).ready(function() {
 
   $('#create-square, #create-price, #create-height').keyup(function () {
     var string = $(this).val();
-    $(this).val(string.replace(/[^\d\\.]+/g,""));
+    // $(this).val(string.replace(/[^\d(\\.|\\,)]+/g,""));
+    if (/^[0-9]+(\.?|\,?)[0-9]{0,2}$/g.test(string)) {
+        console.log(string);
+        newText = string.replace(/\,/, ".");
+        $(this).val(newText);
+      }else{
+        $(this).val(string.substring(0,string.length-1));
+      }
+    // $(this).val(string.replace(/\\,+/g,"."));
     // parseFloat($(this).val())
     var totalPrice = getTotalPrice($('#create-square').val(), $('#create-price').val());
     // totalPrice = totalPrice.toFixed(2);
