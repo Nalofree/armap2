@@ -14,7 +14,7 @@ var express = require('express'),
     watermark = require('image-watermark'),
     im = require('imagemagick'),
     requestIp = require('request-ip');
-    // nodemailer = require('nodemailer');
+    nodemailer = require('nodemailer');
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -31,13 +31,15 @@ var storage = multer.diskStorage({
 
 // https://nodemailer.com/about/
 
-// var transporter = nodemailer.createTransport({
-//     service: 'Yandex',
-//     auth: {
-//         user: 'arenda.38@yandex.ru',
-//         pass: 'yourpass'
-//     }
-// });
+var transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: 'nalofree@gmail.com',
+        pass: 'Ss0951080'
+    }
+});
+
+
 
 var upload = multer({ storage: storage });
 
@@ -137,17 +139,65 @@ function auth(req, res, next) {
 // });
 
 app.post('/sendmail', function (req,res) {
-  res.send(req.body);
-  maildata = {};
-  maildata.email = req.body.email;
-  // console.log(maildata);
-  if (maildata.email) {
-    maildata.name = req.body.name ? req.body.email : "без имени";
+  var maildata = {};
+  console.log(req.body);
+  if (req.body.type === "callme") {
+    maildata.name = req.body.name ? req.body.name : "без имени";
     maildata.phone = req.body.phone ? req.body.phone : "не указан";
+    var mailOptions = {
+        from: '"Rentazavr 👻" <nalofree@gmail.com>', // sender address
+        to: 'nalofree@gmail.com', // list of receivers
+        subject: 'Заказ обратного звонка', // Subject line
+        text: 'Имя: '+maildata.name+'\nНомер телефона: '+maildata.phone+'.', // plain text body
+        html: '<p>Имя: '+maildata.name+'</p><p>Номер телефона: '+maildata.phone+'.</p>' // html body
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+            res.send({err: error});
+        }else{
+          res.send({err: false, message: info.messageId, response: info.response});
+        }
+        console.log('Message %s sent: %s', info.messageId, info.response);
+    });
+  }else if (req.body.type === "footerform") {
+    maildata.email = req.body.email ? req.body.email : "не указан";
+    maildata.phone = req.body.phone ? req.body.phone : "не указан";
+    maildata.message = req.body.message ? req.body.message : "Ничего";
+    var mailOptions = {
+        from: '"Rentazavr 👻" <nalofree@gmail.com>', // sender address
+        to: 'nalofree@gmail.com', // list of receivers
+        subject: 'Нужна помощь!', // Subject line
+        text: 'Почта: '+maildata.email+'\nНомер телефона: '+maildata.phone+'\nСообщение: '+maildata.message+'.', // plain text body
+        html: '<p>Почта: '+maildata.email+'</p><p>Номер телефона: '+maildata.phone+'.</p><p>Сообщение: '+maildata.message+'.</p>' // html body
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+            res.send({err: error});
+        }else{
+          res.send({err: false, message: info.messageId, response: info.response});
+        }
+        console.log('Message %s sent: %s', info.messageId, info.response);
+    });
   }else{
-    res.send('send mail error');
+    res.send({err: 'send mail error'});
   }
+
 });
+
+// app.post('/sendmail', function (req,res) {
+//   res.send(req.body);
+//   maildata = {};
+//   maildata.email = req.body.email;
+//   // console.log(maildata);
+//   if (maildata.email) {
+//     maildata.name = req.body.name ? req.body.email : "без имени";
+//     maildata.phone = req.body.phone ? req.body.phone : "не указан";
+//   }else{
+//     res.send('send mail error');
+//   }
+// });
 
 app.post('/choosecity',function (req,res) {
   connection.query('SELECT city_id, city_name FROM citys',function (error,result,fields) {
@@ -220,22 +270,65 @@ app.post('/addcity',function (req,res) {
 app.post('/register',function (req,res) {
   var user = req.body;
   var pass = req.body.pass;
+  var confirmLinkHash;
+  var now = new Date();
+  var microtime = now.getTime();
+  microtime = microtime+'';
   var hash = crypto.createHmac('sha256', pass)
                      .update('I love cupcakes')
                      .digest('hex');
+
+  confirmLinkHash = crypto.createHmac('sha256', microtime)
+                     .update('I love cupcakes')
+                     .digest('hex');
+  console.log(confirmLinkHash);
   connection.query('SELECT * FROM users WHERE user_email = "'+user.email+'"',function (error,result,fields) {
     if (error) throw error;
     if (result.length > 0) {
       res.send({status: 'error', err: 'email already exist'});
     }else{
-      connection.query('INSERT INTO users (user_email,user_pass,user_role,user_firstname,user_lastname,user_ban,user_confirm) \
-      VALUES ("'+user.email+'","'+hash+'",1,"'+user.firstname+'","'+user.lastname+'",0,0)',
+      connection.query('INSERT INTO users (user_email,user_pass,user_role,user_firstname,user_lastname,user_ban,user_confirm,confirmhash) \
+      VALUES ("'+user.email+'","'+hash+'",1,"'+user.firstname+'","'+user.lastname+'",0,0,"'+confirmLinkHash+'")',
       function(error, result, fields) {
         if (error) throw error;
+
+        var mailOptions = {
+            from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+            to: user.email, // list of receivers
+            subject: 'Подтвердите регистрацию', // Subject line
+            text: 'Подтвердите регистрацию, перейдя по ссылке: http://'+req.headers.host+'/confirmme-'+confirmLinkHash, // plain text body
+            html: '<p>Подтвердите регистрацию, перейдя по ссылке: <a href="http://'+req.headers.host+'/confirmme-'+confirmLinkHash+'">http://'+req.headers.host+'/confirmme-'+confirmLinkHash+'</a>.</p>' // html body
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return console.log(error);
+                res.send({err: error});
+            }else{
+              res.send({err: false, message: info.messageId, response: info.response});
+            }
+            console.log('Message %s sent: %s', info.messageId, info.response);
+        });
+
         res.send({status:'success'});
       });
     }
   });
+});
+
+app.get('/confirmme-:confirmlinkhash', function (req,res) {
+  connection.query('SELECT * FROM users WHERE confirmhash = "'+req.params.confirmlinkhash+'"' ,function (error, result, fields) {
+    if (error) throw error;
+    if (result[0].user_confirm == 0) {
+      connection.query('UPDATE users SET user_confirm = 1 WHERE confirmhash = "'+req.params.confirmlinkhash+'"' ,function (error, result, fields) {
+        if (error) throw error;
+        // res.send({mes: "Активация прошла успешно, срасибо за регистрацию!"});
+        res.render('confirmme.jade', {mes: "Активация прошла успешно, срасибо за регистрацию!"});
+      })
+    }else{
+      res.render('confirmme.jade', {mes: "Профиль уже активирован, срасибо за регистрацию!"});
+      // res.send({mes: "Профиль уже активирован, срасибо за регистрацию!"});
+    }
+  })
 });
 
 

@@ -20,6 +20,7 @@ html(lang='ru')
     //-   .geo-ll,.geo-zoom{height: 0; opacity: 0}
     //- .geo-ll
     .close-layout
+    .close-all
     div#choosecity.citys
       div.citys-list
       div.citys-form
@@ -142,12 +143,12 @@ html(lang='ru')
                   | Оставьте ваши контакты и мы поможем вам найти
                   br
                   | подходящее помещение.
-                form#footer-form
+                form#footer-form(action='/sendmail', method='POST')
                   .form-groups
-                    input(type='tel', required='required', placeholder='Введите телефон')
-                    input(type='email', required='required', placeholder='Введите email')
-                  textarea(placeholder='Какое помещение вы ищите?')
-                  button.btn(type='submit') Отправить
+                    input(type='tel', name='phone', required='required', placeholder='Введите телефон')
+                    input(type='email', name='email' required='required', placeholder='Введите email')
+                  textarea(name='message', placeholder='Какое помещение вы ищите?')
+                  button.btn(type='submit') Отправить 
         article
           #footer-bottom.container
             section
@@ -387,14 +388,14 @@ html(lang='ru')
                 h4 Заказать звонок
                 p Оставьте ваши контакты и мы поможем вам найти  подходящее помещ
               .modal-body
-                form(action='/sendmail', method='POST')#form-call-me
+                form#formcallme(action='/sendmail', method='POST')
                   .form-group
                     label ФИО
                     input.form-control(name='name', type='text', required='')
                   .form-group
                     label Телефон
                     input.form-control(name='phone', type='tel', required='')
-                  input(type="hidden", name='email', value='nalofree@gmail.com')
+                  //- input(type="hidden", name='email', value='nalofree@gmail.com')
                   button.btn-submit(type='submit') Отправить
             // Появляется при успешком заполнении формы
             .modal-thanks
@@ -579,3 +580,4 @@ html(lang='ru')
       script(src='js/remove.js')
       script(src='js/moder.js')
       script(src='js/editofc.js')
+      script(src='js/sendmail.js')
