@@ -122,48 +122,46 @@ $(document).ready(function() {
 
   $('.first-step').click(function (e) {
     e.preventDefault();
+    var objectdata = {};
     if (($("#choose-object").val() != '' || $("#objcoords").val() != '')) {
       $('.kab-create-step-one').fadeOut();//.animate({'display':'none'},500);
-      if ($("#choose-object").val() != '') {
-        $("#objcoords").val('');
-        $('#objadres').val('');
-        $('.kab-create-step-three').fadeIn();
-        $('.close-layout').fadeIn();
-        var objdata = {
-          object_id: $("#choose-object").val(),
-          object_cover: objimagefield
-        }
-        console.log(objdata);
-        $.ajax({
-          url: '/setobjectimage',
-          data: objdata,
-          type: 'POST',
-          success: function (data, status, error) {
-            console.log(data, status, error);
-          },
-          error: function (data, status, error) {
-            console.log(data, status, error);
-          }
-        });
-      }else{
+      // if ($("#choose-object").val() != '') {
+      //   $("#objcoords").val('');
+      //   $('#objadres').val('');
+      //   $('.kab-create-step-three').fadeIn();
+      //   $('.close-layout').fadeIn();
+      //   objdata.object_id: $("#choose-object").val(),
+      //   objdata.object_cover: objimagefield
+      //   console.log(objdata);
+      //   $.ajax({
+      //     url: '/setobjectimage',
+      //     data: objdata,
+      //     type: 'POST',
+      //     success: function (data, status, error) {
+      //       console.log(data, status, error);
+      //     },
+      //     error: function (data, status, error) {
+      //       console.log(data, status, error);
+      //     }
+      //   });
+      // }else{
         $('.kab-create-step-two').fadeIn();
         // $('.step-inform-adres').text('Адрес: '+autoaddres);
         $('.close-layout').fadeIn();
         var now = getTime();
-        objectData = {
-          object_adres: $('#objadres').val(),
-          object_coords: $("#objcoords").val(),
-          object_create: now,
-          object_publish: 0,
-          object_show: 1,
-          // object_type: $('input[name="objectType"]:checked').attr('data-title'),
-          object_cover: objimagefield,
-          object_city: getCookie('city_id')
-        }
+        objectData.object_adres = $('#objadres').val(),
+        objectData.object_coords = $("#objcoords").val(),
+        objectData.object_create = now,
+        objectData.object_publish = 0,
+        objectData.object_show = 1,
+        // object_type: $('input[name="objectType"]:checked').attr('data-title'),
+        objectData.object_cover = objimagefield,
+        objectData.object_city = getCookie('city_id')
         console.log(objectData);
+          $('.step-inform-address').empty();
         $('.step-inform-address').html("Адрес: <span>"+objectData.object_adres+"</span>");
 
-      }
+      // }
     }else{
       alert('Заполните поля');
     }
