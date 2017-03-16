@@ -9,12 +9,13 @@ block content
           //-span >
           //-a(href='#') Результаты поиска
           span >
-          a.active(href='#') Офис №233, 25м2
+          a.active(href='#')= office.office_name + ", "+ office.office_area+' м'
+            sup 2
         section#obj-header
           section
             - var name = office.office_name
             h2= name
-            p ТЦ “Рублёв” ул. Чехова д. 19
+            p= office.office_adres
           section.bookmark-trigger(data-title= office.office_id) Добавить в закладки
         // Слайдер
         section#obj-slider.slider-pro

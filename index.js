@@ -887,17 +887,21 @@ app.get('/office-:office_id', auth, function (req,res) {
               }
             }
             console.log("role",res.role);
-            res.render('office.jade',{
-              role: res.role,
-              username: res.userfullname,
-              userid: res.userid,
-              office: office,
-              images: images,
-              meanings: meanings,
-              included: included,
-              advanced: advanced,
-              providers: providers
-            });
+            connection.query('SELECT object_adres FROM objects WHERE object_id = '+office.office_object, function (error,result,fields) {
+              if (error) throw error;
+              office.office_adres = result[0].object_adres;
+              res.render('office.jade',{
+                role: res.role,
+                username: res.userfullname,
+                userid: res.userid,
+                office: office,
+                images: images,
+                meanings: meanings,
+                included: included,
+                advanced: advanced,
+                providers: providers
+              });
+            });            
           });
         });
       });
