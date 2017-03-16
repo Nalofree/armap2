@@ -32,10 +32,10 @@ var storage = multer.diskStorage({
 // https://nodemailer.com/about/
 
 var transporter = nodemailer.createTransport({
-    service: 'Gmail',
+    service: 'Yandex',
     auth: {
-        user: 'nalofree@gmail.com',
-        pass: 'Ss0951080'
+        user: 'arenda.38@yandex.ru',
+        pass: 'azvZ6E14&lt'
     }
 });
 
@@ -318,16 +318,21 @@ app.post('/register',function (req,res) {
 app.get('/confirmme-:confirmlinkhash', function (req,res) {
   connection.query('SELECT * FROM users WHERE confirmhash = "'+req.params.confirmlinkhash+'"' ,function (error, result, fields) {
     if (error) throw error;
-    if (result[0].user_confirm == 0) {
-      connection.query('UPDATE users SET user_confirm = 1 WHERE confirmhash = "'+req.params.confirmlinkhash+'"' ,function (error, result, fields) {
-        if (error) throw error;
-        // res.send({mes: "Активация прошла успешно, срасибо за регистрацию!"});
-        res.render('confirmme.jade', {mes: "Активация прошла успешно, срасибо за регистрацию!"});
-      })
+    if (result[0]) {
+      if (result[0].user_confirm == 0) {
+        connection.query('UPDATE users SET user_confirm = 1 WHERE confirmhash = "'+req.params.confirmlinkhash+'"' ,function (error, result, fields) {
+          if (error) throw error;
+          // res.send({mes: "Активация прошла успешно, срасибо за регистрацию!"});
+          res.render('confirmme.jade', {mes: "Активация прошла успешно, срасибо за регистрацию!"});
+        })
+      }else{
+        res.render('confirmme.jade', {mes: "Профиль уже активирован, срасибо за регистрацию!"});
+        // res.send({mes: "Профиль уже активирован, срасибо за регистрацию!"});
+      }
     }else{
-      res.render('confirmme.jade', {mes: "Профиль уже активирован, срасибо за регистрацию!"});
-      // res.send({mes: "Профиль уже активирован, срасибо за регистрацию!"});
+      res.render('confirmme.jade', {mes: "Такого пользхователя не существует!"});
     }
+
   })
 });
 
