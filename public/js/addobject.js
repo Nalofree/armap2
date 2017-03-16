@@ -71,7 +71,7 @@ $(document).ready(function() {
             $('#objadres').val(autoaddres);
             $('.obj-addr-autoshow').hide();
           });
-          $(".obj-addr-autoshow .objects-list div").click(function () {
+          $(".obj-addr-autoshow").on('click', '.objects-list div', function () {
             // if ($(this).val() != '') {
               $("#objcoords").val('');
               $('#objadres').val('');
