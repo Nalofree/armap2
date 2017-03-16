@@ -35,7 +35,7 @@ var transporter = nodemailer.createTransport({
     service: 'Yandex',
     auth: {
         user: 'arenda.38@yandex.ru',
-        pass: 'azvZ6E14&lt'
+        pass: 'azvZ6E14&It'
     }
 });
 
@@ -145,8 +145,8 @@ app.post('/sendmail', function (req,res) {
     maildata.name = req.body.name ? req.body.name : "без имени";
     maildata.phone = req.body.phone ? req.body.phone : "не указан";
     var mailOptions = {
-        from: '"Rentazavr 👻" <nalofree@gmail.com>', // sender address
-        to: 'nalofree@gmail.com', // list of receivers
+        from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+        to: 'arenda.38@yandex.ru', // list of receivers
         subject: 'Заказ обратного звонка', // Subject line
         text: 'Имя: '+maildata.name+'\nНомер телефона: '+maildata.phone+'.', // plain text body
         html: '<p>Имя: '+maildata.name+'</p><p>Номер телефона: '+maildata.phone+'.</p>' // html body
@@ -165,8 +165,8 @@ app.post('/sendmail', function (req,res) {
     maildata.phone = req.body.phone ? req.body.phone : "не указан";
     maildata.message = req.body.message ? req.body.message : "Ничего";
     var mailOptions = {
-        from: '"Rentazavr 👻" <nalofree@gmail.com>', // sender address
-        to: 'nalofree@gmail.com', // list of receivers
+        from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+        to: 'arenda.38@yandex.ru', // list of receivers
         subject: 'Нужна помощь!', // Subject line
         text: 'Почта: '+maildata.email+'\nНомер телефона: '+maildata.phone+'\nСообщение: '+maildata.message+'.', // plain text body
         html: '<p>Почта: '+maildata.email+'</p><p>Номер телефона: '+maildata.phone+'.</p><p>Сообщение: '+maildata.message+'.</p>' // html body
