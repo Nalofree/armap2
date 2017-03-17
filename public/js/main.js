@@ -311,15 +311,16 @@ tableMenuBtn.click(function () {
 var footerShowBtn = $('.show-footer'),
     footer = $('#footer');
 
-footer.hide();
+// footer.hide();
 footerShowBtn.click(function () {
-    if ($(this).hasClass('active')) {
-        $(this).removeClass('active');
-        footer.animate({height: "hide"}, 400);
-    } else {
-        $(this).addClass('active');
-        footer.animate({height: "show"}, 400);
-    }
+  document.scrollTop(99999);
+    // if ($(this).hasClass('active')) {
+    //     $(this).removeClass('active');
+    //     footer.animate({height: "hide"}, 400);
+    // } else {
+    //     $(this).addClass('active');
+    //     footer.animate({height: "show"}, 400);
+    // }
 });
 
 $(document).ready(function () {
