@@ -59,21 +59,24 @@ html(lang='ru')
               ul#head-log-in
                 li
                   a(href="/my").btn.btn-danger.add-objava + Добавить объявление
-                li
+                li.username
                   - if (role == "user")
-                    a(href='/my')= username + " | "
+                    a(href='/my')= username 
+                    span= " | "
                       //- span.blue-text ЛИЧНЫЙ КАБИНЕТ
                       //- |  |  
                   - if (role == "admin")
-                    a(href='/admin')= username + " | "
+                    a(href='/admin')= username 
+                    span= " | "
                       //- span.blue-text >>ЛИЧНЫЙ КАБИНЕТ<<
                       //- |  |  
                   - if (role == "moder")
-                    a(href='/moder')= username + " | "
+                    a(href='/moder')= username 
+                    span= " | "
                       //- span.blue-text ЛИЧНЫЙ КАБИНЕТ
                       //- |  |  
                   //- + role
-                li
+                li.username
                   //- button(type='button', data-toggle='modal', data-target='#end-visit', class='end-visit') Выйти
                   a(href="/logout",class='logout') Выйти
             -else

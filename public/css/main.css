@@ -9351,9 +9351,17 @@ textarea {
   font-weight: bold;
 }
 
+ul#head-log-in li.username {
+  color: #eee;
+}
 
+ul#head-log-in li.username a {
+  display: inline-block;
+  padding: 3px 7px;
+  line-height: 20px;
+}
 
 .add-objava {
   padding: 2px 7px;
-  margin-right: 5px;
+  /*height: 30px;*/
 }
