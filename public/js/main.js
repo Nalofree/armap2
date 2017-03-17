@@ -130,6 +130,15 @@ $(".rooms-show").click(function () {
     }
 });
 
+$(".readyreg").click(function () {
+  $("#header-register").modal('hide');
+});
+
+$(".regnow").click(function () {
+  $("#header-login").modal('hide');
+});
+
+
 //Создание объекта
 /*var createObject = $(".kab-create-obj");
  createObject.hide();

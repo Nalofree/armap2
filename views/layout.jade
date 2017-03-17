@@ -83,6 +83,8 @@ html(lang='ru')
                 li
                   button(type='button', data-toggle='modal', data-target='#header-register') Регистрация
                 li
+                  button= " | "
+                li
                   button(type='button', data-toggle='modal', data-target='#header-login') Войти
                 // выйти - data-target='#end-visit'
         // Главное меню
@@ -194,7 +196,7 @@ html(lang='ru')
                 //-   a.vk(href='#')
                 //-   a.fb(href='#')
                 //-   a.ok(href='#')
-                button(type='button', data-toggle='modal', data-target='#header-register') Регистрация
+                button.regnow(type='button', data-toggle='modal', data-target='#header-register') Регистрация
             // Появляется при успешком заполнении формы
             .modal-thanks
               .modal-thanks-header
@@ -305,7 +307,7 @@ html(lang='ru')
                 //-   a.vk(href='#')
                 //-   a.fb(href='#')
                 //-   a.ok(href='#')
-                button(type='button', data-toggle='modal', data-target='#header-login') Уже зарегистрированы?
+                button.readyreg(type='button', data-toggle='modal', data-target='#header-login') Уже зарегистрированы?
             // Появляется при успешком заполнении формы
             .modal-regerror
               .modal-regerror-header
