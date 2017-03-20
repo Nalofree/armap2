@@ -23,6 +23,9 @@ block content
             a(href='#mod-archive', aria-controls='mod-archive', role='tab', data-toggle='tab') Архив
           li(role='presentation')
             a(href='#mod-users', aria-controls='mod-users', role='tab', data-toggle='tab') Пользователи
+          li(role='presentation')
+            a(href='#mod-options', aria-controls='mod-options', role='tab', data-toggle='tab') Опции помещений
+            //- mod-options
         //- .kab-search
         //-   form
         //-     input(type='text', placeholder='Поиск...')
@@ -700,6 +703,30 @@ block content
                       div.btn.btn-default.banuser(data-title=users[i].user_id)= (users[i].user_ban === 0) ? "Заблокировать" : "Разблокировать"
                     td
                       div.btn.btn-default.confirmuser(data-title=users[i].user_id)= (users[i].user_confirm === 0) ? "Подтвердить" : "Подтвержден"
+                      
+        #mod-options.mod-object-list.tab-pane(role='tabpanel')
+          h4 Опции помещений
+          //- .checkbox
+          //-   label
+          //-     input(type="checkbox")
+          //-     | Только не подтвержденные
+          table.table.option-list(width="100%")
+            - for (var i = 0; i < options.length; i++)
+              tr
+                td.option-name
+                  - if (options[i].option_publish == 1)
+                    .btn.btn-danger.refuse-option(data-title=options[i].option_id) &times;
+                  - else
+                    .btn.btn-success.confirm-option(data-title=options[i].option_id) &radic;
+                  //- .btn.btn-default &#9998;
+                  .btn.btn-default.edit-option(data-title=options[i].option_id)= options[i].option_name
+                  //- .input-group.edit-option-field
+                  input.form-control.edit-option-field(type='text', name='optionname', value=options[i].option_name, data-title=options[i].option_id)
+                
+                td= options[i].opttype_name
+                td
+                  .btn.btn-danger.delete-option(data-title=options[i].option_id) Удалить навсегда
+                  
                 
     // Модальные окна при отклонениях
     .mod-modals

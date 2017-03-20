@@ -48,6 +48,7 @@ $(document).ready(function() {
     	  	//console.log(autoaddres);
           $('.obj-addr-autoshow').show();
   			  $('.obj-addr-autoshow p.adres').text(autoaddres);
+          $(".obj-addr-autoshow .objects-list").empty();
           $.ajax({
             url: '/objectautolist',
             type: 'POST',
@@ -235,27 +236,7 @@ $(document).ready(function() {
     }
   });
 
-  function fieldsIsEmpty() {
-    var meanings = $('input[name="meanings"]:checked').index() >=0 ? true : false,
-        included = $('input[name="included"]:checked').index() >=0 ? true : false,
-        advanced = $('input[name="advanced"]:checked').index() >=0 ? true : false,
-        providers = $('input[name="providers"]:checked').index() >=0 ? true : false,
-        mainPhoto = $('input[name="mainPhoto"]:checked').index() >=0 ? true : false,
-        header = $('#create-header').val() != '' ? true : false,
-        square = $('#create-square').val() != '' ? true : false,
-        price = $('#create-price').val() != '' ? true : false,
-        tel = $('#create-tel').val() != '' ? true : false,
-        height = $('#create-height').val() != '' ? true : false,
-        result = meanings & included & advanced & providers & mainPhoto & header & square & price & tel & height;
-        if (result) {
-          return true;
-        }else{
 
-        }
-        //console.log(" meanings: "+meanings+"; included: "+included+"; advanced: "+advanced+"; providers: "+providers+"; mainPhoto: "+mainPhoto+"; header: "+header+"; square: "+square+"; price: "+price+"; tel: "+tel+"; height: "+height);
-        console.log(result);
-    //return result;
-  }
 
   $('#create-square, #create-price, #create-height').keyup(function () {
     var string = $(this).val();
@@ -286,8 +267,30 @@ $(document).ready(function() {
     return totalPrice.toFixed(2);
   }
 
-  $('.third-step.step-btn').click(function (e) {
+  function fieldsIsEmpty() {
+    var meanings = $('input[name="meaning"]:checked').val() ? true : false,
+        included = $('input[name="included"]:checked').val() ? true : false,
+        advanced = $('input[name="advanced"]:checked').val() ? true : false,
+        providers = $('input[name="providers"]:checked').val() ? true : false,
+        mainPhoto = $('input[name="mainPhoto"]:checked').val() ? true : false,
+        header = $('#create-header').val() != '' ? true : false,
+        square = $('#create-square').val() != '' ? true : false,
+        price = $('#create-price').val() != '' ? true : false,
+        tel = $('#create-tel').val() != '' ? true : false,
+        height = $('#create-height').val() != '' ? true : false,
+        result = meanings & included & advanced & providers & mainPhoto & header & square & price & tel & height;
+        if (result) {
+          return true;
+        }else{
+          return false;
+        }
+        console.log(result);
+  }
+
+  // $('.third-step.step-btn').click(function (e) {
+  $('body').on('click', '.third-step.step-btn', function (e) {
     e.preventDefault();
+
     if (!fieldsIsEmpty()) {
       alert('Заполните все поля');
     }else{
@@ -308,7 +311,9 @@ $(document).ready(function() {
         return arr;
       };
 
-      officeData.meanings = checkboxProcess('meanings');
+
+
+      officeData.meanings = checkboxProcess('meaning');
       officeData.included = checkboxProcess('included');
       officeData.advanced = checkboxProcess('advanced');
       officeData.providers = checkboxProcess('providers');

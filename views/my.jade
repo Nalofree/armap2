@@ -132,8 +132,11 @@ block content
                     - for (var i = 0; i < meanings.length; i++)
                       .checkbox
                         label
-                          input(type='checkbox', data-title= ''+meanings[i].option_id,name='meanings')
+                          input(type='checkbox', data-title= ''+meanings[i].option_id,name='meaning')
                           div= meanings[i].option_name
+                    label
+                      | Другое:
+                      input(type='text', class="addmeaning", data-title="meaning")
                   section.second-item
                     h4 В арендную плату входит:
                     - for (var i = 0; i < included.length; i++)
@@ -141,9 +144,9 @@ block content
                         label
                           input(type='checkbox', data-title= ''+included[i].option_id,name='included')
                           div= included[i].option_name
-                    //-- label
-                    //--   | Другое:
-                    //--   input(type='text')
+                    label
+                      | Другое:
+                      input(type='text', class="addincluded", data-title="included")
                   section.second-item
                     h4 Дополнительные услуги:
                     - for (var i = 0; i < advanced.length; i++)
@@ -151,9 +154,9 @@ block content
                         label
                           input(type='checkbox', data-title= ''+advanced[i].option_id,name='advanced')
                           div= advanced[i].option_name
-                    //-- label
-                    //--   | Другое:
-                    //--   input(type='text')
+                    label
+                      | Другое:
+                      input(type='text', class="addadvanced", data-title="advanced")
                   section.second-item
                     h4 Доступные провайдеры:
                     - for (var i = 0; i < providers.length; i++)
@@ -161,9 +164,9 @@ block content
                         label
                           input(type='checkbox', data-title= ''+providers[i].option_id,name='providers')
                           div= providers[i].option_name
-                    //-- label
-                    //--   | Другое:
-                    //--   input(type='text')
+                    label
+                      | Другое:
+                      input(type='text', class="addprovider", data-title="providers")
                 article.add-photos
                   .add-photos-desc
                     h4 Загрузите фотографии
@@ -271,7 +274,7 @@ block content
                           tr
                             td.table-date= objects[i].object_offices[j].office_create
                             td.table-name
-                              a.nowrap-text(href='#')= objects[i].object_offices[j].office_name
+                              a.nowrap-text(href='/office-'+objects[i].object_offices[j].office_id)= objects[i].object_offices[j].office_name
                               - if (objects[i].object_offices[j].office_publish == 0)
                                 span.status.wait Ожидает модерации
                               - else if (objects[i].object_offices[j].office_publish == 1)

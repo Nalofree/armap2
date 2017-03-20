@@ -324,6 +324,42 @@ footerShowBtn.click(function () {
 });
 
 $(document).ready(function () {
+  $(".addmeaning, .addincluded, .addadvanced, .addprovider").keyup(function (e) {
+    if (e.keyCode == 13) {
+      e.preventDefault();
+      if ($(this).val().length >= 3) {
+        // alert($(this).val());
+        var name = $(this).val();
+        var opttype = $(this).attr('data-title');
+        var field = $(this);
+        $.ajax({
+          url: "/addoption",
+          type: "POST",
+          data: {
+            name: name,
+            opttype: opttype
+          },
+          success: function (data, status, error) {
+            if (data.err) {
+              alert(data.err);
+            }else{
+              field.parent().before('<div class="checkbox"><label><input type="checkbox" data-title="'+data.optid+'" name="'+data.opttype+'"><div>'+data.name+'</div></label></div>');
+            }
+            console.log(data, status, error);
+          },
+          error: function (data, status, error) {
+            console.log(data, status, error);
+          }
+        })
+        $(this).val('');
+      }else{
+        alert("Длина названия не должна быть меньше 3 символов!");
+      }
+    }
+  });
+})
+
+$(document).ready(function () {
   $("#create-tel").mask("+7 (999) 999-9999");
   $(".admin-trig .panel-heading").click(function () {
     if ($(this).hasClass("show")) {

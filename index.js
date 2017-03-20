@@ -186,6 +186,23 @@ app.post('/sendmail', function (req,res) {
 
 });
 
+app.post("/addoption", auth, function (req, res) {
+  connection.query("SELECT opttype_id FROM opttypes WHERE opttype_name = '"+req.body.opttype+"'", function (error,result,fields) {
+    if (error) throw error;
+    if (result[0]) {
+      var typeId = result[0].opttype_id;
+      connection.query("INSERT INTO options (option_name, option_type, option_author, option_publish) VALUES ('"+req.body.name+"', "+typeId+", '"+req.session.userid+"', 0) ", function (error,result,fields) {
+        if (error) throw error;
+        res.send({name: req.body.name, opttype: req.body.opttype, optid: result.insertId});
+      })
+    }else{
+      // Error this option type is not exist
+      res.send({err: "Error this option type is not exist",name: req.body.name, opttype: req.body.opttype});
+    }
+  });
+  console.log(req.body);
+})
+
 // app.post('/sendmail', function (req,res) {
 //   res.send(req.body);
 //   maildata = {};
@@ -1161,18 +1178,24 @@ app.get('/moder', auth,function (req,res) {
                 // console.log(objects);
                 // console.log(objects);
 
-                res.render('moder.jade',{
-                  nopublishofccount: nopublishofccount,
-                  role: res.role,
-                  username: res.userfullname,
-                  userid: res.userid,
-                  objects: objects,
-                  objtypes: objtypes,
-                  offices: offices,
-                  images: images,
-                  users: users,
-                  archoffices: archoffices
+                connection.query("SELECT * FROM options LEFT JOIN opttypes ON option_type = opttype_id ORDER BY option_type", function ( error, result, fields ) {
+                  if (error) throw error;
+                  optionsList = result;
+                  res.render('moder.jade',{
+                    nopublishofccount: nopublishofccount,
+                    role: res.role,
+                    username: res.userfullname,
+                    userid: res.userid,
+                    objects: objects,
+                    objtypes: objtypes,
+                    options: optionsList,
+                    offices: offices,
+                    images: images,
+                    users: users,
+                    archoffices: archoffices
+                  });
                 });
+
                 // res.send({
                 //   nopublishofccount: nopublishofccount,
                 //   role: res.role,
@@ -1266,6 +1289,35 @@ app.post('/delobj',function (req,res) {
     }
   });
 });
+
+app.post('/refuseoption',function (req,res) {
+  connection.query("UPDATE options SET option_publish = 0 WHERE option_id = "+req.body.optionid, function (error,result,fields) {
+    if (error) throw error;
+    res.send(req.result);
+  });
+});
+
+app.post('/confirmoption',function (req,res) {
+  connection.query("UPDATE options SET option_publish = 1 WHERE option_id = "+req.body.optionid, function (error,result,fields) {
+    if (error) throw error;
+    res.send(req.result);
+  });
+});
+
+app.post('/editoption',function (req,res) {
+  connection.query("UPDATE options SET option_name = '"+req.body.optionname+"' WHERE option_id = "+req.body.optionid, function (error,result,fields) {
+    if (error) throw error;
+    res.send({optionname: req.body.optionname});
+  });
+});
+
+app.post('/deleteoption',function (req,res) {
+  connection.query("DELETE FROM options WHERE option_id = "+req.body.optionid, function (error,result,fields) {
+    if (error) throw error;
+    res.send(req.result);
+  });
+});
+
 
 app.post('/delofc',function (req,res) {
   connection.query("UPDATE offices SET office_show = 0 WHERE office_id = "+req.body.office_id, function (error,result,fields) {
@@ -1386,7 +1438,8 @@ app.post('/setobject',auth,function (req,res) {
 });
 
 app.post('/objectautolist',function (req,res) {
-  connection.query('SELECT * FROM objects WHERE object_adres LIKE "%'+req.body.adres+'%" ', function (error, result, fields) {
+  // connection.query('SELECT * FROM offices WHERE office_publish = 1 AND office_show')
+  connection.query('SELECT * FROM objects WHERE object_adres LIKE "%'+req.body.adres+'%" AND object_show = 1 AND object_publish = 1', function (error, result, fields) {
     if (error) throw error;
     res.send({objects: result});
   })

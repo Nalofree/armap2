@@ -9365,3 +9365,12 @@ ul#head-log-in li.username a {
   padding: 2px 7px;
   /*height: 30px;*/
 }
+
+.edit-option-field {
+  display: none;
+  margin-left: 20px;
+}
+
+.option-name {
+  display: flex;
+}

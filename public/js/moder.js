@@ -257,4 +257,144 @@ $(document).ready(function () {
     });
   });
 
+  $(".option-list").on("click", ".refuse-option", function (e) {
+    e.preventDefault();
+    $(".close-layout").fadeIn();
+    var optionid = $(this).attr("data-title");
+    var btn = $(this);
+    $.ajax({
+      url: "/refuseoption",
+      type: "POST",
+      data: {
+        optionid: optionid
+      },
+      success: function (data, status, error) {
+        console.log(data, status, error);
+        if (data.err) {
+          console.log(err);
+          $(".close-layout").fadeOut();
+        }else{
+          btn.removeClass("btn-danger");
+          btn.addClass("btn-success");
+          btn.removeClass("refuse-option");
+          btn.addClass("confirm-option");
+          btn.html("&radic;");
+          $(".close-layout").fadeOut();
+        }
+      },
+      error: function (data, status, error) {
+        console.log(data, status, error);
+        $(".close-layout").fadeOut();
+      }
+    });
+
+  });
+
+  $(".option-list").on("click", ".confirm-option", function (e) {
+    e.preventDefault();
+    $(".close-layout").fadeIn();
+    var optionid = $(this).attr("data-title");
+    var btn = $(this);
+    $.ajax({
+      url: "/confirmoption",
+      type: "POST",
+      data: {
+        optionid: optionid
+      },
+      success: function (data, status, error) {
+        console.log(data, status, error);
+        if (data.err) {
+          console.log(err);
+          $(".close-layout").fadeOut();
+        }else{
+          btn.removeClass("btn-success");
+          btn.addClass("btn-danger");
+          btn.removeClass("confirm-option");
+          btn.addClass("refuse-option");
+          btn.html("&times;");
+          $(".close-layout").fadeOut();
+        }
+      },
+      error: function (data, status, error) {
+        console.log(data, status, error);
+        $(".close-layout").fadeOut();
+      }
+    });
+
+  });
+
+  $(".edit-option").click(function (e) {
+    e.preventDefault();
+    $(this).fadeOut("fast", function () {
+      $(this).next(".edit-option-field").fadeIn("fast",function () {
+        $(this).focus();
+      });
+    });
+  });
+
+  $(".edit-option-field").change(function (e) {
+    e.preventDefault();
+    $(".close-layout").fadeIn();
+    var field = $(this);
+    $.ajax({
+      url: "editoption",
+      type: "POST",
+      data: {
+        optionname: field.val(),
+        optionid: field.attr("data-title")
+      },
+      success: function ( data, status, error ) {
+        if (data.err) {
+          $(".close-layout").fadeOut();
+        }else{
+          field.fadeOut("fast", function () {
+            field.val(data.optionname);
+            field.prev(".edit-option").text(data.optionname);
+            field.prev(".edit-option").fadeIn("fast");
+          });
+          $(".close-layout").fadeOut();
+        }
+        console.log( data, status, error );
+      },
+      error: function ( data, status, error ) {
+        console.log( data, status, error );
+        $(".close-layout").fadeOut();
+      }
+    })
+
+  });
+
+  $(".edit-option-field").focusout(function (e) {
+    e.preventDefault();
+    $(this).fadeOut("fast", function () {
+      $(this).prev(".edit-option").fadeIn("fast");
+    });
+  });
+
+  $(".delete-option").click(function (e) {
+    e.preventDefault();
+    $(".close-layout").fadeIn();
+    var btn = $(this);
+    var optionid = $(this).attr("data-title");
+    $.ajax({
+      url: "/deleteoption",
+      type: "POST",
+      data: { optionid: optionid },
+      success: function ( data, status, error ) {
+        if (data.err) {
+          $(".close-layout").fadeOut();
+        }else{
+          btn.closest('tr').fadeOut(function () {
+            $(".close-layout").fadeOut();
+          });
+        };
+        console.log( data, status, error );
+      },
+      error: function ( data, status, error ) {
+        console.log( data, status, error );
+        $(".close-layout").fadeOut();
+      }
+    });
+  });
+
 });
