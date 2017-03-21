@@ -397,10 +397,15 @@ app.get('/logout',function (req,res) {
 });
 
 app.post('/confirmobject', function (req,res) {
-  connection.query('UPDATE objects SET object_publish = 1 WHERE object_id = '+req.body.object_id,
+  var coords = req.body.objectcoords ? ", object_coords = '" + req.body.objectcoords + "'" : "";
+  connection.query("UPDATE objects SET object_publish = 1, object_name = '"+req.body.objectname+"', object_type = "+req.body.objecttype+", object_adres = '"+req.body.objectadres+"' "+coords+" WHERE object_id = "+req.body.objid ,
   function (error, result, fields) {
     if (error) throw error;
-    res.send({success: 1});
+    connection.query("SELECT objtype_name FROM objtypes WHERE objtype_id ="+req.body.objecttype, function (error, result, fields) {
+      if (error) throw error;
+      console.log(result[0].objtype_name);
+      res.send({success: 1, objinfo: req.body, objtypename: result[0].objtype_name});
+    });
   });
 });
 
@@ -895,7 +900,7 @@ app.get('/office-:office_id', auth, function (req,res) {
         connection.query('SELECT * FROM objtypes', function (error,result,fields) {
           if (error) throw error;
           var objtypes = result;
-          connection.query('SELECT * FROM options WHERE option_id IN ('+optionIdsStr+')', function (error,result,fields) {
+          connection.query('SELECT * FROM options WHERE option_id IN ('+optionIdsStr+') AND option_publish = 1', function (error,result,fields) {
             if (error) throw error;
             var meanings = [], included = [], advanced = [], providers = [];
             var opttypes = result;
@@ -1041,7 +1046,7 @@ app.post('/recuveofc', function (req, res) {
 
 app.get('/moder', auth,function (req,res) {
   if (res.role == 'admin' || res.role == 'moder') {
-    connection.query('SELECT object_id, object_name, object_type, object_adres, object_author, object_id, object_cover, object_create, object_city, object_type, object_publish FROM objects WHERE object_city = '+req.cookies.city_id, function (error, result, fields) {
+    connection.query('SELECT object_id, object_name, object_type, object_adres, object_author, object_id, object_cover, object_create, object_city, object_type, object_publish, image_filename, objtype_name, objtype_id FROM objects LEFT JOIN images ON image_id = object_cover LEFT JOIN objtypes ON object_type = objtype_id WHERE object_city = '+req.cookies.city_id, function (error, result, fields) {
       if (error) throw error;
       var objects = result;
       if (objects.length > 0) {
@@ -1067,19 +1072,22 @@ app.get('/moder', auth,function (req,res) {
           objTypeIdsArr.push(objects[i].object_id);
         }
         objTypeIdsStr = objTypeIdsArr.join(',');
-        connection.query('SELECT option_id, option_name FROM options LEFT JOIN opttypes ON option_type = opttype_id WHERE opttype_name ="meaning"', function (error, result, fields) {
+        // connection.query('SELECT option_id, option_name FROM options LEFT JOIN opttypes ON option_type = opttype_id WHERE opttype_name ="meaning"', function (error, result, fields) {
+        //   if (error) throw error;
+        //   var objtypes = result;
+        //   // console.log(objtypes);
+        //   for (var i = 0; i < objects.length; i++) {
+        //     for (var j = 0; j < objtypes.length; j++) {
+        //       if (objtypes[j].objtype_id === objects[i].object_type) {
+        //         objects[i].object_typename = objtypes[j].objtype_name;
+        //         // console.log(decodeURI(objects[i].object_typename));
+        //         // console.log("obj_type", objects[i].object_type);
+        //       }
+        //     }
+        //   }
+        connection.query("SELECT objtype_name, objtype_id FROM objtypes", function (error, result, fields) {
           if (error) throw error;
           var objtypes = result;
-          // console.log(objtypes);
-          for (var i = 0; i < objects.length; i++) {
-            for (var j = 0; j < objtypes.length; j++) {
-              if (objtypes[j].objtype_id === objects[i].object_type) {
-                objects[i].object_typename = objtypes[j].objtype_name;
-                // console.log(decodeURI(objects[i].object_typename));
-                // console.log("obj_type", objects[i].object_type);
-              }
-            }
-          }
           connection.query('SELECT office_name, office_id, office_phone, office_subprice, office_show, office_area, office_height, office_create, office_cover, office_object, image_filename, office_publish, office_author FROM offices LEFT JOIN images ON image_id = office_cover', function (error, result, fields) {
             if (error) throw error;
 

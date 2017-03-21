@@ -1,4 +1,5 @@
 
+
 ymaps.ready(function () {
   $(".object-address").keyup(function () {
     $(".moder-object-address__tooltip").show();
@@ -15,9 +16,10 @@ ymaps.ready(function () {
         $(".moder-object-address__tooltip").click(function () {
           $(".moder_confirm").prop('disabled', false);
           $(".object-address").val(autoadres);
+          $("input.object-coords").val(autoccords.join(","));
           console.log(autoccords);
           $(this).hide();
-          cityData = {
+          var cityData = {
             city_name: autoadres,
             city_coords: autoccords.join(","),
           };
@@ -77,13 +79,20 @@ $(document).ready(function () {
         }
       });
     });
+
     $(this).find('.object-info-block .success-btn').click(function () {
-      var objId = $(this).attr('data-title');
-      console.log(objId);
+      var objdata = {};
+      var btn = $(this);
+      objdata.objid = $(this).attr('data-title');
+      objdata.objectname = $(this).closest(".object-info-block").find("input.object-name").val();
+      objdata.objecttype = $(this).closest(".object-info-block").find("select.object-type").val();
+      objdata.objectadres = $(this).closest(".object-info-block").find("input.object-address").val();
+      objdata.objectcoords = $(this).closest(".object-info-block").find("input.object-coords").val() ? $(this).find("input.object-coords").val() : null;
+      console.log(objdata);
       $(".close-layout").show();
       $.ajax({
         type: 'POST',
-        data: {object_id: objId},
+        data: objdata,
         url: '/confirmobject',
         success: function (data, status, error) {
           console.log(data, status, error);
@@ -91,6 +100,37 @@ $(document).ready(function () {
           objstatus.removeClass('object-disabled');
           $(".object-info-name span").text("Подтвержден");
           objstatus.parent().show();
+          solution.hide();
+          btn.closest(".item-object-more").find(".object-info-name h3").text(data.objinfo.objectname);
+          btn.closest(".item-object-more").find(".object-info-name p.objectadres").text(data.objinfo.objectadres);
+          btn.closest(".item-object-more").find(".object-info-name p.objcttype").text(data.objtypename);
+          $(".close-layout").hide();
+        },
+        error: function (data, status, error) {
+          console.log(data, status, error);
+          alert("Что-то пошло не так, попробуйте снова");
+          $(".close-layout").hide();
+        }
+      });
+    });
+
+    $("#modal-object .success-btn").click(function () {
+      var objId = $(this).attr('data-title');
+      console.log(objId);
+      $(".close-layout").show();
+      var comment = $(".modal-comment textarea").val();
+      console.log(comment);
+      $.ajax({
+        type: 'POST',
+        data: {object_id: objId},
+        url: '/unconfirmobject',
+        success: function (data, status, error) {
+          console.log(data, status, error);
+          objstatus.parent().show();
+          objstatus.addClass('object-disabled');
+          objstatus.removeClass('object-published');
+          $(".object-info-name span").text("Отклонён");
+          $(".object-info-name span").text();
           solution.hide();
           $(".close-layout").hide();
         },
@@ -101,33 +141,6 @@ $(document).ready(function () {
         }
       });
     });
-      $("#modal-object .success-btn").click(function () {
-        var objId = $(this).attr('data-title');
-        console.log(objId);
-        $(".close-layout").show();
-        var comment = $(".modal-comment textarea").val();
-        console.log(comment);
-        $.ajax({
-          type: 'POST',
-          data: {object_id: objId},
-          url: '/unconfirmobject',
-          success: function (data, status, error) {
-            console.log(data, status, error);
-            objstatus.parent().show();
-            objstatus.addClass('object-disabled');
-            objstatus.removeClass('object-published');
-            $(".object-info-name span").text("Отклонён");
-            $(".object-info-name span").text();
-            solution.hide();
-            $(".close-layout").hide();
-          },
-          error: function (data, status, error) {
-            console.log(data, status, error);
-            alert("Что-то пошло не так, попробуйте снова");
-            $(".close-layout").hide();
-          }
-        });
-      });
   });
 
   $(".unconfirmoffice").click(function (e) {

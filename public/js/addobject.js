@@ -268,11 +268,11 @@ $(document).ready(function() {
   }
 
   function fieldsIsEmpty() {
-    var meanings = $('input[name="meaning"]:checked').val() ? true : false,
-        included = $('input[name="included"]:checked').val() ? true : false,
-        advanced = $('input[name="advanced"]:checked').val() ? true : false,
-        providers = $('input[name="providers"]:checked').val() ? true : false,
-        mainPhoto = $('input[name="mainPhoto"]:checked').val() ? true : false,
+    var meanings = $('input[name="meaning"]:checked').index() >= 0 ? true : false,
+        included = $('input[name="included"]:checked').index() >= 0 ? true : false,
+        advanced = $('input[name="advanced"]:checked').index() >= 0 ? true : false,
+        providers = $('input[name="providers"]:checked').index() >= 0 ? true : false,
+        mainPhoto = $('input[name="mainPhoto"]:checked').index() >= 0 ? true : false,
         header = $('#create-header').val() != '' ? true : false,
         square = $('#create-square').val() != '' ? true : false,
         price = $('#create-price').val() != '' ? true : false,

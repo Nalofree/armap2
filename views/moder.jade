@@ -99,14 +99,14 @@ block content
                     p.status.new= (objects[i].object_publish === 0) ? "Новый объект" : " "
                     .object-tooltip
                       .image
-                        - var objimg = objects[i].object_cover != null ? 'images/obj/'+objects[i].object_cover : "images/kabinet/moderation/mod-big.png"
+                        - var objimg = objects[i].object_cover ? 'uploads/'+objects[i].image_filename : "images/kabinet/moderation/mod-big.png"
                         img(src=objimg)
                       .description
                         p.nowrap-text= objects[i].object_name
                         p= objects[i].object_typename
                         p= objects[i].object_adres
                   .item-quantity
-                    p= objects[i].object_offices ? objects[i].object_offices.length + " помещения" : "нет помещений"
+                    p= objects[i].object_offices ? "помещений "+objects[i].object_offices.length : "нет помещений"
                   .item-more-show
                     // Кнопка посмотреть подробнее
                     a.show-object-info(href='javascript: void(0);')
@@ -125,20 +125,21 @@ block content
                       .object-info-name
                         .input-group
                           label(for='object-name') Имя объекта:
-                          input.object-name(type='text', value= objects[i].object_name, disabled)
+                          input.object-name(type='text', value= objects[i].object_name)
                         .input-group
                           label(for='object-type') Тип объекта:
                           //- input#object-type(type='text')
-                          select(disabled).object-type
+                          select.object-type
                             - for (var j = 0; j < objtypes.length; j++)
-                              - if (objtypes[j].option_id ===  objects[i].object_type)
-                                option(selected='selected', value=objtypes[j].option_id)= objtypes[j].option_name
+                              - if (objtypes[j].objtype_id == objects[i].object_type)
+                                option(selected='selected', value=objtypes[j].objtype_id)= objtypes[j].objtype_name
                               - else
-                                option(selected='', value=objtypes[j].option_id)= objtypes[j].option_name
+                                option(selected='', value=objtypes[j].objtype_id)= objtypes[j].objtype_name
                         .input-group
                           label(for='object-address') Адрес:
-                          input.object-address(type='text', value= objects[i].object_adres, title= objects[i].object_adres, disabled)
+                          input.object-address(type='text', value= objects[i].object_adres, title= objects[i].object_adres)
                           .moder-object-address__tooltip
+                          input(type="hidden").object-coords
                         //- a(href='#') Показать на карте
                       .object-info-submit
                         p.user
@@ -176,10 +177,10 @@ block content
                       .object-info-img
                         img(src=objimg)
                       .object-info-name
-                        h3= objects[i].object_name
+                        h3.objctname= objects[i].object_name
                         span= objects[i].object_publish===1 ? "Подтвержден" : "Отклонен"
-                        p= "Тип объекта: " + objects[i].object_typename
-                        p= "Адрес: " + objects[i].object_adres
+                        p.objcttype= "Тип объекта: " + objects[i].objtype_name
+                        p.objectadres= "Адрес: " + objects[i].object_adres
                         //- a(href='#') Комментарий модератора
                       .object-info-submit
                         // Открыть подробную информацию о помещениях

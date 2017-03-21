@@ -9364,6 +9364,7 @@ ul#head-log-in li.username a {
 .add-objava {
   padding: 2px 7px;
   /*height: 30px;*/
+  margin-right: 10px;
 }
 
 .edit-option-field {
@@ -9373,4 +9374,8 @@ ul#head-log-in li.username a {
 
 .option-name {
   display: flex;
+}
+
+.object-info-img img{
+  width: 100%;
 }
