@@ -1691,7 +1691,16 @@ app.get('/image:imageid', function (req, res) {
   });
 });
 
+app.get('/uplimage:imageid', function (req, res) {
+  connection.query("SELECT image_filename FROM images WHERE image_id="+req.params.imageid, function (error, result, fields) {
+    // res.send({imagename: result[0].image_filename});
+    res.sendFile(__dirname+"/uploads/"+result[0].image_filename);
+    console.log(result[0]);
+  });
+});
+
 app.post('/filtred',function (req,res) {
+
   // console.log("Filtr params: ");
   // console.log(req.body.meanings);
   // console.log(req.body.price);
