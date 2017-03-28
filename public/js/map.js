@@ -58,7 +58,8 @@ $(document).ready(function () {
 
               //Заглушить фильтр нафик
 
-              $(".filtr-it").click(function () {
+              $(".filtr-it").click(function (e) {
+                e.preventDefault();
                 for (var i = 0; i < placemarks.length; i++) {
                   myClusterer.remove(placemarks[i]);
                 }
@@ -104,7 +105,8 @@ $(document).ready(function () {
 
                   // Заглушить фильтр нафик
 
-                  $(".filtr-it").click(function () {
+                  $(".filtr-it").click(function (e) {
+                    e.preventDefault();
                     filter(cityId).then(function (placemarks) {
                     });
                   });

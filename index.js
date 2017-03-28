@@ -145,7 +145,7 @@ app.post('/sendmail', function (req,res) {
     maildata.name = req.body.name ? req.body.name : "без имени";
     maildata.phone = req.body.phone ? req.body.phone : "не указан";
     var mailOptions = {
-        from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+        from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
         to: 'arenda.38@yandex.ru', // list of receivers
         subject: 'Заказ обратного звонка', // Subject line
         text: 'Имя: '+maildata.name+'\nНомер телефона: '+maildata.phone+'.', // plain text body
@@ -165,7 +165,7 @@ app.post('/sendmail', function (req,res) {
     maildata.phone = req.body.phone ? req.body.phone : "не указан";
     maildata.message = req.body.message ? req.body.message : "Ничего";
     var mailOptions = {
-        from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+        from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
         to: 'arenda.38@yandex.ru', // list of receivers
         subject: 'Нужна помощь!', // Subject line
         text: 'Почта: '+maildata.email+'\nНомер телефона: '+maildata.phone+'\nСообщение: '+maildata.message+'.', // plain text body
@@ -310,7 +310,7 @@ app.post('/register',function (req,res) {
         if (error) throw error;
 
         var mailOptions = {
-            from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+            from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
             to: user.email, // list of receivers
             subject: 'Подтвердите регистрацию', // Subject line
             text: 'Подтвердите регистрацию, перейдя по ссылке: http://'+req.headers.host+'/confirmme-'+confirmLinkHash, // plain text body
@@ -424,7 +424,7 @@ app.post('/unconfirmobject', auth, function (req, res) {
       maildata.email = result[0].user_email;
       maildata.officeid = req.body.office_id;
       var mailOptions = {
-          from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+          from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
           to: maildata.email, // list of receivers
           subject: 'Объявление!', // Subject line
           text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление на ресурс рентазавр.рф, созданный вами объект отклонён, объявления в нем не опубликованы.\n'+req.body.comment, // plain text body
@@ -475,7 +475,7 @@ app.post('/confirmoffice', auth, function (req,res) {
       maildata.email = result[0].user_email;
       maildata.officeid = req.body.office_id;
       var mailOptions = {
-          from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+          from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
           to: maildata.email, // list of receivers
           subject: 'Объявление!', // Subject line
           text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление опубликовано.', // plain text body
@@ -508,7 +508,7 @@ app.post('/refuseoffice', auth, function (req,res) {
       maildata.email = result[0].user_email;
       maildata.officeid = req.body.office_id;
       var mailOptions = {
-          from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+          from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
           to: maildata.email, // list of receivers
           subject: 'Объявление!', // Subject line
           text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление снято с публиуации', // plain text body
@@ -542,7 +542,7 @@ app.post('/unconfirmoffice', auth, function (req,res) {
       maildata.email = result[0].user_email;
       maildata.officeid = req.body.office_id;
       var mailOptions = {
-          from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+          from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
           to: maildata.email, // list of receivers
           subject: 'Объявление!', // Subject line
           text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление отклонено.\n'+req.body.comment+'\n'+reasons, // plain text body
@@ -580,7 +580,7 @@ app.post('/unconfirmofcphoto', auth, function (req,res) {
       maildata.email = result[0].user_email;
       maildata.officeid = req.body.office_id;
       var mailOptions = {
-          from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+          from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
           to: maildata.email, // list of receivers
           subject: 'Объявление!', // Subject line
           text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление отклонено, не походят фотографии('+ucimgs+').\n'+req.body.comment+'\n'+reasons, // plain text body
@@ -1657,7 +1657,7 @@ app.post('/addoffice', auth, function(req,res) {
                 maildata.email = result[0].user_email;
                 maildata.officeid = officeId;
                 var mailOptions = {
-                    from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+                    from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
                     to: maildata.email, // list of receivers
                     subject: 'Новое объявление!', // Subject line
                     text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, оно будет опубликовано после проверки модератором.', // plain text body
@@ -1683,8 +1683,39 @@ app.post('/addoffice', auth, function(req,res) {
   });
 });
 
+app.get('/image:imageid', function (req, res) {
+  connection.query("SELECT image_filename FROM images WHERE image_id="+req.params.imageid, function (error, result, fields) {
+    // res.send({imagename: result[0].image_filename});
+    res.sendFile(__dirname+"/public/images/obj/"+result[0].image_filename);
+    console.log(result[0]);
+  });
+});
+
 app.post('/filtred',function (req,res) {
+  // console.log("Filtr params: ");
+  // console.log(req.body.meanings);
+  // console.log(req.body.price);
+  // console.log(req.body.area);
   // console.log(req.body.city);
+  // var price = req.body.price ? " AND office_subprice BETWEEN "+req.body.price[0]+" AND "+req.body.price[1]+" " : "";
+  // var area = req.body.area ? " AND office_area BETWEEN "+req.body.area[0]+" AND "+req.body.area[1]+" " : "";
+  // // var meanings = req.body.meanings ? " AND option_id IN ("+req.body.meanings.join(",")+")" : "";
+  // var meanings = req.body.meanings ? " AND link_option IN ("+req.body.meanings.join(",")+")" : "";
+  // // console.log(meanings);
+  // // connection.query("SELECT * FROM offices LEFT JOIN objects ON office_object = object_id LEFT JOIN options_offices ON link_office = office_id LEFT JOIN options ON option_id = link_option WHERE object_publish = 1 AND object_show = 1 AND office_publish = 1 AND office_show = 1 AND object_city = "+req.body.city, function (error, result, fields) {
+  // //   console.log("result: "+result);
+  // //   res.send(result);
+  // // });
+  // // console.log("SELECT * FROM offices WHERE office_publish = 1 AND office_show = 1"+price+area);
+  // connection.query("SELECT * FROM offices LEFT JOIN options_offices ON link_office = office_id WHERE office_publish = 1 AND office_show = 1"+price+area+meanings, function (error, result, fields) {
+  //   console.log("result: "+result);
+  //   res.send(result);
+  // });
+
+  // console.log(req.body.city);
+
+  //Kiil filtr
+
   var objByCity;
   connection.query('SELECT object_id FROM objects WHERE object_city = '+req.body.city+' AND object_publish = 1 AND object_show = 1', function (error, result, fields) {// LIKE "%'+req.body.city+'%"
     if (error) throw error;
@@ -1813,6 +1844,7 @@ app.post('/filtred',function (req,res) {
       });
     }
   });
+
   // res.send(req.body);
   //meaningsString = req.body.meanings.join(',');
   //connection.query('SELECT * FROM options_offices WHERE link_option IN ('+meaningsString+')');
