@@ -20,14 +20,27 @@ if($("#filter").length) {
 			}
 	});
 
+	function minMaxPrice(minarea, maxarea, minprice, maxprice) {
+		var minmax = [0,0];
+		minmax[0] = parseInt(minarea) * parseInt(minprice);
+		minmax[1] = parseInt(maxarea) * parseInt(maxprice);
+		// return minmax;
+		$(".price-desc .min-price").text(minmax[0]+'p');
+		$(".price-desc .max-price").text(minmax[1]+'p');
+	}
+
 	squareSlider.noUiSlider.on('update', function(){
+		var priceCaptionArr = priceSlider.noUiSlider.get();
 		var squareCaptionArr = squareSlider.noUiSlider.get();
+		minMaxPrice(squareCaptionArr[0],squareCaptionArr[1],priceCaptionArr[0],priceCaptionArr[1]);
 		$(".filter-object-square input.min").val(parseInt(squareCaptionArr[0])+'м');
 		$(".filter-object-square input.max").val(parseInt(squareCaptionArr[1])+'м');
 	});
 
 	priceSlider.noUiSlider.on('update', function(){
 		var priceCaptionArr = priceSlider.noUiSlider.get();
+		var squareCaptionArr = squareSlider.noUiSlider.get();
+		minMaxPrice(squareCaptionArr[0],squareCaptionArr[1],priceCaptionArr[0],priceCaptionArr[1]);
 		$(".filter-object-price input.min").val(parseInt(priceCaptionArr[0])+'р');
 		$(".filter-object-price input.max").val(parseInt(priceCaptionArr[1])+'р');
 	});

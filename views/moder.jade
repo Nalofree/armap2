@@ -80,7 +80,7 @@ block content
           // Объект на модерацию
           -if (objects)
             - for (var i = 0; i < objects.length; i++)
-              - var currenObj = JSON.stringify(objects[i])
+              //- - var currenObj = JSON.stringify(objects[i])
               .mod-object-list-item
                 .item-desc
                   .item-time
@@ -96,7 +96,14 @@ block content
                       a.nowrap-text(href='#')= objects[i].object_name
                       - if (objects[i].object_nopublishofccount > 0)
                         span.warning.active= objects[i].object_nopublishofccount
-                    p.status.new= (objects[i].object_publish === 0) ? "Новый объект" : " "
+                    //- p.status.new= (objects[i].object_publish === 0) ? "Новый объект" : objects[i].object_publish===1 ? "Подтвержден" : "Отклонен"
+                    - if (objects[i].object_publish === 0)
+                      p.status.new.orange-text= "Новый объект"
+                    - else if(objects[i].object_publish===1)
+                      p.status.new= "Подтвержден"
+                    - else
+                      p.status.new.red-text= "Отклонен"
+                    //- p.object-status-note= objects[i].object_publish===1 ? "Подтвержден" : "Отклонен"
                     .object-tooltip
                       .image
                         - var objimg = objects[i].object_cover ? 'uploads/'+objects[i].image_filename : "images/kabinet/moderation/mod-big.png"
@@ -111,13 +118,17 @@ block content
                     // Кнопка посмотреть подробнее
                     a.show-object-info(href='javascript: void(0);')
                 // Подробная информация объекта
-                //- - if (objects[i].object_publish === 0)
-                //- - else if (objects[i].object_publish === 2)
-                //- - else if (objects[i].object_publish === 1) //-Что, блять, с этим делать, а?
+                - if (objects[i].object_publish === 0)
+                  - var itemobjectmoreclass = "zerostatus"
+                - else if (objects[i].object_publish === 2)
+                  - var itemobjectmoreclass = "disabled"
+                - else if (objects[i].object_publish === 1) //-Что, блять, с этим делать, а?
+                  - var itemobjectmoreclass = "published"
                 //- - else
                 //-   h1 Error!
-                .item-object-more(data-title= objects[i].object_publish)
-                  .item-object-info.change-solution
+                .item-object-more(data-title= objects[i].object_publish, class=itemobjectmoreclass)
+                  //- - if (objects[i].object_publish===0)
+                  .item-object-info.change-solution(data-title= objects[i].object_id)
                     //- h2 Новый объект!
                     .object-info-block
                       .object-info-img
@@ -134,7 +145,7 @@ block content
                               - if (objtypes[j].objtype_id == objects[i].object_type)
                                 option(selected='selected', value=objtypes[j].objtype_id)= objtypes[j].objtype_name
                               - else
-                                option(selected='', value=objtypes[j].objtype_id)= objtypes[j].objtype_name
+                                option(value=objtypes[j].objtype_id)= objtypes[j].objtype_name
                         .input-group
                           label(for='object-address') Адрес:
                           input.object-address(type='text', value= objects[i].object_adres, title= objects[i].object_adres)
@@ -146,45 +157,94 @@ block content
                           | Добавил пользователь:
                           - var userFullname = objects[i].object_author.user_firstname + ' ' + objects[i].object_author.user_lastname;
                           a(href='#')= userFullname
-                          // what href??
+                          //- what href??
                         //- p Такой объект уже существует?
                         //- select
                         //-   option(selected='', disabled) Выберите объект
                         //-   - for (var k = 0; k < objects.length; k++)
                         //-     option(selected='', value=objects[k].object_id)= objects[k].object_name
                         .submit-btn
-                          button.disable-btn.moder-object_unconfirm(type='button', data-toggle='modal', data-target='#modal-object', data-title=currenObj) Отклонить
+                          button.disable-btn.moder-object_unconfirm(type='button', data-toggle='modal', data-target='#modal-object', data-title= objects[i].object_id) Отклонить
                           //objects[i].object_id
-                          button.success-btn.moder-object_confirm(data-title=objects[i].object_id) Подтвердить                
-                  //- .item-object-info
-                  //-   // При отклонении объекта он приобретает класс object-disabled
-                  //-   .object-info-block.object-status.object-disabled
-                  //-     .object-symbol
-                  //-     .object-info-img
-                  //-       img(src=objimg)
-                  //-     .object-info-name
-                  //-       h3= decodeURI(objects[i].object_name) ? decodeURI(objects[i].object_name) : 'Error!'
-                  //-       span Отклонено
-                  //-       p= "Тип объекта: " + decodeURI(objects[i].object_typename) ? decodeURI(objects[i].object_typename) : 'Error!'
-                  //-       p= "Адрес: " + decodeURI(objects[i].object_adres) ? decodeURI(objects[i].object_adres) : 'Error!'
-                  //-       a(href='#') Комментарий модератора
-                  //-     .object-info-submit
-                  //-       button.change-btn Изменить решение                
-                  .item-object-info
-                    // При публикации объекта он приобретает класс object-published
-                    .object-info-block.object-status.object-published
-                      .object-symbol
-                      .object-info-img
-                        img(src=objimg)
-                      .object-info-name
-                        h3.objctname= objects[i].object_name
-                        span= objects[i].object_publish===1 ? "Подтвержден" : "Отклонен"
-                        p.objcttype= "Тип объекта: " + objects[i].objtype_name
-                        p.objectadres= "Адрес: " + objects[i].object_adres
-                        //- a(href='#') Комментарий модератора
-                      .object-info-submit
-                        // Открыть подробную информацию о помещениях
-                        button.change-btn(data-title=objects[i].object_id) Изменить решение
+                          button.success-btn.moder-object_confirm(data-title= objects[i].object_id) Подтвердить                
+                  //- - else
+                  .item-object-info.done-solution
+                    // При публикации объекта он приобретает класс object-disabled
+                    - if (objects[i].object_publish===2)
+                      .object-info-block.object-status.object-disabled
+                        .object-symbol
+                        .object-info-img
+                          img(src=objimg)
+                        .object-info-name
+                          h3.objctname= objects[i].object_name
+                          span.object-status-note= objects[i].object_publish===1 ? "Подтвержден" : "Отклонен"
+                          p.objcttype= "Тип объекта: " + objects[i].objtype_name
+                          p.objectadres= "Адрес: " + objects[i].object_adres
+                          //- - if (objects[i].object_publish===2) 
+                          p.moder-comment= objects[i].object_comment ? objects[i].object_comment : "Без комментария"
+                        .object-info-submit
+                          // Открыть подробную информацию о помещениях
+                          button.change-solution-btn(data-title=objects[i].object_id) Изменить решение 
+                    - else if (objects[i].object_publish===1)
+                      .object-info-block.object-status.object-published
+                        .object-symbol
+                        .object-info-img
+                          img(src=objimg)
+                        .object-info-name
+                          h3.objctname= objects[i].object_name
+                          span.object-status-note= objects[i].object_publish===1 ? "Подтвержден" : "Отклонен"
+                          p.objcttype= "Тип объекта: " + objects[i].objtype_name
+                          p.objectadres= "Адрес: " + objects[i].object_adres
+                          //- - if (objects[i].object_publish===2) 
+                          //-   a(href='#').moder-comment Комментарий модератора
+                        .object-info-submit
+                          // Открыть подробную информацию о помещениях
+                          button.change-solution-btn(data-title=objects[i].object_id) Изменить решение 
+                    - else if (objects[i].object_publish===0)
+                      .object-info-block.object-status
+                        .object-symbol
+                        .object-info-img
+                          img(src=objimg)
+                        .object-info-name
+                          h3.objctname= objects[i].object_name
+                          span.object-status-note= objects[i].object_publish===1 ? "Подтвержден" : "Отклонен"
+                          p.objcttype= "Тип объекта: " + objects[i].objtype_name
+                          p.objectadres= "Адрес: " + objects[i].object_adres
+                          //- - if (objects[i].object_publish===2) 
+                          //-   a(href='#').moder-comment Комментарий модератора
+                        .object-info-submit
+                          // Открыть подробную информацию о помещениях
+                          button.change-solution-btn(data-title=objects[i].object_id) Изменить решение 
+                    //- .item-object-info.done-solution
+                    //-   // При публикации объекта он приобретает класс object-disabled
+                    //-   .object-info-block.object-status.object-disabled
+                    //-     .object-symbol
+                    //-     .object-info-img
+                    //-       img(src=objimg)
+                    //-     .object-info-name
+                    //-       h3.objctname= objects[i].object_name
+                    //-       span.object-status-note= objects[i].object_publish===1 ? "Подтвержден" : "Отклонен"
+                    //-       p.objcttype= "Тип объекта: " + objects[i].objtype_name
+                    //-       p.objectadres= "Адрес: " + objects[i].object_adres
+                    //-       a(href='#') Комментарий модератора
+                    //-     .object-info-submit
+                    //-       // Открыть подробную информацию о помещениях
+                    //-       button.change-btn(data-title=objects[i].object_id) Изменить решение           
+                    //- .item-object-info.done-solution
+                    //-   // При публикации объекта он приобретает класс object-published
+                    //-   .object-info-block.object-status.object-published
+                    //-     .object-symbol
+                    //-     .object-info-img
+                    //-       img(src=objimg)
+                    //-     .object-info-name
+                    //-       h3.objctname= objects[i].object_name
+                    //-       span.object-status-note= objects[i].object_publish===1 ? "Подтвержден" : "Отклонен"
+                    //-       p.objcttype= "Тип объекта: " + objects[i].objtype_name
+                    //-       p.objectadres= "Адрес: " + objects[i].object_adres
+                    //-       a(href='#') Комментарий модератора
+                    //-     .object-info-submit
+                    //-       // Открыть подробную информацию о помещениях
+                    //-       button.change-btn(data-title=objects[i].object_id) Изменить решение
                   // Подробная информация о помещениях
                   //- - var moderwait = 0;
                   //- - for (var m = 0; m < objects[i].object_offices.length; m++)
@@ -216,58 +276,57 @@ block content
                             при классе published помещение Опубликовано
                             при классе disabled помещение Отклонено
                           - if (objects[i].object_offices[m].office_publish == 0)
-                            - var showClass = "wait"
+                            .item-show-more.wait
                           - else if (objects[i].object_offices[m].office_publish == 1)
-                            - var showClass = "published"
-                          - else
-                            - var showClass = "disabled"
+                            .item-show-more.published
+                          - else if (objects[i].object_offices[m].office_publish == 2)
+                            .item-show-more.disabled
                           - var officeId = objects[i].object_offices[m].office_id;
-                          .item-show-more(class= showClass)
-                            a.btn.btn-default.unconfirmoffice.published(href='#', data-title=officeId) Снять с публикации
-                            //- a.disabled-history(href='#', data-title=officeId) Посмотреть историю
-                            a.show-room-info(href='javascript: void(0);', data-title=officeId) Просмотр
+                              a.btn.btn-default.refuseoffice.published.btn.btn-danger(href='#', data-title=officeId) Снять с публикации
+                              //- a.disabled-history(href='#', data-title=officeId) Посмотреть историю
+                              a.show-room-info.btn.btn-default(href='javascript: void(0);', data-title=officeId) Просмотр
                         // Подробная информация о помещении
                         .item-room-more
                           .item-room-block-one
                             .item-room-inputs
                               .input-group
                                 label(for='room-name') Название помещения:
-                                input#room-name(type='text', disabled, value=objects[i].object_offices[m].office_name)
+                                input#room-name(type='text', value=objects[i].object_offices[m].office_name)
                                 //- span
                                 //-   a.error(href='#') Х
                                 //-   a.edit(href='#') Редактировать
                               .input-group
                                 label(for='room-address') Адрес/объект:
-                                input#room-address(type='text', disabled,  value=objects[i].object_adres)
+                                input#room-address(type='text', disabled,  value=objects[i].object_name)
                                 //- span
                                 //-   a.error(href='#') Х
                                 //-   a.edit(href='#') Редактировать
                               .input-group
                                 label(for='room-tel') Телефон собственника:
-                                input#room-tel(type='text', disabled, value=objects[i].object_offices[m].office_phone)
+                                input#room-tel(type='text', value=objects[i].object_offices[m].office_phone)
                                 //- span
                                 //-   a.error(href='#') Х
                                 //-   a.edit(href='#') Редактировать
                               .input-group
                                 label(for='room-price') Цена за м2:
-                                input#room-price(type='text', disabled, value=objects[i].object_offices[m].office_subprice)
+                                input#room-price(type='text', value=objects[i].object_offices[m].office_subprice)
                                 //- span
                                 //-   a.error(href='#') Х
                                 //-   a.edit(href='#') Редактировать
                               .input-group
                                 label(for='room-square') Площадь:
-                                input#room-square(type='text', disabled, value=objects[i].object_offices[m].office_area)
+                                input#room-square(type='text', value=objects[i].object_offices[m].office_area)
                                 //- span
                                 //-   a.error(href='#') Х
                                 //-   a.edit(href='#') Редактировать
                               .input-group
                                 label(for='room-height') Высота потолков:
-                                input#room-height(type='text', disabled, value=objects[i].object_offices[m].office_height)
+                                input#room-height(type='text', value=objects[i].object_offices[m].office_height)
                                 //- span
                                 //-   a.error(href='#') Х
                                 //-   a.edit(href='#') Редактировать
                             .item-room-disable
-                              button.disable-btn(type='button', data-toggle='modal', data-target='#modal-rooms', data-title=objects[i].object_offices[m].office_id) Отклонить
+                              button.disable-btn.unconfirmoffice-show(type='button', data-toggle='modal', data-target='#modal-rooms', data-title=objects[i].object_offices[m].office_id) Отклонить
                               //- a(href='#') Заблокировать пользователя
                           //- .item-room-block-two
                           //-   section
@@ -317,7 +376,7 @@ block content
                           .item-room-block-three
                             .item-three-head
                               h3 Загруженные фотографии
-                              button.disable-btn(type='button', data-toggle='modal', data-target='#modal-photo') Отклонить фотографии
+                              button.disable-btn.unconfirmofcphoto-show(type='button', data-toggle='modal', data-target='#modal-photo',data-title=objects[i].object_offices[m].office_id) Отклонить фотографии
                             .item-three-images
                               - for (var o = 0; o < objects[i].object_offices[m].office_images.length; o++)
                                 .image
@@ -325,14 +384,11 @@ block content
                                   .photos-settings
                                     .checkbox
                                       label
-                                        input(type='checkbox', name='mainPhoto', value=objects[i].object_offices[m].office_images[o].image_id)
+                                        input(type='checkbox', name='choosephoto', value=objects[i].object_offices[m].office_images[o].image_id)
                                         | Отметить
                                     .radio
                                       label
-                                        - if (objects[i].object_offices[m].office_cover == objects[i].object_offices[m].office_images[o].image_id)
-                                          input(type='radio', name='mainPhoto', checked=true, value=objects[i].object_offices[m].office_images[o].image_id)
-                                        - else
-                                          input(type='radio', name='mainPhoto', checked=false, value=objects[i].object_offices[m].office_images[o].image_id)
+                                        input(type='radio', name='mainphoto'+objects[i].object_offices[m].office_id, checked=objects[i].object_offices[m].office_cover === objects[i].object_offices[m].office_images[o].image_id, value=objects[i].object_offices[m].office_images[o].image_id)
                                         | Главная
                           .item-room-block-four
                             //- .reset
@@ -499,88 +555,88 @@ block content
                     //-           .photos-settings
                     //-             .checkbox
                     //-               label
-                    //-                 input(type='checkbox', name='mainPhoto')
+                    //-                 input(type='checkbox', name='mainphoto')
                     //-                 | Отметить
                     //-             .radio
                     //-               label
-                    //-                 input(type='radio', name='mainPhoto', checked='')
+                    //-                 input(type='radio', name='mainphoto', checked='')
                     //-                 | Главная
                     //-         .image
                     //-           img(src='images/kabinet/moderation/mod-very-big.png')
                     //-           .photos-settings
                     //-             .checkbox
                     //-               label
-                    //-                 input(type='checkbox', name='mainPhoto')
+                    //-                 input(type='checkbox', name='mainphoto')
                     //-                 | Отметить
                     //-             .radio
                     //-               label
-                    //-                 input(type='radio', name='mainPhoto')
+                    //-                 input(type='radio', name='mainphoto')
                     //-                 | Главная
                     //-         .image
                     //-           img(src='images/kabinet/moderation/mod-very-big.png')
                     //-           .photos-settings
                     //-             .checkbox
                     //-               label
-                    //-                 input(type='checkbox', name='mainPhoto')
+                    //-                 input(type='checkbox', name='mainphoto')
                     //-                 | Отметить
                     //-             .radio
                     //-               label
-                    //-                 input(type='radio', name='mainPhoto')
+                    //-                 input(type='radio', name='mainphoto')
                     //-                 | Главная
                     //-         .image
                     //-           img(src='images/kabinet/moderation/mod-very-big.png')
                     //-           .photos-settings
                     //-             .checkbox
                     //-               label
-                    //-                 input(type='checkbox', name='mainPhoto')
+                    //-                 input(type='checkbox', name='mainphoto')
                     //-                 | Отметить
                     //-             .radio
                     //-               label
-                    //-                 input(type='radio', name='mainPhoto')
+                    //-                 input(type='radio', name='mainphoto')
                     //-                 | Главная
                     //-         .image
                     //-           img(src='images/kabinet/moderation/mod-very-big.png')
                     //-           .photos-settings
                     //-             .checkbox
                     //-               label
-                    //-                 input(type='checkbox', name='mainPhoto')
+                    //-                 input(type='checkbox', name='mainphoto')
                     //-                 | Отметить
                     //-             .radio
                     //-               label
-                    //-                 input(type='radio', name='mainPhoto')
+                    //-                 input(type='radio', name='mainphoto')
                     //-                 | Главная
                     //-         .image
                     //-           img(src='images/kabinet/moderation/mod-very-big.png')
                     //-           .photos-settings
                     //-             .checkbox
                     //-               label
-                    //-                 input(type='checkbox', name='mainPhoto')
+                    //-                 input(type='checkbox', name='mainphoto')
                     //-                 | Отметить
                     //-             .radio
                     //-               label
-                    //-                 input(type='radio', name='mainPhoto')
+                    //-                 input(type='radio', name='mainphoto')
                     //-                 | Главная
                     //-         .image
                     //-           img(src='images/kabinet/moderation/mod-very-big.png')
                     //-           .photos-settings
                     //-             .checkbox
                     //-               label
-                    //-                 input(type='checkbox', name='mainPhoto')
+                    //-                 input(type='checkbox', name='mainphoto')
                     //-                 | Отметить
                     //-             .radio
                     //-               label
-                    //-                 input(type='radio', name='mainPhoto')
+                    //-                 input(type='radio', name='mainphoto')
                     //-                 | Главная
                     //-         .image
                     //-           img(src='images/kabinet/moderation/mod-very-big.png')
                     //-           .photos-settings
                     //-             .checkbox
                     //-               label
-                    //-                 input(type='checkbox', name='mainPhoto')
+                    //-                 input(type='checkbox', name='mainphoto')
                     //-                 | Отметить
                     //-             .radio
                     //-               label
-                    //-                 input(type='radio', name='mainPhoto')
+                    //-                 input(type='radio', name='mainphoto')
                     //-                 | Главная
                     //-     .item-room-block-four
                     //-       .reset
@@ -744,22 +800,22 @@ block content
                 p Выберите причину:
                 .checkbox
                   label
-                    input(type='checkbox')
+                    input(type='checkbox', value="Несоответстует тематике ресурса")
                     | Несоответстует тематике ресурса
                 .checkbox
                   label
-                    input(type='checkbox')
+                    input(type='checkbox', value="Нарушает правила ресурса")
                     | Нарушает правила ресурса
                 .checkbox
                   label
-                    input(type='checkbox')
+                    input(type='checkbox', value="Ненадлежащее качество")
                     | Ненадлежащее качество
               .modal-comment
                 p Комментарий модератора:
                 textarea(placeholder='Комментарий...')
                 .mobal-btns
                   a.disable-btn(href='#', aria-label="close",data-dismiss="modal") Отмена
-                  button.success-btn(type='submit', aria-label="close",data-dismiss="modal") Готово
+                  button.success-btn.unconfirmofcphoto(type='submit', aria-label="close",data-dismiss="modal") Готово
       // Модальные окно при отклонении помещения
       #modal-rooms.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
         .modal-dialog
@@ -774,20 +830,16 @@ block content
                 p Выберите причину:
                 .checkbox
                   label
-                    input(type='checkbox')
+                    input(type='checkbox', value="Несоответстует тематике ресурса")
                     | Несоответстует тематике ресурса
                 .checkbox
                   label
-                    input(type='checkbox')
+                    input(type='checkbox', value="Нарушает правила ресурса")
                     | Нарушает правила ресурса
                 .checkbox
                   label
-                    input(type='checkbox')
+                    input(type='checkbox', value="Ненадлежащее качество")
                     | Ненадлежащее качество
-                .checkbox
-                  label
-                    input(type='checkbox')
-                    | Причина 2
               .modal-comment
                 p Комментарий модератора:
                 textarea(placeholder='Комментарий...')
@@ -817,7 +869,7 @@ block content
                     | Нарушает правила ресурса
                 .checkbox
                   label
-                    input(type='checkbox', value= 'Ненадлежащее качество')
+                    input(type='checkbox', value= 'Несоответстует действительности')
                     | Ненадлежащее качество
               .modal-comment
                 p Комментарий модератора:
@@ -825,4 +877,4 @@ block content
                 .mobal-btns
                   button.disable-btn(data-dismiss="modal", aria-label="close") Отмена
                   //<button data-dismiss="modal" aria-label="close" class="close"><span aria-hidden="true"></span></button>
-                  button.success-btn(type='submit', data-title="", data-dismiss="modal", aria-label="close") Готово
+                  button.success-btn(type='submit', data-title="") Готово

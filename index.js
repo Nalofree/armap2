@@ -97,15 +97,15 @@ var geolocation = function(req,res,next) {
     geo.ip = ip;
   }
   res.geo = geo;
-  console.log(geo.ll);
+  // console.log(geo.ll);
   clientlatitude = req.cookies.clientlatitude;
   clientlongitude = req.cookies.clientlongitude;
   if (clientlatitude === undefined) {
     res.cookie('clientlatitude', geo.ll[0], { maxAge: 900000, httpOnly: false });
     res.cookie('clientlongitude', geo.ll[1], { maxAge: 900000, httpOnly: false });
-    console.log('cookie created successfullyl', [clientlatitude, clientlongitude]);
+    // console.log('cookie created successfullyl', [clientlatitude, clientlongitude]);
   } else {
-    console.log('cookie exists', [clientlatitude, clientlongitude]);
+    // console.log('cookie exists', [clientlatitude, clientlongitude]);
   }
   next();
 }
@@ -140,7 +140,7 @@ function auth(req, res, next) {
 
 app.post('/sendmail', function (req,res) {
   var maildata = {};
-  console.log(req.body);
+  // console.log(req.body);
   if (req.body.type === "callme") {
     maildata.name = req.body.name ? req.body.name : "без имени";
     maildata.phone = req.body.phone ? req.body.phone : "не указан";
@@ -200,7 +200,7 @@ app.post("/addoption", auth, function (req, res) {
       res.send({err: "Error this option type is not exist",name: req.body.name, opttype: req.body.opttype});
     }
   });
-  console.log(req.body);
+  // console.log(req.body);
 })
 
 // app.post('/sendmail', function (req,res) {
@@ -267,7 +267,7 @@ app.post('/getcitybyid',function (req,res) {
 
 app.post('/addcity',function (req,res) {
   connection.query('INSERT INTO citys (city_name, city_coords) VALUES ("'+req.body.city_name+'", "'+req.body.city_coords+'")',function (error,result,fields) {
-    console.log(req.body.city_name);
+    // console.log(req.body.city_name);
     if (error) throw error;
     if (result) {
       res.send({
@@ -298,7 +298,7 @@ app.post('/register',function (req,res) {
   confirmLinkHash = crypto.createHmac('sha256', microtime)
                      .update('I love cupcakes')
                      .digest('hex');
-  console.log(confirmLinkHash);
+  // console.log(confirmLinkHash);
   connection.query('SELECT * FROM users WHERE user_email = "'+user.email+'"',function (error,result,fields) {
     if (error) throw error;
     if (result.length > 0) {
@@ -355,7 +355,7 @@ app.get('/confirmme-:confirmlinkhash', function (req,res) {
 
 
 app.post('/login',function (req,res) {
-  console.log(req.body);
+  // console.log(req.body);
   //res.send(req.body);
   var email = req.body.email;
   connection.query('SELECT * FROM users WHERE user_email = "'+email+'"',
@@ -368,7 +368,7 @@ app.post('/login',function (req,res) {
                          .digest('hex');
       if (result[0].user_pass === hash && result[0].user_confirm === 1 && result[0].user_ban === 0) {
         var user = result[0];
-        console.log(user);
+        // console.log(user);
         connection.query('SELECT * FROM roles WHERE role_id = '+user.user_role, function (error,result,fields) {
           if (error) {throw error; res.send({status:'error'})};
           req.session.userfullname = user.user_firstname + ' ' + user.user_lastname;
@@ -397,8 +397,9 @@ app.get('/logout',function (req,res) {
 });
 
 app.post('/confirmobject', function (req,res) {
-  var coords = req.body.objectcoords ? ", object_coords = '" + req.body.objectcoords + "'" : "";
-  connection.query("UPDATE objects SET object_publish = 1, object_name = '"+req.body.objectname+"', object_type = "+req.body.objecttype+", object_adres = '"+req.body.objectadres+"' "+coords+" WHERE object_id = "+req.body.objid ,
+  var coords = req.body.objectcoords != null ? ", object_coords = '" + req.body.objectcoords + "'" : "";
+  // console.log("UPDATE objects SET object_publish = 1, object_name = '"+req.body.objectname+"', object_type = "+req.body.objecttype+", object_adres = '"+req.body.objectadres+"' "+coords+" WHERE object_id = "+req.body.objectid);
+  connection.query("UPDATE objects SET object_publish = 1, object_name = '"+req.body.objectname+"', object_type = "+req.body.objecttype+", object_adres = '"+req.body.objectadres+"' "+coords+" WHERE object_id = "+req.body.objectid ,
   function (error, result, fields) {
     if (error) throw error;
     connection.query("SELECT objtype_name FROM objtypes WHERE objtype_id ="+req.body.objecttype, function (error, result, fields) {
@@ -409,11 +410,38 @@ app.post('/confirmobject', function (req,res) {
   });
 });
 
-app.post('/unconfirmobject', function (req,res) {
-  connection.query('UPDATE objects SET object_publish = 2 WHERE object_id = '+req.body.object_id,
+app.post('/unconfirmobject', auth, function (req, res) {
+  connection.query('UPDATE objects SET object_publish = 2, object_comment = "'+req.body.comment+'" WHERE object_id = '+req.body.objectid,
   function (error, result, fields) {
     if (error) throw error;
-    res.send({success: 1});
+    // res.send({success: 1});
+    // console.log("res.userid: "+res.userid);
+
+    connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.userid, function (error,result,fields) {
+      // console.log("res.userid: "+res.userid);
+      if (error) throw error;
+      var maildata = {};
+      maildata.email = result[0].user_email;
+      maildata.officeid = req.body.office_id;
+      var mailOptions = {
+          from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+          to: maildata.email, // list of receivers
+          subject: 'Объявление!', // Subject line
+          text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление на ресурс рентазавр.рф, созданный вами объект отклонён, объявления в нем не опубликованы.\n'+req.body.comment, // plain text body
+          html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали новое объявление на ресурс рентазавр.рф, созданный вами объект отклонён, объявления в нем не опубликованы</p><p>'+req.body.comment+'</p>' // html body
+      };
+      transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              return console.log(error);
+              res.send({err: error});
+          }else{
+            res.send({err: false, message: info.messageId, response: info.response, success: 1});
+            // res.send(result);
+          }
+          console.log('Message %s sent: %s', info.messageId, info.response);
+      });
+    });
+
   });
 });
 
@@ -433,19 +461,143 @@ app.post('/objecttoarchive', function (req,res) {
   });
 });
 
-app.post('/confirmoffice', function (req,res) {
-  connection.query('UPDATE offices SET office_publish = 1 WHERE office_id = '+req.body.office_id,
+app.post('/confirmoffice', auth, function (req,res) {
+  // console.log(req.body);
+  connection.query('UPDATE offices SET office_publish = 1, office_name = "'+req.body.officename+'", office_phone = "'+req.body.officetel+'", office_subprice = '+req.body.officeprice+', office_area = '+req.body.officesquare+', office_height = '+req.body.officeheight+' WHERE office_id = '+req.body.office_id,
   function (error, result, fields) {
     if (error) throw error;
-    res.send({success: 1});
+    // res.send({success: 1});
+    // var resultimage = result;
+
+    connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.userid, function (error,result,fields) {
+      if (error) throw error;
+      var maildata = {};
+      maildata.email = result[0].user_email;
+      maildata.officeid = req.body.office_id;
+      var mailOptions = {
+          from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+          to: maildata.email, // list of receivers
+          subject: 'Объявление!', // Subject line
+          text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление опубликовано.', // plain text body
+          html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали новое <a href="http://рентазавр.рф/office-'+maildata.officeid+'">объявление</a> на ресурс рентазавр.рф, ваше объявление опубликовано</p>' // html body
+      };
+      transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              return console.log(error);
+              res.send({err: error});
+          }else{
+            res.send({err: false, message: info.messageId, response: info.response, success: 1});
+            // res.send(result);
+          }
+          console.log('Message %s sent: %s', info.messageId, info.response);
+      });
+    });
+
   });
 });
 
-app.post('/unconfirmoffice', function (req,res) {
+app.post('/refuseoffice', auth, function (req,res) {
   connection.query('UPDATE offices SET office_publish = 2 WHERE office_id = '+req.body.office_id,
   function (error, result, fields) {
     if (error) throw error;
-    res.send({success: 1});
+    // res.send({success: 1});
+
+    connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.userid, function (error,result,fields) {
+      if (error) throw error;
+      var maildata = {};
+      maildata.email = result[0].user_email;
+      maildata.officeid = req.body.office_id;
+      var mailOptions = {
+          from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+          to: maildata.email, // list of receivers
+          subject: 'Объявление!', // Subject line
+          text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление снято с публиуации', // plain text body
+          html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали <a href="http://рентазавр.рф/office-'+maildata.officeid+'">объявление</a> на ресурс рентазавр.рф, ваше объявление снято с публиуации</p>' // html body
+      };
+      transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              return console.log(error);
+              res.send({err: error});
+          }else{
+            res.send({err: false, message: info.messageId, response: info.response, success: 1});
+            // res.send(result);
+          }
+          console.log('Message %s sent: %s', info.messageId, info.response);
+      });
+    });
+
+  });
+});
+
+app.post('/unconfirmoffice', auth, function (req,res) {
+  connection.query('UPDATE offices SET office_publish = 2 WHERE office_id = '+req.body.office_id,
+  function (error, result, fields) {
+    if (error) throw error;
+    // res.send({success: 1});
+
+    connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.userid, function (error,result,fields) {
+      if (error) throw error;
+      var maildata = {};
+      var reasons = req.body.reasons.join(', ');
+      maildata.email = result[0].user_email;
+      maildata.officeid = req.body.office_id;
+      var mailOptions = {
+          from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+          to: maildata.email, // list of receivers
+          subject: 'Объявление!', // Subject line
+          text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление отклонено.\n'+req.body.comment+'\n'+reasons, // plain text body
+          html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали <a href="http://рентазавр.рф/office-'+maildata.officeid+'">объявление</a> на ресурс рентазавр.рф, ваше объявление отклонено.</p><p>'+req.body.comment+'</p><p>'+reasons+'</p>' // html body
+      };
+      transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              return console.log(error);
+              res.send({err: error});
+          }else{
+            res.send({err: false, message: info.messageId, response: info.response, success: 1});
+            // res.send(result);
+          }
+          console.log('Message %s sent: %s', info.messageId, info.response);
+      });
+    });
+
+  });
+});
+
+app.post('/unconfirmofcphoto', auth, function (req,res) {
+  connection.query('UPDATE offices SET office_publish = 2 WHERE office_id = '+req.body.office_id,
+  function (error, result, fields) {
+    if (error) throw error;
+    // res.send({success: 1});
+
+    connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.userid, function (error,result,fields) {
+      if (error) throw error;
+      var maildata = {};
+      var reasons = req.body.reasons.join(', ');
+      for (var i = 0; i < req.body.ucimgs.length; i++) {
+        req.body.ucimgs[i] = "http://рентазавр.рф/"+req.body.ucimgs[i];
+      }
+      var ucimgs = req.body.ucimgs.join(', ');
+      maildata.email = result[0].user_email;
+      maildata.officeid = req.body.office_id;
+      var mailOptions = {
+          from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+          to: maildata.email, // list of receivers
+          subject: 'Объявление!', // Subject line
+          text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление отклонено, не походят фотографии('+ucimgs+').\n'+req.body.comment+'\n'+reasons, // plain text body
+          html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали <a href="http://рентазавр.рф/office-'+maildata.officeid+'">объявление</a> на ресурс рентазавр.рф, ваше объявление отклонено, не походят фотографии('+ucimgs+').</p><p>'+req.body.comment+'</p><p>'+reasons+'</p>' // html body
+      };
+      transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              return console.log(error);
+              res.send({err: error});
+          }else{
+            res.send({err: false, message: info.messageId, response: info.response, success: 1});
+            // res.send(result);
+          }
+          console.log('Message %s sent: %s', info.messageId, info.response);
+      });
+    });
+
   });
 });
 
@@ -481,7 +633,7 @@ app.post('/userban',auth, function (req,res) {
       });
     }else if(req.session.role == 'moder'){
       connection.query('SELECT user_ban, role_name FROM users LEFT JOIN roles ON role_id = user_role WHERE user_id = '+req.body.user_id, function (error, result, fields) {
-        console.log(result[0]);
+        // console.log(result[0]);
         if (result[0].role_name == 'admin' || result[0].role_name == 'moder' ) {
           res.send({err: 'Ошибка доступа. Обратитесь к администратору системы.'})
         }else{
@@ -534,7 +686,7 @@ function getOffices(ofcParams) {
         if (error) throw error;
         for (var i = 0; i < result.length; i++) {
           ofcIdsArray.push(result[i].office_id);
-          console.log(ofcIdsArray);
+          // console.log(ofcIdsArray);
         }
       });
     }else{
@@ -547,18 +699,23 @@ function getOffices(ofcParams) {
 }
 
 app.get('/',auth, function(req,res) {
-  console.log('Cookies: ', req.cookies);
+  // console.log('Cookies: ', req.cookies);
+  console.log(req.query);
   connection.query('SELECT * FROM options WHERE option_type = 1',function (error,result,fields) {
     if (error) throw error;
     meanings = result;
-    res.render('home.jade',{
-      role: res.role,
-      username: res.userfullname,
-      userid: res.userid,
-      meanings: meanings,
-      ishome: 1,
-      //clientIp: res.clientIp
-    });
+    // connection.query('SELECT office_id, office_name, office_area, office_subprice, object_name FROM offices LEFT JOIN objects ON object_id = office_object WHERE office_publish = 1 AND office_show = 1 AND object_publish = 1', function (error,result,fields) {
+    //   if (error) throw error;
+    //   console.log(result);
+      res.render('home.jade',{
+        role: res.role,
+        username: res.userfullname,
+        userid: res.userid,
+        meanings: meanings,
+        ishome: 1,
+        //clientIp: res.clientIp
+      });
+    // });
   });
 });
 
@@ -588,7 +745,7 @@ app.get('/my',auth, function(req,res) {
           }
           // result[i]
         }
-        console.log("city_id", req.cookies.city_id);
+        // console.log("city_id", req.cookies.city_id);
         connection.query('SELECT object_id,object_name,object_adres,object_cover, image_filename \
          FROM objects LEFT JOIN images ON image_id = object_cover WHERE object_city = '+req.cookies.city_id, function (error,result,fields) {
           if (error) throw error;
@@ -617,7 +774,7 @@ app.get('/my',auth, function(req,res) {
                 archoffices.push(offices[i]);
               }
             }
-            console.log(showoffices);
+            // console.log(showoffices);
             for (var i = 0; i < showoffices.length; i++) {
               for (var j = 0; j < objects.length; j++) {
                 if (showoffices[i].office_object === objects[j].object_id) {
@@ -641,7 +798,7 @@ app.get('/my',auth, function(req,res) {
 
             // console.log(objects);
             // console.log(meanings[2].option_id);
-            console.log(res.role);
+            // console.log(res.role);
             res.render('my.jade',{
               role: res.role,
               username: res.userfullname,
@@ -712,7 +869,7 @@ app.get('/editofc-:officeid', auth, function (req, res) {
               linkedopts.push(result[i].link_option);
             }
             // linkedopts = linkedopts.join(' ');
-            console.log("linkedopts: "+linkedopts);
+            // console.log("linkedopts: "+linkedopts);
             // console.log(result[0]);
             connection.query('SELECT object_name, object_id FROM objects', function (error,result,fields) {
               if (error) throw error;
@@ -830,8 +987,8 @@ app.post('/my', function (req,res) {
       }
       objByCity = objByCityArr.join(',');
     }
-    console.log(req.body.city);
-    console.log(res.userid);
+    // console.log(req.body.city);
+    // console.log(res.userid);
     connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_author ='+res.userid,function (error, result, fields) {
       if (error) throw error;
       var offices = result;
@@ -852,7 +1009,7 @@ app.post('/my', function (req,res) {
           }
         }
       }
-      console.log(objects);
+      // console.log(objects);
       res.send({
         objects: objects
       });
@@ -869,7 +1026,7 @@ app.get('/object-:object_id', auth, function (req,res) {
     connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover WHERE office_publish = 1 AND office_show = 1 AND office_object = '+req.params.object_id, function (error,result,fields) {
       if (error) throw error;
       object.object_offices = result;
-      console.log(result);
+      // console.log(result);
       // console.log("role",res.role);
       res.render('object.jade',{
         role: res.role,
@@ -896,7 +1053,7 @@ app.get('/office-:office_id', auth, function (req,res) {
           optionIdsArr.push(optionIds[i].link_option);
         }
         optionIdsStr = optionIdsArr.join(',');
-        console.log(optionIdsStr);
+        // console.log(optionIdsStr);
         connection.query('SELECT * FROM objtypes', function (error,result,fields) {
           if (error) throw error;
           var objtypes = result;
@@ -920,7 +1077,7 @@ app.get('/office-:office_id', auth, function (req,res) {
                   break;
               }
             }
-            console.log("role",res.role);
+            // console.log("role",res.role);
             connection.query('SELECT object_adres FROM objects WHERE object_id = '+office.office_object, function (error,result,fields) {
               if (error) throw error;
               office.office_adres = result[0].object_adres;
@@ -949,7 +1106,7 @@ app.get('/objects', auth, function (req,res) {
     var objects = result;
     for (var i = 0; i < objects.length; i++) {
       objects[i].object_cover = objects[i].image_filename;
-      console.log(objects[i].image_filename);
+      // console.log(objects[i].image_filename);
     }
 
     connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id where office_show = 1 AND office_publish = 1',function (error, result, fields) {
@@ -965,7 +1122,7 @@ app.get('/objects', auth, function (req,res) {
       }
       for (var i = objects.length-1; i >= 0; i--) {
         if (objects[i].object_offices.length <= 0) {
-          console.log('выпилить объект нафик - ' + objects[i].object_id);
+          // console.log('выпилить объект нафик - ' + objects[i].object_id);
           objects.splice(i, 1);
         }
       }
@@ -1010,13 +1167,13 @@ app.get('/objects', auth, function (req,res) {
 // });
 
 app.get('/bookmarks', auth, function (req,res) {
-  console.log(req.cookies.bmarks);
+  // console.log(req.cookies.bmarks);
   if (req.cookies.bmarks) {
-    console.log('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_id IN ('+req.cookies.bmarks+')');
+    // console.log('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_id IN ('+req.cookies.bmarks+')');
     connection.query('SELECT * FROM offices LEFT JOIN images ON office_cover = image_id WHERE office_id IN ('+req.cookies.bmarks+')', function (error,result,fields) {
       if (error) throw error;
       offices = result;
-      console.log(offices);
+      // console.log(offices);
       res.render('bookmarks.jade',{
         role: res.role,
         username: res.userfullname,
@@ -1046,7 +1203,7 @@ app.post('/recuveofc', function (req, res) {
 
 app.get('/moder', auth,function (req,res) {
   if (res.role == 'admin' || res.role == 'moder') {
-    connection.query('SELECT object_id, object_name, object_type, object_adres, object_author, object_id, object_cover, object_create, object_city, object_type, object_publish, image_filename, objtype_name, objtype_id FROM objects LEFT JOIN images ON image_id = object_cover LEFT JOIN objtypes ON object_type = objtype_id WHERE object_city = '+req.cookies.city_id, function (error, result, fields) {
+    connection.query('SELECT object_id, object_name, object_type, object_adres, object_author, object_id, object_cover, object_comment, object_create, object_city, object_type, object_publish, image_filename, objtype_name, objtype_id FROM objects LEFT JOIN images ON image_id = object_cover LEFT JOIN objtypes ON object_type = objtype_id WHERE object_city = '+req.cookies.city_id, function (error, result, fields) {
       if (error) throw error;
       var objects = result;
       if (objects.length > 0) {
@@ -1117,7 +1274,7 @@ app.get('/moder', auth,function (req,res) {
             connection.query('SELECT image_id, image_filename, image_office FROM images WHERE image_office IN ('+officesIdsStr+')', function (error, result, fields) {
               if (error) throw error;
               var images = result;
-              console.log(result);
+              // console.log(result);
               for (var i = 0; i < offices.length; i++) {
                 offices[i].office_image = "";
                 offices[i].office_images = [];
@@ -1127,7 +1284,7 @@ app.get('/moder', auth,function (req,res) {
                     offices[i].office_images.push(images[j]);
                   }
                 }
-                console.log(offices[i].office_image);
+                // console.log(offices[i].office_image);
               }
               var nopublishofccount = 0;
               for (var i = 0; i < objects.length; i++) {
@@ -1156,7 +1313,7 @@ app.get('/moder', auth,function (req,res) {
               connection.query("SELECT user_id, user_email, user_role, user_firstname, user_lastname, user_ban, user_mobile, user_confirm, role_name FROM users LEFT JOIN roles ON user_role = role_id", function (error, result, fields) {
                 if (error) throw error;
                 var users = result;
-                console.log(users);
+                // console.log(users);
                 for (var i = 0; i < objects.length; i++) {
                   //objects[i].object_author = [];
                   for (var j = 0; j < users.length; j++) {
@@ -1258,7 +1415,7 @@ app.post('/delobj',function (req,res) {
   // res.send(req.body);
   connection.query('SELECT office_id FROM offices WHERE office_object = '+req.body.object_id,function (error,result,fields) {
     if (error) throw error;
-    console.log(result.length);
+    // console.log(result.length);
     if (result.length > 0) {
       var offices = result,
           ofcIdsStr = "",
@@ -1337,8 +1494,8 @@ app.post('/delofc',function (req,res) {
 app.post('/uploadimage',upload.array('uplimage'),function (req,res,next) {
   var valuesString = [],
       imgWhereString = [];
-      console.log(req.files);
-      console.log(req.files.length);
+      // console.log(req.files);
+      // console.log(req.files.length);
   for (var i = 0; i < req.files.length; i++) {
     var options = {
       'text':'text',
@@ -1363,9 +1520,9 @@ app.post('/uploadimage',upload.array('uplimage'),function (req,res,next) {
 
     valuesString.push('("'+req.files[i].filename+'")');
     imgWhereString.push(req.files[i].filename);
-    console.log(req.files[i].filename);
+    // console.log(req.files[i].filename);
   }
-  console.log(req.files);
+  // console.log(req.files);
   valuesString = valuesString.join(',');
   imgWhereString = imgWhereString.join('","')
   if (valuesString.length > 0) {
@@ -1375,7 +1532,7 @@ app.post('/uploadimage',upload.array('uplimage'),function (req,res,next) {
       connection.query('SELECT * FROM images WHERE image_filename IN ("'+imgWhereString+'")',function (error,result,fields) {
         if (error) throw error;
         images = result;
-        console.log(images);
+        // console.log(images);
         res.send({images: images});
       });
     });
@@ -1386,12 +1543,12 @@ app.post('/uploadimage',upload.array('uplimage'),function (req,res,next) {
 
 app.post('/deluplimage',function (req,res) {
   filename = req.body.path.split('/')[2];
-  console.log(filename);
+  // console.log(filename);
   connection.query('DELETE FROM images WHERE image_filename = "'+filename+'"',function (error,result,fields) {
     if (error) throw error;
     fs.unlink('public'+req.body.path, (err) => {
       if (err) throw err;
-      console.log('successfully deleted public'+req.body.path);
+      // console.log('successfully deleted public'+req.body.path);
       connection.query('SELECT * FROM images WHERE image_filename IN ("'+req.body.imgWhereString+'")',function (error,result,fields) {
         if (error) throw error;
         images = result;
@@ -1466,7 +1623,7 @@ app.post('/addoffice', auth, function(req,res) {
     var cover = result[0].image_id;
     //console.log(cover);
     var images = req.body.images.join(',');
-    console.log(req.body);
+    // console.log(req.body);
     connection.query('INSERT INTO offices (office_name, office_create, office_author, office_area, office_height, office_subprice, office_tacked, office_cover, office_publish, office_object, office_show, office_phone)\
     VALUES ("'+req.body.header+'", "'+req.body.create+'", "'+res.userid+'", "'+req.body.sqare+'", "'+req.body.height+'", "'+req.body.price+'", 0, '+cover+', 0, "'+req.body.object+'", 1, "'+req.body.phone+'")',
       function (error,result,fields) {
@@ -1491,7 +1648,33 @@ app.post('/addoffice', auth, function(req,res) {
                 fs.renameSync(__dirname+'/public/uploads/'+result[i].image_filename, __dirname+'/public/images/obj/'+result[i].image_filename);
                 //fs.renameSync('uploads/'+result[i].image_min,'public/images/obj/'+result[i].image_min); adding thumbail should be here
               }
-              res.send(result);
+              // res.send(result);
+              var resultimage = result;
+              connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.userid, function (error,result,fields) {
+                if (error) throw error;
+
+                var maildata = {};
+                maildata.email = result[0].user_email;
+                maildata.officeid = officeId;
+                var mailOptions = {
+                    from: '"Rentazavr 👻" <arenda.38@yandex.ru>', // sender address
+                    to: maildata.email, // list of receivers
+                    subject: 'Новое объявление!', // Subject line
+                    text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, оно будет опубликовано после проверки модератором.', // plain text body
+                    html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали новое <a href="http://рентазавр.рф/office-'+maildata.officeid+'">объявление</a> на ресурс рентазавр.рф, оно будет опубликовано после проверки модератором</p>' // html body
+                };
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                        return console.log(error);
+                        res.send({err: error});
+                    }else{
+                      res.send({err: false, message: info.messageId, response: info.response, result: resultimage});
+                      // res.send(result);
+                    }
+                    console.log('Message %s sent: %s', info.messageId, info.response);
+                });
+              });
+
             });
             //
           });
@@ -1501,7 +1684,7 @@ app.post('/addoffice', auth, function(req,res) {
 });
 
 app.post('/filtred',function (req,res) {
-  console.log(req.body.city);
+  // console.log(req.body.city);
   var objByCity;
   connection.query('SELECT object_id FROM objects WHERE object_city = '+req.body.city+' AND object_publish = 1 AND object_show = 1', function (error, result, fields) {// LIKE "%'+req.body.city+'%"
     if (error) throw error;
@@ -1511,13 +1694,13 @@ app.post('/filtred',function (req,res) {
         objByCityArr.push(result[i].object_id);
       }
       objByCity = objByCityArr.join(',');
-      console.log(objByCity);
+      // console.log(objByCity);
       if (req.body.meanings > 0) {
         var meaningsString = req.body.meanings.join(',');
         connection.query('SELECT link_office FROM options_offices WHERE link_option IN ('+meaningsString+')', function (error,result,fields) {
           if (error) throw error;
           var officesIdArr = [];
-          console.log(result);
+          // console.log(result);
           if (result.length<=0) {
             res.send({
               count: 0,
@@ -1577,7 +1760,7 @@ app.post('/filtred',function (req,res) {
         connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover  WHERE (office_area BETWEEN '+req.body.area[0]+' AND '+req.body.area[1]+')\
         AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+') AND office_publish = 1 AND office_show = 1', function (error,result,fields) { // AND (office_object IN ('+objByCity+'))
           if (error) throw error;
-          console.log(result.length);
+          // console.log(result.length);
           if (result.length<=0) {
             res.send({
               count: 0,
@@ -1595,7 +1778,7 @@ app.post('/filtred',function (req,res) {
             connection.query('SELECT * FROM objects WHERE object_id IN ('+objIdsString+') AND object_publish = 1 AND object_show = 1', function (error,result,fields) { // WHERE object_id IN('+objIdsString+')
               if (error) throw error;
               var objects = result;
-              console.log("objects",objects);
+              // console.log("objects",objects);
               for (var i = 0; i < objects.length; i++) {
                 var ofccount = 0;
                 objects[i].object_offices = [];

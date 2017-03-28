@@ -19,218 +19,67 @@ block content
       .tab-content
         a.close-filter(href='#')
         // Фильтр
-        article#filter.tab-pane.fade.active.in(role='tabpanel')
-          h3 Назначение:
-          p Для чего вы ищите помещение?
-          .filter-object-type
-            -for (var i = 0; i < meanings.length; i++)
-              .checkbox
-                label
-                  input(type='checkbox', data-title= meanings[i].option_id)
-                  - option_name = meanings[i].option_name
-                  span= option_name
-            //- .checkbox
-            //-   label
-            //-     input(type='checkbox')
-            //-     | Свободного назначения
-            //- .checkbox
-            //-   label
-            //-     input(type='checkbox')
-            //-     | Склад
-            //- .checkbox
-            //-   label
-            //-     input(type='checkbox')
-            //-     | Кафе
-            //- .checkbox
-            //-   label
-            //-     input(type='checkbox')
-            //-     | Магазин
-            //- .checkbox
-            //-   label
-            //-     input(type='checkbox')
-            //-     | Офис
-          section.filter-object-square
-            h3 Площадь:
-            p Какая площадь вам необходима?
-            .ui-slider
-              section
-                input.min(type='text', value='20м')
-                input.max(type='text', value='20м')
-              #square-slider
-          section
-            h3 Цена:
-            p
-              | Какая цена за 1м
-              sup 2
-              |  вас интересует?
-            .ui-slider
-              section.filter-object-price
-                input.min(type='text', value='20м')
-                input.max(type='text', value='20м')
-              #price-slider
-              p.price-desc
-                | Цена за всю площадь:
-                span.min-price  10000р
-                |  -
-                span.max-price  150000р
-          section
-            button.btn.filtr-it Применить
+        form#filter.tab-pane.fade.active.in(role='tabpanel', method="GET", acion='/')
+          article
+            h3 Назначение:
+            p Для чего вы ищите помещение?
+            .filter-object-type
+              -for (var i = 0; i < meanings.length; i++)
+                .checkbox
+                  label
+                    input(type='checkbox', value= meanings[i].option_id, data-title= meanings[i].option_id, name='meanings')
+                    - option_name = meanings[i].option_name
+                    span= option_name
+            section.filter-object-square
+              h3 Площадь:
+              p Какая площадь вам необходима?
+              .ui-slider
+                section
+                  input.min(type='text', value='20м', name='minarea')
+                  input.max(type='text', value='20м', name='maxarea')
+                #square-slider
+            section
+              h3 Цена:
+              p
+                | Какая цена за 1м
+                sup 2
+                |  вас интересует?
+              .ui-slider
+                section.filter-object-price
+                  input.min(type='text', value='20м', name='minprice')
+                  input.max(type='text', value='20м', name='maxprice')
+                #price-slider
+                p.price-desc
+                  | Цена за всю площадь:
+                  span.min-price  10000р
+                  |  -
+                  span.max-price  150000р
+            section
+              button.btn.filtr-it(type='submit') Применить
         // Результаты поиска в фильтре
         article#filter-result.tab-pane.fade(role='tabpanel')
-          article
-            a(href='#')
-              .result-img
-                img(src='images/search/result-img.png')
-              .result-desc
-                h4 Офис № 241
-                p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
-                section
-                  .result-price
-                    p
-                      | Цена за м
-                      sup 2
-                      | : 
-                      br
-                      span 2000 р.
-                  .result-square
-                    p
-                      | Площадь: 
-                      br
-                      span
-                        | 50 м
-                        sup 2
-          article
-            a(href='#')
-              .result-img
-                img(src='images/search/result-img.png')
-              .result-desc
-                h4 Офис № 241 Офис № 241 Офис № 241
-                p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
-                section
-                  .result-price
-                    p
-                      | Цена за м
-                      sup 2
-                      | : 
-                      br
-                      span 2000 р.
-                  .result-square
-                    p
-                      | Площадь: 
-                      br
-                      span
-                        | 50 м
-                        sup 2
-          article
-            a(href='#')
-              .result-img
-                img(src='images/search/result-img.png')
-              .result-desc
-                h4 Офис № 241
-                p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
-                section
-                  .result-price
-                    p
-                      | Цена за м
-                      sup 2
-                      | : 
-                      br
-                      span 2000 р.
-                  .result-square
-                    p
-                      | Площадь: 
-                      br
-                      span
-                        | 50 м
-                        sup 2
-          article
-            a(href='#')
-              .result-img
-                img(src='images/search/result-img.png')
-              .result-desc
-                h4 Офис № 241
-                p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
-                section
-                  .result-price
-                    p
-                      | Цена за м
-                      sup 2
-                      | : 
-                      br
-                      span 2000 р.
-                  .result-square
-                    p
-                      | Площадь: 
-                      br
-                      span
-                        | 50 м
-                        sup 2
-          article
-            a(href='#')
-              .result-img
-                img(src='images/search/result-img.png')
-              .result-desc
-                h4 Офис № 241
-                p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
-                section
-                  .result-price
-                    p
-                      | Цена за м
-                      sup 2
-                      | : 
-                      br
-                      span 2000 р.
-                  .result-square
-                    p
-                      | Площадь: 
-                      br
-                      span
-                        | 50 м
-                        sup 2
-          article
-            a(href='#')
-              .result-img
-                img(src='images/search/result-img.png')
-              .result-desc
-                h4 Офис № 241
-                p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
-                section
-                  .result-price
-                    p
-                      | Цена за м
-                      sup 2
-                      | : 
-                      br
-                      span 2000 р.
-                  .result-square
-                    p
-                      | Площадь: 
-                      br
-                      span
-                        | 50 м
-                        sup 2
-          article
-            a(href='#')
-              .result-img
-                img(src='images/search/result-img.png')
-              .result-desc
-                h4 Офис № 241
-                p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
-                section
-                  .result-price
-                    p
-                      | Цена за м
-                      sup 2
-                      | : 
-                      br
-                      span 2000 р.
-                  .result-square
-                    p
-                      | Площадь: 
-                      br
-                      span
-                        | 50 м
-                        sup 2
+          //- article
+          //-   a(href='#')
+          //-     .result-img
+          //-       img(src='images/search/result-img.png')
+          //-     .result-desc
+          //-       h4 Офис № 241
+          //-       p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+          //-       section
+          //-         .result-price
+          //-           p
+          //-             | Цена за м
+          //-             sup 2
+          //-             | : 
+          //-             br
+          //-             span 2000 р.
+          //-         .result-square
+          //-           p
+          //-             | Площадь: 
+          //-             br
+          //-             span
+          //-               | 50 м
+          //-               sup 2
     // Блок появляется при наведении на маркет объека
     //- .map-marker-info-hover
     //-   h3.nowrap-text

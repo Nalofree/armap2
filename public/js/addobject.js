@@ -15,18 +15,18 @@ $(document).ready(function() {
   var objectData={};
   var officeData = {};
 
-  $('.close-layout').click(function () {
-    $('.close-layout').fadeOut();
-    $('.kab-create-step-one').fadeOut();
-    $('.kab-create-step-two').fadeOut();
-    $('.kab-create-step-three').fadeOut();
-    $('.kab-create-step-complite').fadeOut();
-  });
+  // $('.close-layout').click(function () {
+  //   $('.close-layout').fadeOut();
+  //   $('.kab-create-step-one').fadeOut();
+  //   $('.kab-create-step-two').fadeOut();
+  //   $('.kab-create-step-three').fadeOut();
+  //   $('.kab-create-step-complite').fadeOut();
+  // });
 
   $('.btn-create-object').click(function (e) {
     e.preventDefault();
     $('.kab-create-step-one').fadeIn();
-    $('.close-layout').fadeIn();
+    // $('.close-layout').fadeIn();
     $('input').val('');
     $('input:checkbox').removeAttr('checked');
     $('select').prop('selectedIndex',0);
@@ -84,7 +84,7 @@ $(document).ready(function() {
               $('.step-inform-address').html("Адрес: <span>"+objectData.object_adres+"</span><span>"+objectData.object_name+"</span>");
               $('.kab-create-step-one').fadeOut();
               $('.kab-create-step-three').fadeIn();
-              $('.close-layout').fadeIn();
+              // $('.close-layout').fadeIn();
               $('.obj-addr-autoshow').hide();
               $(".obj-addr-autoshow .objects-list").empty();
               $(".obj-addr-autoshow .adres").empty();
@@ -148,7 +148,7 @@ $(document).ready(function() {
       // }else{
         $('.kab-create-step-two').fadeIn();
         // $('.step-inform-adres').text('Адрес: '+autoaddres);
-        $('.close-layout').fadeIn();
+        // $('.close-layout').fadeIn();
         var now = getTime();
         objectData.object_adres = $('#objadres').val(),
         objectData.object_coords = $("#objcoords").val(),
@@ -327,18 +327,17 @@ $(document).ready(function() {
       officeData.create = now;
       officeData.object = objectData.Id;
       // console.log(officeData);
-
+      $('.kab-create-step-three').empty();
       $.ajax({
         url: '/addoffice',
         type: 'post',
         data: officeData,
         success: function (data) {
           console.log('success '+data);
-          $('.kab-create-step-three').fadeOut();
           // $('body,html').animate({"scrollTop":0},"slow");
           $('.kab-create-step-complite').fadeIn();
-          $('.close-layout').fadeIn();
-
+          // $('.close-layout').fadeIn();
+          $('.kab-create-step-three').fadeOut();
           $('input').val('');
           $('input:checkbox').removeAttr('checked');
           $('select').prop('selectedIndex',0);
@@ -364,7 +363,7 @@ $(document).ready(function() {
     objectData.object_adres = $(this).parent().parent().parent().find('.kab-item-header p').text();
     $('.step-inform-address').html("Адрес: <span>"+objectData.object_adres+"</span><span>"+objectData.object_name+"</span>");
     $('.kab-create-step-three').fadeIn();
-    $('.close-layout').fadeIn();
+    // $('.close-layout').fadeIn();
   });
 
   $('#setimages').change(function (e) {

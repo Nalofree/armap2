@@ -41,178 +41,192 @@ block content
                 //-a(href='#') Площадь
           //- Создание объекта и помещений, имеет несколько шагов, которые появляются один за другим
           .kab-create-obj
-            //- Шаг 1
+            //- Шаг 1 
             section.kab-create-step-one
-              h3 Создать новый объект
-              article
-                .step-inform
-                  input#objimagefield(type='hidden')
-                  label
-                    | Введите адрес:
-                    input(type='text')#objadres
-                    .obj-addr-autoshow
-                      p.adres
-                      .objects-list
-                    input(type='hidden')#objcoords
-                    //- span
-                    //-   | ТЦ “Рублёв”
-                    //-   a(href='#') Другой объект?
-                  //- span или
-                  //- select#choose-object(name="object[]") Выберите объект
-                  //-   option(selected='' value='') Выберите объект
-                  //- 
-                  //-   - for (var i = 0; i < objects.length; i++)
-                  //-     option(value= objects[i].object_id, title= objects[i].object_adres)= objects[i].object_name
+              button.close
+              span.close-tooltip Закрыть
+              .container
+                h3 Создать новый объект
+                article
+                  .step-inform
+                    input#objimagefield(type='hidden')
+                    label
+                      | Введите адрес:
+                      input(type='text')#objadres
+                      .obj-addr-autoshow
+                        p.adres
+                        .objects-list
+                      input(type='hidden')#objcoords
+                      //- span
+                      //-   | ТЦ “Рублёв”
+                      //-   a(href='#') Другой объект?
+                    //- span или
+                    //- select#choose-object(name="object[]") Выберите объект
+                    //-   option(selected='' value='') Выберите объект
+                    //- 
+                    //-   - for (var i = 0; i < objects.length; i++)
+                    //-     option(value= objects[i].object_id, title= objects[i].object_adres)= objects[i].object_name
 
-                .step-submit
-                  a.first-step.step-btn(href='#') Продолжить
-              article.add-obj-photos
-                .add-obj-photos-desc
-                  h4 Загрузите фотографии
-                  form(method='post', enctype='multipart/form-data', action='/uploadimage')
-                    input(type='file', name='uplimage', id='setobjimages', accept="image/*,image/jpeg")
-                .add-obj-photos-items
+                  
+                  .add-obj-photos
+                    .add-obj-photos-desc
+                      h4 Загрузите фотографии
+                      form(method='post', enctype='multipart/form-data', action='/uploadimage')
+                        input(type='file', name='uplimage', id='setobjimages', accept="image/*,image/jpeg")
+                    .add-obj-photos-items
+                article
+                  .step-submit
+                    a.first-step.step-btn(href='#') Продолжить
             //- Шаг 2
             section.kab-create-step-two
-              h3 Создать новый объект
-              .step-inform
-                p.step-inform-adres
-                .step-object-type
-                  p
-                    | Выберите тип здания:
-                    - for (var i = 0; i < objtypes.length; i++)
-                      .radio
-                        label
-                          input(type='radio', name='objectType', data-title= objtypes[i].objtype_id, checked='checked')
-                          div= objtypes[i].objtype_name
-                label
-                  | Введите название:
-                  input#objname(type='text')
-                  span ТЦ “Рублёв”, Торговая площадь “Иванушки”, БЦ “Лисиха”
-              .step-submit
-                a.step-btn.back(href='#') Назад
-                a.second-step.step-btn(href='#') Продолжить
-            //- Шаг 3
+              button.close
+              span.close-tooltip Закрыть
+              .container
+                h3 Создать новый объект
+                .step-inform
+                  p.step-inform-adres
+                  .step-object-type
+                    p
+                      | Выберите тип здания:
+                      - for (var i = 0; i < objtypes.length; i++)
+                        .radio
+                          label
+                            input(type='radio', name='objectType', data-title= objtypes[i].objtype_id, checked='checked')
+                            div= objtypes[i].objtype_name
+                  label
+                    | Введите название:
+                    input#objname(type='text')
+                    span ТЦ “Рублёв”, Торговая площадь “Иванушки”, БЦ “Лисиха”
+                .step-submit
+                  a.step-btn.back(href='#') Назад
+                  a.second-step.step-btn(href='#') Продолжить
+              //- Шаг 3
             section.kab-create-step-three
-              h3 Создать новое помещение
-              .step-inform
-                p.step-inform-address
-                  | Адрес:
-                  span г. Иркутск, ул. Чехова 19
-                  span Торгово-развлекательный центр “Рублёв”
-                article.first-desc
-                  .input-group
-                    label(for='create-header') Заголовок объявления:
-                    input#create-header(type='text')
-                    span Не используйте слова: Срочно, Сдам, Аренда.
-                  .input-group
-                    label(for='create-square') Площадь:
-                    input#create-square(type='text',placeholder='Цифры, например 25.5')
-                    span м
-                    sup 2
-                  .input-group
-                    label(for='create-price') Цена за м2:
-                    input#create-price(type='text',placeholder='Цифры, например 800.2')
-                    span Цена за всю площадь:
-                    span.comp-price= '0'
-                    span &nbsp;руб.
-                  .input-group
-                    label(for='create-tel') Телефон собственника:
-                    input#create-tel(type='text')
-                    //-- span
-                    //--   a(href='#') Подтвердите
-                    //--   | телефон
-                  .input-group
-                    label(for='create-height') Высота потолков:
-                    input#create-height(type='text',placeholder='Цифры, например 2.6')
-                    span м
-                article.second-desc
-                  section.second-item
-                    h4 Назначение помещения:
-                    - for (var i = 0; i < meanings.length; i++)
-                      .checkbox
-                        label
-                          input(type='checkbox', data-title= ''+meanings[i].option_id,name='meaning')
-                          div= meanings[i].option_name
-                    label
-                      | Другое:
-                      input(type='text', class="addmeaning", data-title="meaning")
-                  section.second-item
-                    h4 В арендную плату входит:
-                    - for (var i = 0; i < included.length; i++)
-                      .checkbox
-                        label
-                          input(type='checkbox', data-title= ''+included[i].option_id,name='included')
-                          div= included[i].option_name
-                    label
-                      | Другое:
-                      input(type='text', class="addincluded", data-title="included")
-                  section.second-item
-                    h4 Дополнительные услуги:
-                    - for (var i = 0; i < advanced.length; i++)
-                      .checkbox
-                        label
-                          input(type='checkbox', data-title= ''+advanced[i].option_id,name='advanced')
-                          div= advanced[i].option_name
-                    label
-                      | Другое:
-                      input(type='text', class="addadvanced", data-title="advanced")
-                  section.second-item
-                    h4 Доступные провайдеры:
-                    - for (var i = 0; i < providers.length; i++)
-                      .checkbox
-                        label
-                          input(type='checkbox', data-title= ''+providers[i].option_id,name='providers')
-                          div= providers[i].option_name
-                    label
-                      | Другое:
-                      input(type='text', class="addprovider", data-title="providers")
-                article.add-photos
-                  .add-photos-desc
-                    h4 Загрузите фотографии
-                    p Вы можете загрузить не более 8-ми фотографий
-                    p Размер файла не должен превышать 1MB
-                    p Пожалуйста не загружайте фотографии с различным текстом.
-                    //-input(type='file')
-                    form(method='post', enctype='multipart/form-data', action='/uploadimage')
-                      //-| File:
-                      input(type='file', name='uplimage', multiple='multiple', id='setimages', accept="image/*,image/jpeg")
-                      //-input(type='submit', value='Upload')
-                  .add-photos-items
-                    //-- .add-photos-item
-                    //--   img(src='images/kabinet/1.png')
-                    //--   .photos-settings
-                    //--     .radio
-                    //--       label
-                    //--         input(type='radio', name='mainPhoto', checked='')
-                    //--         | Главная
-                    //--     a(href='#') Удалить
-                    //-- .add-photos-item
-                    //--   img(src='images/kabinet/1.png')
-                    //--   .photos-settings
-                    //--     .radio
-                    //--       label
-                    //--         input(type='radio', name='mainPhoto', checked='')
-                    //--         | Главная
-                    //--     a(href='#') Удалить
-                    //-- .add-photos-item
-                    //--   img(src='images/kabinet/1.png')
-                    //--   .photos-settings
-                    //--     .radio
-                    //--       label
-                    //--         input(type='radio', name='mainPhoto', checked='')
-                    //--         | Главная
-                    //--     a(href='#') Удалить
-              .step-submit
-                //-- a.step-btn(href='#') Проверить объявление
-                a.third-step.step-btn(href='#') Опубликовать
-                //-- a.back(href='#') Назад
+              button.close
+              span.close-tooltip Закрыть
+              .container
+                h3 Создать новое помещение
+                .step-inform
+                  p.step-inform-address
+                    | Адрес:
+                    span г. Иркутск, ул. Чехова 19
+                    span Торгово-развлекательный центр “Рублёв”
+                  article.first-desc
+                    .input-group
+                      label(for='create-header') Заголовок объявления:
+                      input#create-header(type='text')
+                      span Не используйте слова: Срочно, Сдам, Аренда.
+                    .input-group
+                      label(for='create-square') Площадь:
+                      input#create-square(type='text',placeholder='Цифры, например 25.5')
+                      span м
+                      sup 2
+                    .input-group
+                      label(for='create-price') Цена за м2:
+                      input#create-price(type='text',placeholder='Цифры, например 800.2')
+                      span Цена за всю площадь:
+                      span.comp-price= '0'
+                      span &nbsp;руб.
+                    .input-group
+                      label(for='create-tel') Телефон собственника:
+                      input#create-tel(type='text')
+                      //-- span
+                      //--   a(href='#') Подтвердите
+                      //--   | телефон
+                    .input-group
+                      label(for='create-height') Высота потолков:
+                      input#create-height(type='text',placeholder='Цифры, например 2.6')
+                      span м
+                  article.second-desc
+                    section.second-item
+                      h4 Назначение помещения:
+                      - for (var i = 0; i < meanings.length; i++)
+                        .checkbox
+                          label
+                            input(type='checkbox', data-title= ''+meanings[i].option_id,name='meaning')
+                            div= meanings[i].option_name
+                      label
+                        | Другое:
+                        input(type='text', class="addmeaning", data-title="meaning")
+                    section.second-item
+                      h4 В арендную плату входит:
+                      - for (var i = 0; i < included.length; i++)
+                        .checkbox
+                          label
+                            input(type='checkbox', data-title= ''+included[i].option_id,name='included')
+                            div= included[i].option_name
+                      label
+                        | Другое:
+                        input(type='text', class="addincluded", data-title="included")
+                    section.second-item
+                      h4 Дополнительные услуги:
+                      - for (var i = 0; i < advanced.length; i++)
+                        .checkbox
+                          label
+                            input(type='checkbox', data-title= ''+advanced[i].option_id,name='advanced')
+                            div= advanced[i].option_name
+                      label
+                        | Другое:
+                        input(type='text', class="addadvanced", data-title="advanced")
+                    section.second-item
+                      h4 Доступные провайдеры:
+                      - for (var i = 0; i < providers.length; i++)
+                        .checkbox
+                          label
+                            input(type='checkbox', data-title= ''+providers[i].option_id,name='providers')
+                            div= providers[i].option_name
+                      label
+                        | Другое:
+                        input(type='text', class="addprovider", data-title="providers")
+                  article.add-photos
+                    .add-photos-desc
+                      h4 Загрузите фотографии
+                      p Вы можете загрузить не более 8-ми фотографий
+                      p Размер файла не должен превышать 1MB
+                      p Пожалуйста не загружайте фотографии с различным текстом.
+                      //-input(type='file')
+                      form(method='post', enctype='multipart/form-data', action='/uploadimage')
+                        //-| File:
+                        input(type='file', name='uplimage', multiple='multiple', id='setimages', accept="image/*,image/jpeg")
+                        //-input(type='submit', value='Upload')
+                    .add-photos-items
+                      //-- .add-photos-item
+                      //--   img(src='images/kabinet/1.png')
+                      //--   .photos-settings
+                      //--     .radio
+                      //--       label
+                      //--         input(type='radio', name='mainPhoto', checked='')
+                      //--         | Главная
+                      //--     a(href='#') Удалить
+                      //-- .add-photos-item
+                      //--   img(src='images/kabinet/1.png')
+                      //--   .photos-settings
+                      //--     .radio
+                      //--       label
+                      //--         input(type='radio', name='mainPhoto', checked='')
+                      //--         | Главная
+                      //--     a(href='#') Удалить
+                      //-- .add-photos-item
+                      //--   img(src='images/kabinet/1.png')
+                      //--   .photos-settings
+                      //--     .radio
+                      //--       label
+                      //--         input(type='radio', name='mainPhoto', checked='')
+                      //--         | Главная
+                      //--     a(href='#') Удалить
+                .step-submit
+                  //-- a.step-btn(href='#') Проверить объявление
+                  a.third-step.step-btn(href='#') Опубликовать
+                  //-- a.back(href='#') Назад
             //- Шаг 4
             section.kab-create-step-complite
-              h3 Готово
-              p
-                | Спасибо! Ваше объявление отправлено на модерацию, и в скором времени будет опубликовано на сайте.
-              a.step-btn(href='#') Спасибо
+              //- button.close
+              //- span.close-tooltip Закрыть
+              .container
+                h3 Готово
+                p
+                  | Спасибо! Ваше объявление отправлено на модерацию, и в скором времени будет опубликовано на сайте.
+                a.step-btn(href='#') Спасибо
           //- Объекты и помещения
           .kab-items
             - for (var i = 0; i < objects.length; i++)

@@ -246,10 +246,11 @@ modObject.hide();
 showObject.click(function () {
     if ($(this).hasClass('open')) {
         $(this).removeClass('open');
-        $(this).parent().parent().next(modObject).animate({height: "hide"}, 600)
+        $(this).parent().parent().next(modObject).animate({height: "hide"}, 600);
     } else {
         $(this).addClass('open');
-        $(this).parent().parent().next(modObject).animate({height: "show"}, 600)
+        $(this).parent().parent().next(modObject).animate({height: "show"}, 600);
+        $('.item-object-info').attr('style', '');
     }
 });
 
@@ -261,14 +262,14 @@ modRoom.hide();
 showRoom.click(function () {
     if ($(this).hasClass('open')) {
         $(this).removeClass('open');
-        $(this).parent().parent('.item-desc').removeClass('open');
+        $(this).closest('.item-desc').removeClass('open');
         $(this).text('Просмотр');
-        $(this).parent().parent().next(modRoom).animate({height: "hide"}, 800)
+        $(this).closest('.item-desc').next(modRoom).animate({height: "hide"}, 200)
     } else {
         $(this).addClass('open');
-        $(this).parent().parent('.item-desc').addClass('open');
+        $(this).closest('.item-desc').addClass('open');
         $(this).text('Свернуть');
-        $(this).parent().parent().next(modRoom).animate({height: "show"}, 800)
+        $(this).closest('.item-desc').next(modRoom).animate({height: "show"}, 200)
     }
 });
 
@@ -360,7 +361,7 @@ $(document).ready(function () {
 })
 
 $(document).ready(function () {
-  $("#create-tel").mask("+7 (999) 999-9999");
+  $("#create-tel, #room-tel").mask("+7 (999) 999-9999");
   $(".admin-trig .panel-heading").click(function () {
     if ($(this).hasClass("show")) {
       $(this).parent('.admin-trig').find(".panel-body").hide(200);
@@ -375,5 +376,9 @@ $(document).ready(function () {
 
   });
 
+  $(".kab-create-obj .close").click(function (e) {
+    e.preventDefault();
+    $(this).closest("section").fadeOut();
+  });
 
 });

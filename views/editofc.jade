@@ -40,7 +40,7 @@ block content
                   label.control-label(for='name') Телефон собственника*
                   input#create-tel.form-control(type='text', name='phone' placeholder='+7 (111) 111-1111', value=office.office_phone)
                 .form-group
-                  input#editofcmainsubmit.btn.btn-primary(type='submit', data-title=office.office_id )
+                  input#editofcmainsubmit.btn.btn-primary(type='submit', data-title=office.office_id, value="Сохранить" )
           .panel.panel-primary
             .panel-heading= "Основная информация"
             .panel-body
@@ -130,7 +130,7 @@ block content
                                   | Главная
                               a.deluplimage(href="#", data-title=images[i].image_id) Удалить
                     hr
-                    input.btn.btn-primary.set-images(type='submit', data-title=office.office_id)
+                    input.btn.btn-primary.set-images(type='submit', data-title=office.office_id, value="Сохранить")
                 //-     .col-md-6.col-sm-12
                 //-       .thumbnail.edit-ofc-images
                 //-         img(src="images/obj/"+images[i].image_filename, alt="alt")

@@ -550,7 +550,7 @@ input[type="search"] {
 .checkbox-inline input[type="checkbox"] {
   position: absolute;
   margin-left: -20px;
-  margin-top: 4px \9;
+  margin-top: 4px;
 }
 
 .radio + .radio,
@@ -3787,33 +3787,33 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   color: #979797;
 }
 
-#filter > section {
+#filter section {
   padding: 20px 3px 21px;
   border-bottom: 1px solid #ebebeb;
 }
 
-#filter > section:nth-child(n+5) {
+#filter section:nth-child(n+5) {
   border: none;
 }
 
-#filter > section .checkbox {
+#filter section .checkbox {
   margin: 0 0 5px;
 }
 
-#filter > section .checkbox label {
+#filter section .checkbox label {
   color: #5b5b5b;
 }
 
-#filter > section .checkbox:last-of-type {
+#filter section .checkbox:last-of-type {
   margin-bottom: 0;
 }
 
-#filter > section .ui-slider {
+#filter section .ui-slider {
   position: relative;
   width: 100%;
 }
 
-#filter > section .ui-slider section {
+#filter section .ui-slider section {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -3823,7 +3823,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   margin: 18px 0;
 }
 
-#filter > section .ui-slider section input {
+#filter section .ui-slider section input {
   width: 80px;
   height: 22px;
   border: 1px solid #f5f5f5;
@@ -3833,43 +3833,43 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   transition: all .2s linear;
 }
 
-#filter > section .ui-slider section input.max {
+#filter section .ui-slider section input.max {
   text-align: right;
 }
 
-#filter > section .ui-slider section input:focus {
+#filter section .ui-slider section input:focus {
   outline: none;
   border-color: #2c71e7;
 }
 
-#filter > section .ui-slider #square-slider.noUi-horizontal,
-#filter > section .ui-slider #price-slider.noUi-horizontal {
+#filter section .ui-slider #square-slider.noUi-horizontal,
+#filter section .ui-slider #price-slider.noUi-horizontal {
   height: 6px;
 }
 
-#filter > section .ui-slider #square-slider.noUi-horizontal.noUi-target,
-#filter > section .ui-slider #price-slider.noUi-horizontal.noUi-target {
+#filter section .ui-slider #square-slider.noUi-horizontal.noUi-target,
+#filter section .ui-slider #price-slider.noUi-horizontal.noUi-target {
   border: 1px solid #d3d3d3;
   box-shadow: none;
   border-radius: 2px;
 }
 
-#filter > section .ui-slider #square-slider.noUi-horizontal.noUi-background,
-#filter > section .ui-slider #square-slider.noUi-horizontal .noUi-background,
-#filter > section .ui-slider #price-slider.noUi-horizontal.noUi-background,
-#filter > section .ui-slider #price-slider.noUi-horizontal .noUi-background {
+#filter section .ui-slider #square-slider.noUi-horizontal.noUi-background,
+#filter section .ui-slider #square-slider.noUi-horizontal .noUi-background,
+#filter section .ui-slider #price-slider.noUi-horizontal.noUi-background,
+#filter section .ui-slider #price-slider.noUi-horizontal .noUi-background {
   box-shadow: none;
   background: #fafafa;
 }
 
-#filter > section .ui-slider #square-slider.noUi-horizontal .noUi-connect,
-#filter > section .ui-slider #price-slider.noUi-horizontal .noUi-connect {
+#filter section .ui-slider #square-slider.noUi-horizontal .noUi-connect,
+#filter section .ui-slider #price-slider.noUi-horizontal .noUi-connect {
   background: #2c71e7;
   box-shadow: none;
 }
 
-#filter > section .ui-slider #square-slider.noUi-horizontal .noUi-handle,
-#filter > section .ui-slider #price-slider.noUi-horizontal .noUi-handle {
+#filter section .ui-slider #square-slider.noUi-horizontal .noUi-handle,
+#filter section .ui-slider #price-slider.noUi-horizontal .noUi-handle {
   top: -8px;
   width: 20px;
   height: 20px;
@@ -3879,21 +3879,21 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   cursor: pointer;
 }
 
-#filter > section .ui-slider #square-slider.noUi-horizontal .noUi-handle:after, #filter > section .ui-slider #square-slider.noUi-horizontal .noUi-handle:before,
-#filter > section .ui-slider #price-slider.noUi-horizontal .noUi-handle:after,
-#filter > section .ui-slider #price-slider.noUi-horizontal .noUi-handle:before {
+#filter section .ui-slider #square-slider.noUi-horizontal .noUi-handle:after, #filter section .ui-slider #square-slider.noUi-horizontal .noUi-handle:before,
+#filter section .ui-slider #price-slider.noUi-horizontal .noUi-handle:after,
+#filter section .ui-slider #price-slider.noUi-horizontal .noUi-handle:before {
   display: none;
 }
 
-#filter > section .ui-slider .price-desc {
+#filter section .ui-slider .price-desc {
   margin-top: 20px;
 }
 
-#filter > section:last-of-type {
+#filter section:last-of-type {
   padding-top: 0;
 }
 
-#filter > section:last-of-type .btn {
+#filter section:last-of-type .btn {
   width: 100%;
   height: 40px;
   border: 1px solid #f5584e;
@@ -6467,11 +6467,11 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 .kab-create-obj > section {
-  width: 100%;
-  height: auto;
+  /*width: 100%;*/
+  /*height: auto;*/
   padding: 20px;
-  margin-bottom: 30px;
-  border-radius: 5px;
+  /*margin-bottom: 30px;*/
+  /*border-radius: 5px;*/
   background: #fff;
   border: 1px solid #dadada;
 }
@@ -7545,6 +7545,10 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   overflow: hidden;
 }
 
+.mod-object-list-item .item-object .object-tooltip .image img {
+  width: 100%;
+}
+
 .mod-object-list-item .item-object .object-tooltip .description {
   width: 185px;
 }
@@ -7777,7 +7781,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   text-align: right;
 }
 
-.mod-object-list-item .item-object-info .object-status .object-info-submit .change-btn {
+.mod-object-list-item .item-object-info .object-status .object-info-submit .change-solution-btn {
   padding: 6px 30px;
   background: #fff;
   border: 1px solid #c9c9c9;
@@ -7787,7 +7791,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   transition: all .3s ease-out;
 }
 
-.mod-object-list-item .item-object-info .object-status .object-info-submit .change-btn:hover {
+.mod-object-list-item .item-object-info .object-status .object-info-submit .change-solution-btn:hover {
   text-decoration: none;
   color: #101010;
 }
@@ -7966,13 +7970,13 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   margin-left: 10px;
 }
 
-.item-object-rooms-list .item-show-more .show-room-info {
+/*.item-object-rooms-list .item-show-more .show-room-info {
   padding: 5px 20px;
   border-radius: 3px;
   border: 1px solid #4dc885;
   font-size: 14px;
   color: #2a2a2a;
-}
+}*/
 
 .item-object-rooms-list .item-show-more .show-room-info:hover {
   text-decoration: none;
@@ -8357,6 +8361,35 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   background: transparent;
   border: none;
 }
+
+/*#modal-photo .modal-dialog .close:before, #modal-photo .modal-dialog .close:after,
+#modal-rooms .modal-dialog .close:before,
+#modal-rooms .modal-dialog .close:after,
+#modal-object .modal-dialog .close:before,
+#modal-object .modal-dialog .close:after {
+  content: '';
+  position: absolute;
+  width: 1px;
+  height: 18px;
+  top: 0;
+  background: #535353;
+}
+
+#modal-photo .modal-dialog .close:before,
+#modal-rooms .modal-dialog .close:before,
+#modal-object .modal-dialog .close:before {
+  -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+#modal-photo .modal-dialog .close:after,
+#modal-rooms .modal-dialog .close:after,
+#modal-object .modal-dialog .close:after {
+  -webkit-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}*/
 
 #modal-photo .modal-dialog .close:before, #modal-photo .modal-dialog .close:after,
 #modal-rooms .modal-dialog .close:before,
@@ -8962,13 +8995,13 @@ h1 a:hover, h1 a:focus {
 .kab-create-step-complite {
   display: none;
   position: fixed;
-  max-height: 70%;
+  height: 100%;
+  width: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
   z-index: 999;
-  top: 100px;
+  top: 0;
   left: 0;
-  /*width: 77%;*/
 }
 
 .close-layout {
@@ -9378,4 +9411,113 @@ ul#head-log-in li.username a {
 
 .object-info-img img{
   width: 100%;
+}
+
+.item-object-more.zerostatus .item-object-info.change-solution {
+  display: block;
+}
+
+.item-object-more.disabled .item-object-info.change-solution {
+  display: none;
+}
+
+.item-object-more.published  .item-object-info.change-solution {
+  display: none;
+}
+
+.item-object-more.zerostatus .item-object-info.done-solution {
+  display: none;
+}
+
+.item-object-more.disabled .item-object-info.done-solution {
+  display: block;
+}
+
+.item-object-more.published  .item-object-info.done-solution {
+  display: block;
+}
+
+.moder-comment {
+  color: #2c71e7;
+}
+
+.mod-object-list-item .status.new.red-text {
+  color: #f00;
+}
+
+.mod-object-list-item .status.new.orange-text {
+  color: orange;
+}
+
+.kab-create-step-one .close,
+.kab-create-step-two .close,
+.kab-create-step-three .close,
+.kab-create-step-complete .close {
+  -webkit-appearance: none;
+  padding: 0;
+  cursor: pointer;
+  background: 0 0;
+  border: 0;
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  height: 40px;
+  width: 40px;
+  border: none;
+  background: transparent;
+  opacity: 1;
+}
+
+.kab-create-step-one .close:before, .kab-create-step-one .close:after,
+.kab-create-step-two .close:before,
+.kab-create-step-two .close:after,
+.kab-create-step-three .close:before,
+.kab-create-step-three .close:after,
+.kab-create-step-complete .close:before,
+.kab-create-step-complete .close:after {
+  content: '';
+  position: absolute;
+  width: 3px;
+  height: 40px;
+  top: 0;
+  background: #2C71E7;
+}
+
+.kab-create-step-one .close:before,
+.kab-create-step-two .close:before,
+.kab-create-step-three .close:before,
+.kab-create-step-complete .close:before {
+  -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+.kab-create-step-one .close:after,
+.kab-create-step-two .close:after,
+.kab-create-step-three .close:after,
+.kab-create-step-complete .close:after {
+  -webkit-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+
+.close-tooltip {
+  display: block;
+  position: absolute;
+  right: 60px;
+  top: 30px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #000;
+  color: #fff;
+  opacity: 0.6;
+}
+
+.close-tooltip::after {
+  content: '';
+  position: absolute; /* Абсолютное позиционирование */
+  right: -16px;
+  bottom: 5px; /* Положение треугольника */
+  border: 10px solid transparent; /* Прозрачные границы */
+  border-left: 10px solid #000; /* Добавляем треугольник */
 }

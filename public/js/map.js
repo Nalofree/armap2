@@ -55,6 +55,9 @@ $(document).ready(function () {
                 }
                 map.geoObjects.add(myClusterer);
               });
+
+              //Заглушить фильтр нафик
+
               $(".filtr-it").click(function () {
                 for (var i = 0; i < placemarks.length; i++) {
                   myClusterer.remove(placemarks[i]);
@@ -98,6 +101,9 @@ $(document).ready(function () {
                 if ($("#search-filter").length) {
                   filter(cityId).then(function (placemarks) {
                   });
+
+                  // Заглушить фильтр нафик
+
                   $(".filtr-it").click(function () {
                     filter(cityId).then(function (placemarks) {
                     });
