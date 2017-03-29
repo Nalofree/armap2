@@ -1716,8 +1716,12 @@ app.post('/filtred',function (req,res) {
   // //   res.send(result);
   // // });
   // // console.log("SELECT * FROM offices WHERE office_publish = 1 AND office_show = 1"+price+area);
-  // connection.query("SELECT * FROM offices LEFT JOIN options_offices ON link_office = office_id WHERE office_publish = 1 AND office_show = 1"+price+area+meanings, function (error, result, fields) {
-  //   console.log("result: "+result);
+  // connection.query("SELECT * FROM offices INNER JOIN options_offices ON link_office = office_id LEFT JOIN objects ON object_id = office_object WHERE office_publish = 1 AND office_show = 1"+price+area+meanings, function (error, result, fields) {
+  //   // console.log("result: "+result);
+  //   for (let item of result) {
+  //     console.log(" ");
+  //     console.log(item);
+  //   }
   //   res.send(result);
   // });
 
