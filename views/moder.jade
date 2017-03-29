@@ -768,21 +768,22 @@ block content
           //-     input(type="checkbox")
           //-     | Только не подтвержденные
           table.table.option-list(width="100%")
-            - for (var i = 0; i < options.length; i++)
-              tr
-                td.option-name
-                  - if (options[i].option_publish == 1)
-                    .btn.btn-danger.refuse-option(data-title=options[i].option_id) &times;
-                  - else
-                    .btn.btn-success.confirm-option(data-title=options[i].option_id) &radic;
-                  //- .btn.btn-default &#9998;
-                  .btn.btn-default.edit-option(data-title=options[i].option_id)= options[i].option_name
-                  //- .input-group.edit-option-field
-                  input.form-control.edit-option-field(type='text', name='optionname', value=options[i].option_name, data-title=options[i].option_id)
-                
-                td= options[i].opttype_name
-                td
-                  .btn.btn-danger.delete-option(data-title=options[i].option_id) Удалить навсегда
+            - if (options)
+              - for (var i = 0; i < options.length; i++)
+                tr
+                  td.option-name
+                    - if (options[i].option_publish == 1)
+                      .btn.btn-danger.refuse-option(data-title=options[i].option_id) &times;
+                    - else
+                      .btn.btn-success.confirm-option(data-title=options[i].option_id) &radic;
+                    //- .btn.btn-default &#9998;
+                    .btn.btn-default.edit-option(data-title=options[i].option_id)= options[i].option_name
+                    //- .input-group.edit-option-field
+                    input.form-control.edit-option-field(type='text', name='optionname', value=options[i].option_name, data-title=options[i].option_id)
+                  
+                  td= options[i].opttype_name
+                  td
+                    .btn.btn-danger.delete-option(data-title=options[i].option_id) Удалить навсегда
                   
                 
     // Модальные окна при отклонениях
