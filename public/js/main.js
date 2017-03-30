@@ -138,7 +138,27 @@ $(".regnow").click(function () {
   $("#header-login").modal('hide');
 });
 
+//Удаление объекта
 
+$(".delete-object").click(function (e) {
+  e.preventDefault();
+  var objectid = $(this).attr('data-title');
+  var btn = $(this);
+  $.ajax({
+    url: "/delobj",
+    type: "POST",
+    data: {
+      object_id: objectid
+    },
+    success: function (data, status, error) {
+      console.log(data, status, error);
+      btn.closest("tr").fadeOut();
+    },
+    error: function (data, status, error) {
+      console.log(data, status, error);
+    }
+  });
+});
 
 
 //Создание объекта

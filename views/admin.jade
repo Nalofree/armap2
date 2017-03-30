@@ -3,10 +3,15 @@ block content
   .container
     .panel.panel-primary.admin-trig
       .panel-heading
-        h4= "Типы объектов"
-      .panel-body     
-        - for (var i = 0; i < objects.length; i++)
-          
+        h4= "Объекты"
+      .panel-body
+        table.table
+          - for (var i = 0; i < objects.length; i++)
+            tr
+              td= objects[i].object_name
+              td= objects[i].object_adres
+              td
+                .btn.btn-danger.delete-object(data-title=objects[i].object_id) Удалить навсегда со всеми помещениями
           //- form(action="/admin/objtypes" method="POST")
           //-   .form-group
           //-   input.form-control(type='text', name='name', placeholder='holder', value=objtypes[i].objtype_name)
