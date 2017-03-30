@@ -9521,3 +9521,9 @@ ul#head-log-in li.username a {
   border: 10px solid transparent; /* Прозрачные границы */
   border-left: 10px solid #000; /* Добавляем треугольник */
 }
+
+.grayimg {
+  -webkit-filter: grayscale(1); /* Webkit браузеры */
+          filter: gray; /* для IE6-9 */
+          filter: grayscale(1); /* W3C */  
+}

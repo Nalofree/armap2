@@ -93,7 +93,7 @@ block content
                     //-     - moderwait++
                       //- moderwait = objects[i].object_offices.office_publish === 0 ? moderwait+1 : moderwait
                     h3
-                      a.nowrap-text(href='#')= objects[i].object_name
+                      a.nowrap-text(href='/object-'+objects[i].object_id)= objects[i].object_name
                       - if (objects[i].object_nopublishofccount > 0)
                         span.warning.active= objects[i].object_nopublishofccount
                     //- p.status.new= (objects[i].object_publish === 0) ? "Новый объект" : objects[i].object_publish===1 ? "Подтвержден" : "Отклонен"

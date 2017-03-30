@@ -1740,7 +1740,7 @@ app.post('/filtred',function (req,res) {
    "+req.body.area[0]+" AND "+req.body.area[1]+" " : "";
   var meanings = req.body.meanings ? " AND link_option IN\
    ("+req.body.meanings.join(",")+")" : "";
-  connection.query("SELECT * FROM offices INNER JOIN options_offices ON link_office = office_id LEFT JOIN objects ON object_id = office_object WHERE office_publish = 1 AND office_show = 1"+price+area+meanings, function (error, result, fields) {
+  connection.query("SELECT * FROM offices INNER JOIN options_offices ON link_office = office_id LEFT JOIN objects ON object_id = office_object WHERE office_publish = 1 AND office_show = 1 AND object_publish = 1 AND object_show = 1"+price+area+meanings, function (error, result, fields) {
     var output = [];
 
     for (var i = result.length-1; i >= 0; i--) {

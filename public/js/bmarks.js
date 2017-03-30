@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  
+
   var bmarksString = getCookie('bmarks'),
       bmarksArray = (bmarksString.length > 0) ? bmarksString.split(',') : [];
   $("#main-menu ul li a span.active").text(bmarksArray.length);
@@ -19,17 +19,20 @@ $(document).ready(function () {
     if (bmarksArray.length) {
       if (bmarksArray.indexOf(currentOfficeId) >= 0) {
         trigger.text('Удалить из закладок');
+        trigger.removeClass('grayimg');
         // console.log(getCookie('bmarks'));
         $("#main-menu ul li a span.active").text(bmarksArray.length);
         return true;
       }else{
         trigger.text('Добавить в закладки');
+        trigger.addClass('grayimg');
         // console.log(getCookie('bmarks'));
         $("#main-menu ul li a span.active").text(bmarksArray.length);
         return false;
       };
     }else{
       trigger.text('Добавить в закладки');
+      trigger.addClass('grayimg');
       // console.log(getCookie('bmarks'));
       $("#main-menu ul li a span.active").text(bmarksArray.length);
       return false;
