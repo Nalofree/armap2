@@ -175,21 +175,21 @@ $(document).ready(function () {
           console.log(data,status,error);
           $('#filter-result').empty();
           if (data.count > 0) {
-            for (var i = 0; i < data.objects.length; i++) {
-              for (var j = 0; j < data.objects[i].object_offices.length; j++) {
-                var adres = data.objects[i].object_offices[j].office_adres;
-                var name = data.objects[i].object_offices[j].office_name;
-                var officeItem = '<article><a href="office-'+data.objects[i].object_offices[j].office_id+'">\
-                  <div class="result-img"><img src="images/obj/'+data.objects[i].object_offices[j].image_filename+'"/></div>\
+            // for (var i = 0; i < data.objects.length; i++) {
+              for (var j = 0; j < data.offices.length; j++) {
+                var adres = data.offices[j].object_adres;
+                var name = data.offices[j].office_name;
+                var officeItem = '<article><a href="office-'+data.offices[j].office_id+'">\
+                  <div class="result-img"><img src="/image'+data.offices[j].office_cover+'"/></div>\
                   <div class="result-desc">\
                     <h4>'+name+'</h4>\
                     <p>'+adres+'</p>\
                     <section>\
                       <div class="result-price">\
-                        <p>Цена за м<sup>2</sup>: <br/><span>'+data.objects[i].object_offices[j].office_subprice+' р.</span></p>\
+                        <p>Цена за м<sup>2</sup>: <br/><span>'+data.offices[j].office_subprice+' р.</span></p>\
                       </div>\
                       <div class="result-square">\
-                        <p>Площадь: <br/><span>'+data.objects[i].object_offices[j].office_area+' м<sup>2</sup></span></p>\
+                        <p>Площадь: <br/><span>'+data.offices[j].office_area+' м<sup>2</sup></span></p>\
                       </div>\
                     </section>\
                   </div></a></article>';
@@ -199,22 +199,32 @@ $(document).ready(function () {
                 $(".filter-btn").removeClass('active');
                 $("#filter").removeClass('active in');
               }
-            }
+            // }
+            console.log(data.objects);
             ymaps.ready(function () {
               placemarks = [];
+              var params=[];
+              for (var variable in data.params) {
+                if (data.params.hasOwnProperty(variable)) {
+                  params.push(variable + "=" + data.params[variable]);
+                }
+              }
+              console.log(params);
+              var paramsquery = params.join("&");
               for (var i = 0; i < data.objects.length; i++) {
                   var coordss=data.objects[i].object_coords.split(',');
                   var coordsArr = [];
                   coordsArr[0] = parseFloat(coordss[0]);
                   coordsArr[1] = parseFloat(coordss[1]);
-                  var officeCountByObject = data.objects[i].object_offices.length;
+                  var officeCountByObject = data.objects[i].count;
+                  // var officeCountByObject = 0;
                   officeCountByObject = officeCountByObject.toString();
                   var adres = data.objects[i].object_adres;
                   var name = data.objects[i].object_name;
                   placemarks[i] = new ymaps.Placemark(coordsArr,{
                     balloonContentHeader: name,
                     balloonContentBody: adres,
-                    balloonContentFooter: '<a href="/object-'+data.objects[i].object_id+'" class="balloon-count-link">Найдено помещений: '+officeCountByObject+'</a><a href="/object-'+data.objects[i].object_id+'" class="balloon-more-link">Подробнее</a>',
+                    balloonContentFooter: '<a href="/object-'+data.objects[i].object_id+'?'+paramsquery+'" class="balloon-count-link">Найдено помещений: '+officeCountByObject+'</a><a href="/object-'+data.objects[i].object_id+'" class="balloon-more-link">Подробнее</a>',
                     hintContent: '<strong>'+name+'</strong><br>'+adres,
                     clusterCaption: name,
                     iconContent: officeCountByObject

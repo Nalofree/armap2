@@ -67,6 +67,35 @@ if($("#filter").length) {
 		priceSlider.noUiSlider.set(valArr);
 	});
 
+	//Фильтр в списке помещений
+
+	var strGET = window.location.search.replace( '?', '');
+	arrGET = strGET.split('&');
+	console.log(arrGET);
+	var objGET = {};
+	for (item of arrGET) {
+	  objGET[item.split("=")[0]] = item.split("=")[1];
+	}
+
+	console.log(objGET);
+	if(arrGET.length > 0) {
+		var squareSlider = document.getElementById('square-slider');
+		var priceSlider = document.getElementById('price-slider');
+	  squareSlider.noUiSlider.set([parseInt(objGET.minarea),parseInt(objGET.maxarea)]);
+	  priceSlider.noUiSlider.set([parseInt(objGET.minprice),parseInt(objGET.maxprice)]);
+
+		var meanings = objGET.meanings.split(",");
+
+		$('input[name="meanings"]').each(function () {
+			var cb = $(this);
+			for (meaningsid of meanings) {
+				if (cb.val() == meaningsid) {
+					cb.prop("checked", true);
+				}
+			}
+		});
+	}
+
 	// $("#filter .filtr-it").click(function (e) {
 	// 	e.preventDefault();
 	// 	var data = {};

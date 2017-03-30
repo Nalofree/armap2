@@ -1018,22 +1018,42 @@ app.post('/my', function (req,res) {
 });
 
 app.get('/object-:object_id', auth, function (req,res) {
+  console.log(req.query);
   connection.query('SELECT * FROM objects WHERE object_id = '+req.params.object_id+' AND object_show = 1 AND object_publish = 1', function (error,result,fields) {
     if (error) throw error;
     object = result[0];
     // console.log(result);
     // connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover WHERE office_show = 1 AND office_object = '+req.params.object_id, function (error,result,fields) {
-    connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover WHERE office_publish = 1 AND office_show = 1 AND office_object = '+req.params.object_id, function (error,result,fields) {
+    var price = req.query.maxprice && req.query.minprice ? " AND (office_subprice BETWEEN "+parseInt(req.query.minprice)+" AND "+parseInt(req.query.maxprice)+") " : "";
+    var area = req.query.minarea && req.query.maxarea ? " AND (office_area BETWEEN "+parseInt(req.query.minarea)+" AND "+parseInt(req.query.maxarea)+") " : "";
+    var meanings = req.query.meanings ? " AND link_option IN ("+req.query.meanings+")" : "";
+    //  console.log('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover WHERE office_publish = 1 AND office_show = 1 AND office_object = '+req.params.object_id+price+area);
+    connection.query('SELECT * FROM offices INNER JOIN options_offices ON link_office = office_id LEFT JOIN images ON image_id = office_cover WHERE office_publish = 1 AND office_show = 1 AND office_object = '+req.params.object_id+price+area+meanings, function (error,result,fields) {
       if (error) throw error;
+      for (var i = result.length-1; i >= 0; i--) {
+        if ( (i > 0) && (result[i].office_id === result[i-1].office_id)) {
+          result.splice(i,1);
+        }
+      }
       object.object_offices = result;
-      // console.log(result);
+      console.log(result);
       // console.log("role",res.role);
-      res.render('object.jade',{
-        role: res.role,
-        username: res.userfullname,
-        userid: res.userid,
-        object: object
+      connection.query('SELECT * FROM options WHERE option_type = 1',function (error,result,fields) {
+        if (error) throw error;
+        meanings = result;
+        // connection.query('SELECT office_id, office_name, office_area, office_subprice, object_name FROM offices LEFT JOIN objects ON object_id = office_object WHERE office_publish = 1 AND office_show = 1 AND object_publish = 1', function (error,result,fields) {
+        //   if (error) throw error;
+        //   console.log(result);
+        res.render('object.jade',{
+          role: res.role,
+          username: res.userfullname,
+          userid: res.userid,
+          object: object,
+          meanings: meanings
+        });
+        // });
       });
+
     });
   });
 });
@@ -1201,7 +1221,7 @@ app.post('/recuveofc', function (req, res) {
   });
 });
 
-app.get('/moder', auth,function (req,res) {
+app.get('/moder', auth, function (req,res) {
   if (res.role == 'admin' || res.role == 'moder') {
     connection.query('SELECT object_id, object_name, object_type, object_adres, object_author, object_id, object_cover, object_comment, object_create, object_city, object_type, object_publish, image_filename, objtype_name, objtype_id FROM objects LEFT JOIN images ON image_id = object_cover LEFT JOIN objtypes ON object_type = objtype_id WHERE object_city = '+req.cookies.city_id, function (error, result, fields) {
       if (error) throw error;
@@ -1706,157 +1726,199 @@ app.post('/filtred',function (req,res) {
   // console.log(req.body.price);
   // console.log(req.body.area);
   // console.log(req.body.city);
-  // var price = req.body.price ? " AND office_subprice BETWEEN "+req.body.price[0]+" AND "+req.body.price[1]+" " : "";
-  // var area = req.body.area ? " AND office_area BETWEEN "+req.body.area[0]+" AND "+req.body.area[1]+" " : "";
-  // // var meanings = req.body.meanings ? " AND option_id IN ("+req.body.meanings.join(",")+")" : "";
-  // var meanings = req.body.meanings ? " AND link_option IN ("+req.body.meanings.join(",")+")" : "";
-  // // console.log(meanings);
-  // // connection.query("SELECT * FROM offices LEFT JOIN objects ON office_object = object_id LEFT JOIN options_offices ON link_office = office_id LEFT JOIN options ON option_id = link_option WHERE object_publish = 1 AND object_show = 1 AND office_publish = 1 AND office_show = 1 AND object_city = "+req.body.city, function (error, result, fields) {
-  // //   console.log("result: "+result);
-  // //   res.send(result);
-  // // });
-  // // console.log("SELECT * FROM offices WHERE office_publish = 1 AND office_show = 1"+price+area);
-  // connection.query("SELECT * FROM offices INNER JOIN options_offices ON link_office = office_id LEFT JOIN objects ON object_id = office_object WHERE office_publish = 1 AND office_show = 1"+price+area+meanings, function (error, result, fields) {
-  //   // console.log("result: "+result);
-  //   for (let item of result) {
-  //     console.log(" ");
-  //     console.log(item);
-  //   }
-  //   res.send(result);
-  // });
+  var params = {
+    meanings: req.body.meanings ? req.body.meanings.join(",") : "",
+    minprice: req.body.price[0],
+    maxprice: req.body.price[1],
+    minarea: req.body.area[0],
+    maxarea: req.body.area[1],
+    city: req.body.city
+  }
+  var price = req.body.price ? " AND office_subprice BETWEEN\
+   "+req.body.price[0]+" AND "+req.body.price[1]+" " : "";
+  var area = req.body.area ? " AND office_area BETWEEN\
+   "+req.body.area[0]+" AND "+req.body.area[1]+" " : "";
+  var meanings = req.body.meanings ? " AND link_option IN\
+   ("+req.body.meanings.join(",")+")" : "";
+  connection.query("SELECT * FROM offices INNER JOIN options_offices ON link_office = office_id LEFT JOIN objects ON object_id = office_object WHERE office_publish = 1 AND office_show = 1"+price+area+meanings, function (error, result, fields) {
+    var output = [];
+
+    for (var i = result.length-1; i >= 0; i--) {
+      if ( (i > 0) && (result[i].office_id === result[i-1].office_id)) {
+        result.splice(i,1);
+      }
+    }
+
+    var objects = [];
+
+    for (var i = 0; i < result.length; i++) {
+      objects.push(result[i]);
+    }
+
+    for (var i = objects.length-1; i >= 0 ; i--) {
+      objects[i].count = 0;
+      for (var j = 0; j < result.length; j++) {
+        if (objects[i].object_id == result[j].object_id) {
+          objects[i].count++;
+        }
+      }
+    }
+
+    function compareNumeric(a, b) {
+      if (a.object_id > b.object_id) return 1;
+      if (a.object_id < b.object_id) return -1;
+    }
+
+    objects.sort(compareNumeric);
+
+    for (var i = objects.length-1; i >= 0; i--) {
+      if ( (i > 0) && (objects[i].object_id == objects[i-1].object_id)) {
+        objects.splice(i,1);
+      }
+    }
+
+    // res.send(result);
+    res.send({
+      objects: objects,
+      offices: result,
+      count: result.length,
+      messege: 'Seccess, it\'s works',
+      params: params
+    });
+  });
 
   // console.log(req.body.city);
 
   //Kiil filtr
 
-  var objByCity;
-  connection.query('SELECT object_id FROM objects WHERE object_city = '+req.body.city+' AND object_publish = 1 AND object_show = 1', function (error, result, fields) {// LIKE "%'+req.body.city+'%"
-    if (error) throw error;
-    var objByCityArr = [];
-    if (result.length > 0) {
-      for (var i = 0; i < result.length; i++) {
-        objByCityArr.push(result[i].object_id);
-      }
-      objByCity = objByCityArr.join(',');
-      // console.log(objByCity);
-      if (req.body.meanings > 0) {
-        var meaningsString = req.body.meanings.join(',');
-        connection.query('SELECT link_office FROM options_offices WHERE link_option IN ('+meaningsString+')', function (error,result,fields) {
-          if (error) throw error;
-          var officesIdArr = [];
-          // console.log(result);
-          if (result.length<=0) {
-            res.send({
-              count: 0,
-              messege: 'Empty answer, nothing to show'
-            });
-          }else{
-            result.forEach(function(item, i, arr) {
-              officesIdArr.push(item.link_office);
-            });
-            officesIdString = officesIdArr.join(',');
-            connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover WHERE (office_id IN ('+officesIdString+')) AND (office_area BETWEEN '+req.body.area[0]+' AND '+req.body.area[1]+')\
-            AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+') AND office_publish = 1 AND office_show = 1', function (error,result,fields) { // AND (office_object IN ('+objByCity+'))
-              if (error) throw error;
-              if (result.length<=0) {
-                res.send({
-                  count: 0,
-                  messege: 'Empty answer, nothing to show'
-                });
-              }else{
-                var offices = result;
-                objIds = [];
-                for (var i = 0; i < result.length; i++) {
-                  objIds.push(result[i].office_object);
-                }
-                objIdsString = objIds.join(',');
-                connection.query('SELECT * FROM objects WHERE object_id IN ("'+objIdsString+'") AND object_publish = 1 AND object_show = 1', function (error,result,fields) { // WHERE object_id IN('+objIdsString+')
-                  if (error) throw error;
-                  var objects = result;
-                  for (var i = 0; i < objects.length; i++) {
-                    var ofccount = 0;
-                    objects[i].object_offices = [];
-                    for (var j = 0; j < offices.length; j++) {
-                      if (offices[j].office_object === objects[i].object_id) {
-                        ofccount++;
-                        var adres = objects[i].object_adres;
-                        objects[i].offices_count = ofccount;
-                        offices[j].office_adres = adres;
-                        // console.log(offices[j].office_name);
-                        objects[i].object_offices.push(offices[j]);
-                      }
-                    }
-                    objects[i].offices_count = objects[i].object_offices.length;
-                    // console.log("ofccount: ", ofccount);
-                  }
-                  res.send({
-                    objects: objects,
-                    offices: offices,
-                    count: result.length,
-                    messege: 'Seccess, it\'s works'
-                  });
-                });
-              }
-            });
-          }
-        });
-      }else{
-        connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover  WHERE (office_area BETWEEN '+req.body.area[0]+' AND '+req.body.area[1]+')\
-        AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+') AND office_publish = 1 AND office_show = 1', function (error,result,fields) { // AND (office_object IN ('+objByCity+'))
-          if (error) throw error;
-          // console.log(result.length);
-          if (result.length<=0) {
-            res.send({
-              count: 0,
-              messege: 'Empty offices answer, nothing to show'
-            });
-          }else{
-            var offices = result;
-            objIds = [];
-            // console.log("offices: ", result.length);
-            for (var i = 0; i < offices.length; i++) {
-              objIds.push(offices[i].office_object);
-            }
-            objIdsString = objIds.join(',');
-            // console.log('objIdsString', objIdsString);
-            connection.query('SELECT * FROM objects WHERE object_id IN ('+objIdsString+') AND object_publish = 1 AND object_show = 1', function (error,result,fields) { // WHERE object_id IN('+objIdsString+')
-              if (error) throw error;
-              var objects = result;
-              // console.log("objects",objects);
-              for (var i = 0; i < objects.length; i++) {
-                var ofccount = 0;
-                objects[i].object_offices = [];
-                for (var j = 0; j < offices.length; j++) {
-                  if (offices[j].office_object === objects[i].object_id) {
-                    ofccount++;
-                    var adres = objects[i].object_adres;
-                    objects[i].offices_count = ofccount;
-                    offices[j].office_adres = adres;
-                    // console.log(offices[j].office_name);
-                    objects[i].object_offices.push(offices[j]);
-                  }
-                }
-                objects[i].offices_count = objects[i].object_offices.length;
-                // console.log("ofccount: ", ofccount);
-              }
-              // console.log(objects);
-              res.send({
-                objects: objects,
-                offices: offices,
-                count: result.length,
-                messege: 'Seccess, it\'s works'
-              });
-            });
-          }
-        });
-      }
-    }else{
-      res.send({
-        count: 0,
-        messege: 'Empty answer, nothing to show'
-      });
-    }
-  });
+  // var objByCity;
+  // connection.query('SELECT object_id FROM objects WHERE object_city = '+req.body.city+' AND object_publish = 1 AND object_show = 1', function (error, result, fields) {// LIKE "%'+req.body.city+'%"
+  //   if (error) throw error;
+  //   var objByCityArr = [];
+  //   if (result.length > 0) {
+  //     for (var i = 0; i < result.length; i++) {
+  //       objByCityArr.push(result[i].object_id);
+  //     }
+  //     objByCity = objByCityArr.join(',');
+  //     // console.log(objByCity);
+  //     if (req.body.meanings > 0) {
+  //       var meaningsString = req.body.meanings.join(',');
+  //       connection.query('SELECT link_office FROM options_offices WHERE link_option IN ('+meaningsString+')', function (error,result,fields) {
+  //         if (error) throw error;
+  //         var officesIdArr = [];
+  //         // console.log(result);
+  //         if (result.length<=0) {
+  //           res.send({
+  //             count: 0,
+  //             messege: 'Empty answer, nothing to show'
+  //           });
+  //         }else{
+  //           result.forEach(function(item, i, arr) {
+  //             officesIdArr.push(item.link_office);
+  //           });
+  //           officesIdString = officesIdArr.join(',');
+  //           connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover WHERE (office_id IN ('+officesIdString+')) AND (office_area BETWEEN '+req.body.area[0]+' AND '+req.body.area[1]+')\
+  //           AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+') AND office_publish = 1 AND office_show = 1', function (error,result,fields) { // AND (office_object IN ('+objByCity+'))
+  //             if (error) throw error;
+  //             if (result.length<=0) {
+  //               res.send({
+  //                 count: 0,
+  //                 messege: 'Empty answer, nothing to show'
+  //               });
+  //             }else{
+  //               var offices = result;
+  //               objIds = [];
+  //               for (var i = 0; i < result.length; i++) {
+  //                 objIds.push(result[i].office_object);
+  //               }
+  //               objIdsString = objIds.join(',');
+  //               connection.query('SELECT * FROM objects WHERE object_id IN ("'+objIdsString+'") AND object_publish = 1 AND object_show = 1', function (error,result,fields) { // WHERE object_id IN('+objIdsString+')
+  //                 if (error) throw error;
+  //                 var objects = result;
+  //                 for (var i = 0; i < objects.length; i++) {
+  //                   var ofccount = 0;
+  //                   objects[i].object_offices = [];
+  //                   for (var j = 0; j < offices.length; j++) {
+  //                     if (offices[j].office_object === objects[i].object_id) {
+  //                       ofccount++;
+  //                       var adres = objects[i].object_adres;
+  //                       objects[i].offices_count = ofccount;
+  //                       offices[j].office_adres = adres;
+  //                       // console.log(offices[j].office_name);
+  //                       objects[i].object_offices.push(offices[j]);
+  //                     }
+  //                   }
+  //                   objects[i].offices_count = objects[i].object_offices.length;
+  //                   // console.log("ofccount: ", ofccount);
+  //                 }
+  //                 res.send({
+  //                   objects: objects,
+  //                   offices: offices,
+  //                   count: result.length,
+  //                   messege: 'Seccess, it\'s works'
+  //                 });
+  //               });
+  //             }
+  //           });
+  //         }
+  //       });
+  //     }else{
+  //       connection.query('SELECT * FROM offices LEFT JOIN images ON image_id = office_cover  WHERE (office_area BETWEEN '+req.body.area[0]+' AND '+req.body.area[1]+')\
+  //       AND (office_subprice BETWEEN '+req.body.price[0]+' AND '+req.body.price[1]+') AND office_publish = 1 AND office_show = 1', function (error,result,fields) { // AND (office_object IN ('+objByCity+'))
+  //         if (error) throw error;
+  //         // console.log(result.length);
+  //         if (result.length<=0) {
+  //           res.send({
+  //             count: 0,
+  //             messege: 'Empty offices answer, nothing to show'
+  //           });
+  //         }else{
+  //           var offices = result;
+  //           objIds = [];
+  //           // console.log("offices: ", result.length);
+  //           for (var i = 0; i < offices.length; i++) {
+  //             objIds.push(offices[i].office_object);
+  //           }
+  //           objIdsString = objIds.join(',');
+  //           // console.log('objIdsString', objIdsString);
+  //           connection.query('SELECT * FROM objects WHERE object_id IN ('+objIdsString+') AND object_publish = 1 AND object_show = 1', function (error,result,fields) { // WHERE object_id IN('+objIdsString+')
+  //             if (error) throw error;
+  //             var objects = result;
+  //             // console.log("objects",objects);
+  //             for (var i = 0; i < objects.length; i++) {
+  //               var ofccount = 0;
+  //               objects[i].object_offices = [];
+  //               for (var j = 0; j < offices.length; j++) {
+  //                 if (offices[j].office_object === objects[i].object_id) {
+  //                   ofccount++;
+  //                   var adres = objects[i].object_adres;
+  //                   objects[i].offices_count = ofccount;
+  //                   offices[j].office_adres = adres;
+  //                   // console.log(offices[j].office_name);
+  //                   objects[i].object_offices.push(offices[j]);
+  //                 }
+  //               }
+  //               objects[i].offices_count = objects[i].object_offices.length;
+  //               // console.log("ofccount: ", ofccount);
+  //             }
+  //             // console.log(objects);
+  //             res.send({
+  //               objects: objects,
+  //               offices: offices,
+  //               count: result.length,
+  //               messege: 'Seccess, it\'s works'
+  //             });
+  //           });
+  //         }
+  //       });
+  //     }
+  //   }else{
+  //     res.send({
+  //       count: 0,
+  //       messege: 'Empty answer, nothing to show'
+  //     });
+  //   }
+  // });
 
   // res.send(req.body);
   //meaningsString = req.body.meanings.join(',');

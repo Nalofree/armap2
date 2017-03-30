@@ -139,6 +139,8 @@ $(".regnow").click(function () {
 });
 
 
+
+
 //Создание объекта
 /*var createObject = $(".kab-create-obj");
  createObject.hide();

@@ -7,43 +7,25 @@ block content
       article
         a.show-search(href='#') Показать фильтр
         // Фильтр
-        article#filter.tab-pane.fade.active.in(role='tabpanel')
+        form(method="GET", action="/object-"+object.object_id)#filter.tab-pane.fade.active.in(role='tabpanel')
           h3 Назначение:
           p Для чего вы ищите помещение?
           .filter-object-type
-            .checkbox
-              label
-                input(type='checkbox')
-                | Торговый павильон
-            .checkbox
-              label
-                input(type='checkbox')
-                | Свободного назначения
-            .checkbox
-              label
-                input(type='checkbox')
-                | Склад
-            .checkbox
-              label
-                input(type='checkbox')
-                | Кафе
-            .checkbox
-              label
-                input(type='checkbox')
-                | Магазин
-            .checkbox
-              label
-                input(type='checkbox')
-                | Офис
+            -for (var i = 0; i < meanings.length; i++)
+              .checkbox
+                label
+                  input(type='checkbox', value= meanings[i].option_id, data-title= meanings[i].option_id, name='meanings')
+                  - option_name = meanings[i].option_name
+                  span= option_name
           section.filter-object-square
             h3 Площадь:
             p Какая площадь вам необходима?
             .ui-slider
               section
-                input.min(type='text', value='20м')
-                input.max(type='text', value='20м')
+                input.min(type='text', value='20м', name="minarea")
+                input.max(type='text', value='20м', name="maxarea")
               #square-slider
-          section
+          section.filter-object-price
             h3 Цена:
             p
               | Какая цена за 1м
@@ -51,8 +33,8 @@ block content
               |  вас интересует?
             .ui-slider
               section
-                input.min(type='text', value='20м')
-                input.max(type='text', value='20м')
+                input.min(type='text', value='20м', name="minprice")
+                input.max(type='text', value='20м', name="maxprice")
               #price-slider
               p.price-desc
                 | Цена за всю площадь:
@@ -60,7 +42,7 @@ block content
                 |  -
                 span.max-price  150000р
           section
-            button.btn Применить
+            button.btn(type="submit") Применить
       article#search-result-block
         // Сортировка и стили элементов
         #search-sorting
