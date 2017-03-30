@@ -59,7 +59,7 @@ block content
         section#obj-summ
           p
             span Общая стоимость
-            span= (office.office_subprice*office.office_area) + ' р.'
+            span= (office.office_subprice*office.office_area).toFixed(2) + ' р.'
           p
             span Высота потолков
             span= office.office_height == null ? 0+'м' : office.office_height+'м'
