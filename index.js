@@ -398,7 +398,7 @@ app.get('/logout',function (req,res) {
 
 app.post('/confirmobject', function (req,res) {
   var coords = req.body.objectcoords ? ", object_coords = '" + req.body.objectcoords + "'" : "";
-  var cover = req.body.objectcover ? ", object_cover = " + req.body.objectcover + " " : ""; 
+  var cover = req.body.objectcover ? ", object_cover = " + req.body.objectcover + " " : "";
 
   console.log("UPDATE objects SET object_publish = 1, object_name = '"+req.body.objectname+"', object_type = "+req.body.objecttype+", object_adres = '"+req.body.objectadres+"' "+coords+cover+" WHERE object_id = "+req.body.objectid);
   connection.query("UPDATE objects SET object_publish = 1, object_name = '"+req.body.objectname+"', object_type = "+req.body.objecttype+", object_adres = '"+req.body.objectadres+"' "+coords+cover+" WHERE object_id = "+req.body.objectid ,
@@ -1227,6 +1227,7 @@ app.get('/moder', auth, function (req,res) {
   if (res.role == 'admin' || res.role == 'moder') {
     connection.query('SELECT object_id, object_name, object_type, object_adres, object_author, object_id, object_cover, object_comment, object_create, object_city, object_type, object_publish, image_filename, objtype_name, objtype_id FROM objects LEFT JOIN images ON image_id = object_cover LEFT JOIN objtypes ON object_type = objtype_id WHERE object_city = '+req.cookies.city_id, function (error, result, fields) {
       if (error) throw error;
+      console.log(result);
       var objects = result;
       if (objects.length > 0) {
         var objTypeIdsArr = [];
@@ -1242,9 +1243,9 @@ app.get('/moder', auth, function (req,res) {
               time = hours+':'+minutes;
           objects[i].object_create = day+'.'+month+'.'+year+' '+time;
           // objects[i].object_adres = objects[i].object_adres
-          objAdresArr = objects[i].object_adres.split(",");
-          objAdresArr.splice(0,1);
-          objects[i].object_adres = objAdresArr.join(',');
+          // objAdresArr = objects[i].object_adres.split(",");
+          // objAdresArr.splice(0,1);
+          // objects[i].object_adres = objAdresArr.join(',');
           objects[i].object_offices = [];
           objects[i].object_nopublishofccount = 0;
           objects[i].object_typename = "";

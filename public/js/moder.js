@@ -7,7 +7,7 @@ ymaps.ready(function () {
     var myGeocoder2 = ymaps.geocode("Россия, "+ $("#city").text() + ',' + $(this).val()),
     autoadres,
     autoccords;
-    console.log("Россия, "+ $("#city").text() + ',' + $(this).val());
+    // console.log("Россия, "+ $("#city").text() + ',' + $(this).val());
     myGeocoder2.then(
       function (res) {
         autoccords = res.geoObjects.get(0).geometry.getCoordinates();
@@ -35,6 +35,8 @@ ymaps.ready(function () {
 
 $(document).ready(function () {
 
+  console.log($("input.object-address").val());
+
   $(".moder-object_unconfirm").click(function () {
     var objData = JSON.parse($(this).attr('data-title'));
     $(".modal-header-objectname").text('( '+objData.object_name+' )');
@@ -53,6 +55,7 @@ $(document).ready(function () {
       objectcoords: $(this).closest(".item-object-info").find(".object-coords").val() ? $(this).closest(".item-object-info").find(".object-coords").val() : null,
       objectcover: $(this).closest(".item-object-info").find("input.object-cover").val() ? $(this).closest(".item-object-info").find("input.object-cover").val() : null
     };
+    console.log(btn.closest(".mod-object-list-item").find("input.object-address").val());//логируем адрес при каждо действии
     console.log(objData);
     $(".close-layout").fadeIn();
     $.ajax({
@@ -68,11 +71,13 @@ $(document).ready(function () {
           $(this).closest(".item-object-more").find('.object-status-note').text("Подтвержден");
         });
         btn.closest(".item-object-more").prev(".item-desc").find(".status.new").removeClass("orange-text");
+        // item-object-info
+        console.log(btn.closest(".mod-object-list-item").find("input.object-address").val());//логируем адрес при каждо действии
         btn.closest(".item-object-more").prev(".item-desc").find(".status.new").removeClass("red-text");
         btn.closest(".item-object-more").prev(".item-desc").find(".status.new").text("Подтвержден");
         if (objData.objectcover) {
           btn.closest(".mod-object-list-item").find(".object-info-img img").attr("src","/uplimage"+data.objinfo.objectcover);
-        }        
+        }
         $(".mod-object-list-item").find(".add-obj-photos-items").empty();
         $(".mod-object-list-item").find(".changeobjimage").val(null);
         //changeobjimage
@@ -144,13 +149,16 @@ $(document).ready(function () {
 
   $(".change-solution-btn").click(function (e) {
     e.preventDefault();
+    var btn = $(this);
     $(this).closest(".item-object-info.done-solution").fadeOut(function () {
       $(this).prev(".item-object-info.change-solution").fadeIn();
     });
+    console.log(btn.closest(".mod-object-list-item").find("input.object-address").val());//логируем адрес при каждо действии
   });
 
   $('#room-square, #room-price, #room-height').keyup(function () {
     var string = $(this).val();
+    var btn = $(this);
     // $(this).val(string.replace(/[^\d(\\.|\\,)]+/g,""));
     if (/^[0-9]+(\.?|\,?)[0-9]{0,2}$/g.test(string)) {
       console.log(string);
@@ -159,6 +167,7 @@ $(document).ready(function () {
     }else{
       $(this).val(string.substring(0,string.length-1));
     }
+    console.log(btn.closest(".mod-object-list-item").find("input.object-address").val());//логируем адрес при каждо действии
   });
 
   //.unconfirmofcphoto-show
@@ -177,6 +186,7 @@ $(document).ready(function () {
       ucimgs.push($(this).closest(".image").find("img").attr("src"));
     });
     console.log(ucimgs);
+    console.log(btn.closest(".mod-object-list-item").find("input.object-address").val());//логируем адрес при каждо действии
   });
 
   //.unconfirmofcphoto
