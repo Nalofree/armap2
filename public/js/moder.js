@@ -50,9 +50,10 @@ $(document).ready(function () {
       objectname: $(this).closest(".item-object-info").find(".object-name").val(),
       objecttype: $(this).closest(".item-object-info").find(".object-type").val(),
       objectadres: $(this).closest(".item-object-info").find(".object-address").val(),
-      objectcoords: $(this).closest(".item-object-info").find(".object-coords").val() != '' ? $(this).closest(".item-object-info").find(".object-coords").val() : null
+      objectcoords: $(this).closest(".item-object-info").find(".object-coords").val() ? $(this).closest(".item-object-info").find(".object-coords").val() : null,
+      objectcover: $(this).closest(".item-object-info").find("input.object-cover").val() ? $(this).closest(".item-object-info").find("input.object-cover").val() : null
     };
-    // console.log(objData);
+    console.log(objData);
     $(".close-layout").fadeIn();
     $.ajax({
       url: '/confirmobject',
@@ -69,6 +70,12 @@ $(document).ready(function () {
         btn.closest(".item-object-more").prev(".item-desc").find(".status.new").removeClass("orange-text");
         btn.closest(".item-object-more").prev(".item-desc").find(".status.new").removeClass("red-text");
         btn.closest(".item-object-more").prev(".item-desc").find(".status.new").text("Подтвержден");
+        btn.closest(".mod-object-list-item").find(".object-info-img img").attr("src","/uplimage"+data.objinfo.objectcover).text("Подтвержден");
+        $(".mod-object-list-item").find(".add-obj-photos-items").empty();
+        $(".mod-object-list-item").find(".changeobjimage").val(null);
+        //changeobjimage
+        btn.closest(".item-object-info").find("input.object-cover").val();
+        // object-info-img
         $(".close-layout").fadeOut();
       },
       error: function ( data, status, error ) {

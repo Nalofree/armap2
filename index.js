@@ -397,9 +397,11 @@ app.get('/logout',function (req,res) {
 });
 
 app.post('/confirmobject', function (req,res) {
-  var coords = req.body.objectcoords != null ? ", object_coords = '" + req.body.objectcoords + "'" : "";
-  // console.log("UPDATE objects SET object_publish = 1, object_name = '"+req.body.objectname+"', object_type = "+req.body.objecttype+", object_adres = '"+req.body.objectadres+"' "+coords+" WHERE object_id = "+req.body.objectid);
-  connection.query("UPDATE objects SET object_publish = 1, object_name = '"+req.body.objectname+"', object_type = "+req.body.objecttype+", object_adres = '"+req.body.objectadres+"' "+coords+" WHERE object_id = "+req.body.objectid ,
+  var coords = req.body.objectcoords ? ", object_coords = '" + req.body.objectcoords + "'" : "";
+  var cover = req.body.objectcover ? ", object_cover = " + req.body.objectcover + " " : ""; 
+
+  console.log("UPDATE objects SET object_publish = 1, object_name = '"+req.body.objectname+"', object_type = "+req.body.objecttype+", object_adres = '"+req.body.objectadres+"' "+coords+cover+" WHERE object_id = "+req.body.objectid);
+  connection.query("UPDATE objects SET object_publish = 1, object_name = '"+req.body.objectname+"', object_type = "+req.body.objecttype+", object_adres = '"+req.body.objectadres+"' "+coords+cover+" WHERE object_id = "+req.body.objectid ,
   function (error, result, fields) {
     if (error) throw error;
     connection.query("SELECT objtype_name FROM objtypes WHERE objtype_id ="+req.body.objecttype, function (error, result, fields) {

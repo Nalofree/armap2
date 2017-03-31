@@ -168,9 +168,10 @@ $(document).ready(function() {
     }
   });
 
-  $('#setobjimages').change(function (e) {
+  $('#setobjimages, .changeobjimage').change(function (e) {
     files = this.files;
     var data = new FormData();
+    var btn = $(this);
     $.each( files, function( key, value ){
         if ((value.type).indexOf('image') >= 0) {
             data.append( 'uplimage', value );
@@ -195,6 +196,7 @@ $(document).ready(function() {
           $('.add-obj-photos-items').empty();
           $('.add-obj-photos-items').append('<div class="add-obj-photos-item"><img src="/uplimage'+data.images[i].image_id+'" alt="" width=180></div>');
           objimagefield = data.images[i].image_id;
+          btn.closest(".item-object-info").find("input.object-cover").val(data.images[i].image_id);
         }
         $('#setimages').val('');
         $(".close-layout").hide();

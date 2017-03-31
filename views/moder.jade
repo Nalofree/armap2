@@ -151,6 +151,7 @@ block content
                           input.object-address(type='text', value= objects[i].object_adres, title= objects[i].object_adres)
                           .moder-object-address__tooltip
                           input(type="hidden").object-coords
+                          input(type="hidden").object-cover
                         //- a(href='#') Показать на карте
                       .object-info-submit
                         p.user
@@ -166,7 +167,13 @@ block content
                         .submit-btn
                           button.disable-btn.moder-object_unconfirm(type='button', data-toggle='modal', data-target='#modal-object', data-title= objects[i].object_id) Отклонить
                           //objects[i].object_id
-                          button.success-btn.moder-object_confirm(data-title= objects[i].object_id) Подтвердить                
+                          button.success-btn.moder-object_confirm(data-title= objects[i].object_id) Подтвердить
+                    .add-obj-photos
+                      .add-obj-photos-desc
+                        h4 Загрузите фотографии
+                        form(method='post', enctype='multipart/form-data', action='/uploadimage')
+                          input.changeobjimage(type='file', name='uplimage', accept="image/*,image/jpeg")
+                      .add-obj-photos-items                
                   //- - else
                   .item-object-info.done-solution
                     // При публикации объекта он приобретает класс object-disabled
