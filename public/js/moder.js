@@ -70,7 +70,9 @@ $(document).ready(function () {
         btn.closest(".item-object-more").prev(".item-desc").find(".status.new").removeClass("orange-text");
         btn.closest(".item-object-more").prev(".item-desc").find(".status.new").removeClass("red-text");
         btn.closest(".item-object-more").prev(".item-desc").find(".status.new").text("Подтвержден");
-        btn.closest(".mod-object-list-item").find(".object-info-img img").attr("src","/uplimage"+data.objinfo.objectcover).text("Подтвержден");
+        if (objData.objectcover) {
+          btn.closest(".mod-object-list-item").find(".object-info-img img").attr("src","/uplimage"+data.objinfo.objectcover);
+        }        
         $(".mod-object-list-item").find(".add-obj-photos-items").empty();
         $(".mod-object-list-item").find(".changeobjimage").val(null);
         //changeobjimage
