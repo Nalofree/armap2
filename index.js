@@ -186,22 +186,75 @@ app.post('/sendmail', function (req,res) {
 
 });
 
+// connection.query("SELCECT user_email FROM users left join roles on user_role = role_id WHERE role_name = 'moder'", function (error,result,fields) {
+//   if (error) throw error;
+//   var addrlist = [];
+//   for (var i = 0; i < result.length; i++) {
+//     addrlist.push(result[i].user_email);
+//   }
+//   var addrliststr = addrlist.join(",");
+//   var mailOptions = {
+//       from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
+//       to: addrliststr, // list of receivers
+//       subject: 'Новая опция помещений', // Subject line
+//       text: 'Появились новые опции помещений', // plain text body
+//       html: '<p>Появились новые опции помещений</p>' // html body
+//   };
+//   transporter.sendMail(mailOptions, (error, info) => {
+//       if (error) {
+//           return console.log(error);
+//           res.send({err: error});
+//       }else{
+//         res.send({some: thing});
+//       }
+//       console.log('Message %s sent: %s', info.messageId, info.response);
+//   });
+// });
+
 app.post("/addoption", auth, function (req, res) {
-  connection.query("SELECT opttype_id FROM opttypes WHERE opttype_name = '"+req.body.opttype+"'", function (error,result,fields) {
+  connection.query("SELCECT user_email FROM users left join roles on user_role = role_id WHERE role_name = 'moder'", function (error,result,fields) {
     if (error) throw error;
-    if (result[0]) {
-      var typeId = result[0].opttype_id;
-      connection.query("INSERT INTO options (option_name, option_type, option_author, option_publish) VALUES ('"+req.body.name+"', "+typeId+", '"+req.session.userid+"', 0) ", function (error,result,fields) {
-        if (error) throw error;
-        res.send({name: req.body.name, opttype: req.body.opttype, optid: result.insertId});
-      })
-    }else{
-      // Error this option type is not exist
-      res.send({err: "Error this option type is not exist",name: req.body.name, opttype: req.body.opttype});
+    var addrlist = [];
+    for (var i = 0; i < result.length; i++) {
+      addrlist.push(result[i].user_email);
     }
+    var addrliststr = addrlist.join(",");
+    connection.query("SELECT opttype_id FROM opttypes WHERE opttype_name = '"+req.body.opttype+"'", function (error,result,fields) {
+      if (error) throw error;
+      if (result[0]) {
+        var typeId = result[0].opttype_id;
+        connection.query("INSERT INTO options (option_name, option_type, option_author, option_publish) VALUES ('"+req.body.name+"', "+typeId+", '"+req.session.userid+"', 0) ", function (error,result,fields) {
+          if (error) throw error;
+          // res.send({name: req.body.name, opttype: req.body.opttype, optid: result.insertId});
+
+          var mailOptions = {
+              from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
+              to: addrliststr, // list of receivers
+              subject: 'Новая опция помещений', // Subject line
+              text: 'Появились новые опции помещений', // plain text body
+              html: '<p>Появились новые опции помещений</p>' // html body
+          };
+          transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                  return console.log(error);
+                  res.send({err: error});
+              }else{
+                res.send({name: req.body.name, opttype: req.body.opttype, optid: result.insertId});
+                // res.send({err: false, message: info.messageId, response: info.response});
+              }
+              console.log('Message %s sent: %s', info.messageId, info.response);
+          });
+
+        });
+      }else{
+        // Error this option type is not exist
+        res.send({err: "Error this option type is not exist",name: req.body.name, opttype: req.body.opttype});
+      }
+    });
   });
+
   // console.log(req.body);
-})
+});
 
 // app.post('/sendmail', function (req,res) {
 //   res.send(req.body);
@@ -1659,67 +1712,73 @@ app.post('/setobjectimage', function (req,res) {
 });
 
 app.post('/addoffice', auth, function(req,res) {
-  connection.query('SELECT * FROM images WHERE image_id ='+req.body.cover[0],function (error,result,fields) {
+  connection.query("SELCECT user_email FROM users left join roles on user_role = role_id WHERE role_name = 'moder'", function (error,result,fields) {
     if (error) throw error;
-    var cover = result[0].image_id;
-    //console.log(cover);
-    var images = req.body.images.join(',');
-    // console.log(req.body);
-    connection.query('INSERT INTO offices (office_name, office_create, office_author, office_area, office_height, office_subprice, office_tacked, office_cover, office_publish, office_object, office_show, office_phone)\
-    VALUES ("'+req.body.header+'", "'+req.body.create+'", "'+res.userid+'", "'+req.body.sqare+'", "'+req.body.height+'", "'+req.body.price+'", 0, '+cover+', 0, "'+req.body.object+'", 1, "'+req.body.phone+'")',
-      function (error,result,fields) {
-        if (error) throw error;
-        var options = req.body.meanings.join(',') + ',' + req.body.included.join(',') + ',' + req.body.advanced.join(',') + ',' + req.body.providers.join(',');
-        options = options.split(',');
-        var valString = [];
-        var officeId = result.insertId;
-        for (var i = 0; i < options.length; i++) {
-          valString.push('('+officeId+','+options[i]+')');
-        };
-        valString = valString.join(',');
-        //console.log(valString);
-        connection.query('INSERT INTO options_offices (link_office,link_option)\
-        VALUES '+valString+'',function (error,result,fields) {
+    var addrlist = [];
+    for (var i = 0; i < result.length; i++) {
+      addrlist.push(result[i].user_email);
+    }
+    var addrliststr = addrlist.join(',');
+    connection.query('SELECT * FROM images WHERE image_id ='+req.body.cover[0],function (error,result,fields) {
+      if (error) throw error;
+      var cover = result[0].image_id;
+      //console.log(cover);
+      var images = req.body.images.join(',');
+      // console.log(req.body);
+      connection.query('INSERT INTO offices (office_name, office_create, office_author, office_area, office_height, office_subprice, office_tacked, office_cover, office_publish, office_object, office_show, office_phone)\
+      VALUES ("'+req.body.header+'", "'+req.body.create+'", "'+res.userid+'", "'+req.body.sqare+'", "'+req.body.height+'", "'+req.body.price+'", 0, '+cover+', 0, "'+req.body.object+'", 1, "'+req.body.phone+'")',
+        function (error,result,fields) {
           if (error) throw error;
-          connection.query('UPDATE images SET image_office = '+officeId+' WHERE image_id IN ('+images+')',function (error,result,fields) {
+          var options = req.body.meanings.join(',') + ',' + req.body.included.join(',') + ',' + req.body.advanced.join(',') + ',' + req.body.providers.join(',');
+          options = options.split(',');
+          var valString = [];
+          var officeId = result.insertId;
+          for (var i = 0; i < options.length; i++) {
+            valString.push('('+officeId+','+options[i]+')');
+          };
+          valString = valString.join(',');
+          //console.log(valString);
+          connection.query('INSERT INTO options_offices (link_office,link_option)\
+          VALUES '+valString+'',function (error,result,fields) {
             if (error) throw error;
-            connection.query('SELECT * FROM images WHERE image_id IN ('+images+')',function (error,result,fields) {
+            connection.query('UPDATE images SET image_office = '+officeId+' WHERE image_id IN ('+images+')',function (error,result,fields) {
               if (error) throw error;
-              for (var i = 0; i < result.length; i++) {
-                fs.renameSync(__dirname+'/public/uploads/'+result[i].image_filename, __dirname+'/public/images/obj/'+result[i].image_filename);
-                //fs.renameSync('uploads/'+result[i].image_min,'public/images/obj/'+result[i].image_min); adding thumbail should be here
-              }
-              // res.send(result);
-              var resultimage = result;
-              connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.userid, function (error,result,fields) {
+              connection.query('SELECT * FROM images WHERE image_id IN ('+images+')',function (error,result,fields) {
                 if (error) throw error;
+                for (var i = 0; i < result.length; i++) {
+                  fs.renameSync(__dirname+'/public/uploads/'+result[i].image_filename, __dirname+'/public/images/obj/'+result[i].image_filename);
+                  //fs.renameSync('uploads/'+result[i].image_min,'public/images/obj/'+result[i].image_min); adding thumbail should be here
+                }
+                // res.send(result);
+                var resultimage = result;
+                connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.userid, function (error,result,fields) {
+                  if (error) throw error;
 
-                var maildata = {};
-                maildata.email = result[0].user_email;
-                maildata.officeid = officeId;
-                var mailOptions = {
-                    from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
-                    to: maildata.email, // list of receivers
-                    subject: 'Новое объявление!', // Subject line
-                    text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, оно будет опубликовано после проверки модератором.', // plain text body
-                    html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали новое <a href="http://рентазавр.рф/office-'+maildata.officeid+'">объявление</a> на ресурс рентазавр.рф, оно будет опубликовано после проверки модератором</p>' // html body
-                };
-                transporter.sendMail(mailOptions, (error, info) => {
-                    if (error) {
-                        return console.log(error);
-                        res.send({err: error});
-                    }else{
-                      res.send({err: false, message: info.messageId, response: info.response, result: resultimage});
-                      // res.send(result);
-                    }
-                    console.log('Message %s sent: %s', info.messageId, info.response);
+                  var maildata = {};
+                  maildata.email = result[0].user_email;
+                  maildata.officeid = officeId;
+                  var mailOptions = {
+                      from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
+                      to: maildata.email + addrliststr, // list of receivers
+                      subject: 'Новое объявление!', // Subject line
+                      text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, оно будет опубликовано после проверки модератором.', // plain text body
+                      html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали новое <a href="http://рентазавр.рф/office-'+maildata.officeid+'">объявление</a> на ресурс рентазавр.рф, оно будет опубликовано после проверки модератором</p>' // html body
+                  };
+                  transporter.sendMail(mailOptions, (error, info) => {
+                      if (error) {
+                          return console.log(error);
+                          res.send({err: error});
+                      }else{
+                        res.send({err: false, message: info.messageId, response: info.response, result: resultimage});
+                        // res.send(result);
+                      }
+                      console.log('Message %s sent: %s', info.messageId, info.response);
+                  });
                 });
-              });
-
+              });              //
             });
-            //
           });
-        });
+      });
     });
   });
 });
