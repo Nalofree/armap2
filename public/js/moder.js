@@ -205,7 +205,7 @@ $(document).ready(function () {
 
     console.log(reasons, comment);
 
-    if ($("#modal-photo .modal-comment textarea").val()) {
+    if ($("#modal-photo .modal-comment textarea").val() && ucimgs) {
       $(".close-layout").show();
 
       $.ajax({
@@ -233,7 +233,7 @@ $(document).ready(function () {
         }
       });
     }else{
-      alert("Комментарий обязателен!");
+      alert("Заполните поле комментария и отметьте фото!");
     }
   });
 
