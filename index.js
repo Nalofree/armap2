@@ -413,37 +413,41 @@ app.post('/confirmobject', function (req,res) {
 });
 
 app.post('/unconfirmobject', auth, function (req, res) {
-  connection.query('UPDATE objects SET object_publish = 2, object_comment = "'+req.body.comment+'" WHERE object_id = '+req.body.objectid,
-  function (error, result, fields) {
+  connection.query('SELECT object_author FROM objects WHERE object_id ='+req.body.object_id, function (error, result, fields) {
     if (error) throw error;
-    // res.send({success: 1});
-    // console.log("res.userid: "+res.userid);
-
-    connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.userid, function (error,result,fields) {
-      // console.log("res.userid: "+res.userid);
+    var objectauthor = result[0].object_author;
+    connection.query('UPDATE objects SET object_publish = 2, object_comment = "'+req.body.comment+'" WHERE object_id = '+req.body.objectid,
+    function (error, result, fields) {
       if (error) throw error;
-      var maildata = {};
-      maildata.email = result[0].user_email;
-      maildata.officeid = req.body.office_id;
-      var mailOptions = {
-          from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
-          to: maildata.email, // list of receivers
-          subject: 'Объявление!', // Subject line
-          text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление на ресурс рентазавр.рф, созданный вами объект отклонён, объявления в нем не опубликованы.\n'+req.body.comment, // plain text body
-          html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали новое объявление на ресурс рентазавр.рф, созданный вами объект отклонён, объявления в нем не опубликованы</p><p>'+req.body.comment+'</p>' // html body
-      };
-      transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-              return console.log(error);
-              res.send({err: error});
-          }else{
-            res.send({err: false, message: info.messageId, response: info.response, success: 1});
-            // res.send(result);
-          }
-          console.log('Message %s sent: %s', info.messageId, info.response);
-      });
-    });
+      // res.send({success: 1});
+      // console.log("res.userid: "+res.userid);
 
+      connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.objectauthor, function (error,result,fields) {
+        // console.log("res.userid: "+res.userid);
+        if (error) throw error;
+        var maildata = {};
+        maildata.email = result[0].user_email;
+        maildata.officeid = req.body.office_id;
+        var mailOptions = {
+            from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
+            to: maildata.email, // list of receivers
+            subject: 'Объявление!', // Subject line
+            text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление на ресурс рентазавр.рф, созданный вами объект отклонён, объявления в нем не опубликованы.\n'+req.body.comment, // plain text body
+            html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали новое объявление на ресурс рентазавр.рф, созданный вами объект отклонён, объявления в нем не опубликованы</p><p>'+req.body.comment+'</p>' // html body
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return console.log(error);
+                res.send({err: error});
+            }else{
+              res.send({err: false, message: info.messageId, response: info.response, success: 1});
+              // res.send(result);
+            }
+            console.log('Message %s sent: %s', info.messageId, info.response);
+        });
+      });
+
+    });
   });
 });
 
@@ -465,141 +469,155 @@ app.post('/objecttoarchive', function (req,res) {
 
 app.post('/confirmoffice', auth, function (req,res) {
   // console.log(req.body);
-  connection.query('UPDATE offices SET office_publish = 1, office_name = "'+req.body.officename+'", office_phone = "'+req.body.officetel+'", office_subprice = '+req.body.officeprice+', office_area = '+req.body.officesquare+', office_height = '+req.body.officeheight+' WHERE office_id = '+req.body.office_id,
-  function (error, result, fields) {
+  connection.query('SELECT office_author FROM offices WHERE office_id ='+req.body.office_id, function (error, result, fields) {
     if (error) throw error;
-    // res.send({success: 1});
-    // var resultimage = result;
-
-    connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.userid, function (error,result,fields) {
+    var officeauthor = result[0].office_author;
+    connection.query('UPDATE offices SET office_publish = 1, office_name = "'+req.body.officename+'", office_phone = "'+req.body.officetel+'", office_subprice = '+req.body.officeprice+', office_area = '+req.body.officesquare+', office_height = '+req.body.officeheight+' WHERE office_id = '+req.body.office_id,
+    function (error, result, fields) {
       if (error) throw error;
-      var maildata = {};
-      maildata.email = result[0].user_email;
-      maildata.officeid = req.body.office_id;
-      var mailOptions = {
-          from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
-          to: maildata.email, // list of receivers
-          subject: 'Объявление!', // Subject line
-          text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление опубликовано.', // plain text body
-          html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали новое <a href="http://рентазавр.рф/office-'+maildata.officeid+'">объявление</a> на ресурс рентазавр.рф, ваше объявление опубликовано</p>' // html body
-      };
-      transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-              return console.log(error);
-              res.send({err: error});
-          }else{
-            res.send({err: false, message: info.messageId, response: info.response, success: 1});
-            // res.send(result);
-          }
-          console.log('Message %s sent: %s', info.messageId, info.response);
-      });
-    });
+      // res.send({success: 1});
+      // var resultimage = result;
 
+      connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + officeauthor, function (error,result,fields) {
+        if (error) throw error;
+        var maildata = {};
+        maildata.email = result[0].user_email;
+        maildata.officeid = req.body.office_id;
+        var mailOptions = {
+            from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
+            to: maildata.email, // list of receivers
+            subject: 'Объявление!', // Subject line
+            text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление опубликовано.', // plain text body
+            html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали новое <a href="http://рентазавр.рф/office-'+maildata.officeid+'">объявление</a> на ресурс рентазавр.рф, ваше объявление опубликовано</p>' // html body
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return console.log(error);
+                res.send({err: error});
+            }else{
+              res.send({err: false, message: info.messageId, response: info.response, success: 1});
+              // res.send(result);
+            }
+            console.log('Message %s sent: %s', info.messageId, info.response);
+        });
+      });
+
+    });
   });
 });
 
 app.post('/refuseoffice', auth, function (req,res) {
-  connection.query('UPDATE offices SET office_publish = 2 WHERE office_id = '+req.body.office_id,
-  function (error, result, fields) {
+  connection.query('SELECT office_author FROM offices WHERE office_id ='+req.body.office_id, function (error, result, fields) {
     if (error) throw error;
-    // res.send({success: 1});
-
-    connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.userid, function (error,result,fields) {
+    var officeauthor = result[0].office_author;
+    connection.query('UPDATE offices SET office_publish = 2 WHERE office_id = '+req.body.office_id,
+    function (error, result, fields) {
       if (error) throw error;
-      var maildata = {};
-      maildata.email = result[0].user_email;
-      maildata.officeid = req.body.office_id;
-      var mailOptions = {
-          from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
-          to: maildata.email, // list of receivers
-          subject: 'Объявление!', // Subject line
-          text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление снято с публиуации', // plain text body
-          html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали <a href="http://рентазавр.рф/office-'+maildata.officeid+'">объявление</a> на ресурс рентазавр.рф, ваше объявление снято с публиуации</p>' // html body
-      };
-      transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-              return console.log(error);
-              res.send({err: error});
-          }else{
-            res.send({err: false, message: info.messageId, response: info.response, success: 1});
-            // res.send(result);
-          }
-          console.log('Message %s sent: %s', info.messageId, info.response);
-      });
-    });
+      // res.send({success: 1});
 
+      connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + officeauthor, function (error,result,fields) {
+        if (error) throw error;
+        var maildata = {};
+        maildata.email = result[0].user_email;
+        maildata.officeid = req.body.office_id;
+        var mailOptions = {
+            from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
+            to: maildata.email, // list of receivers
+            subject: 'Объявление!', // Subject line
+            text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление снято с публиуации', // plain text body
+            html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали <a href="http://рентазавр.рф/office-'+maildata.officeid+'">объявление</a> на ресурс рентазавр.рф, ваше объявление снято с публиуации</p>' // html body
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return console.log(error);
+                res.send({err: error});
+            }else{
+              res.send({err: false, message: info.messageId, response: info.response, success: 1});
+              // res.send(result);
+            }
+            console.log('Message %s sent: %s', info.messageId, info.response);
+        });
+      });
+
+    });
   });
 });
 
 app.post('/unconfirmoffice', auth, function (req,res) {
-  connection.query('UPDATE offices SET office_publish = 2 WHERE office_id = '+req.body.office_id,
-  function (error, result, fields) {
+  connection.query('SELECT office_author FROM offices WHERE office_id ='+req.body.office_id, function (error, result, fields) {
     if (error) throw error;
-    // res.send({success: 1});
-
-    connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.userid, function (error,result,fields) {
+    var officeauthor = result[0].office_author;
+    connection.query('UPDATE offices SET office_publish = 2 WHERE office_id = '+req.body.office_id,
+    function (error, result, fields) {
       if (error) throw error;
-      var maildata = {};
-      var reasons = req.body.reasons.join(', ');
-      maildata.email = result[0].user_email;
-      maildata.officeid = req.body.office_id;
-      var mailOptions = {
-          from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
-          to: maildata.email, // list of receivers
-          subject: 'Объявление!', // Subject line
-          text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление отклонено.\n'+req.body.comment+'\n'+reasons, // plain text body
-          html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали <a href="http://рентазавр.рф/office-'+maildata.officeid+'">объявление</a> на ресурс рентазавр.рф, ваше объявление отклонено.</p><p>'+req.body.comment+'</p><p>'+reasons+'</p>' // html body
-      };
-      transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-              return console.log(error);
-              res.send({err: error});
-          }else{
-            res.send({err: false, message: info.messageId, response: info.response, success: 1});
-            // res.send(result);
-          }
-          console.log('Message %s sent: %s', info.messageId, info.response);
-      });
-    });
+      // res.send({success: 1});
 
+      connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + officeauthor, function (error,result,fields) {
+        if (error) throw error;
+        var maildata = {};
+        var reasons = req.body.reasons ? req.body.reasons.join(', ') : "";
+        maildata.email = result[0].user_email;
+        maildata.officeid = req.body.office_id;
+        var mailOptions = {
+            from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
+            to: maildata.email, // list of receivers
+            subject: 'Объявление!', // Subject line
+            text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление отклонено.\n'+req.body.comment+'\n'+reasons, // plain text body
+            html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали <a href="http://рентазавр.рф/office-'+maildata.officeid+'">объявление</a> на ресурс рентазавр.рф, ваше объявление отклонено.</p><p>'+req.body.comment+'</p><p>'+reasons+'</p>' // html body
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return console.log(error);
+                res.send({err: error});
+            }else{
+              res.send({err: false, message: info.messageId, response: info.response, success: 1});
+              // res.send(result);
+            }
+            console.log('Message %s sent: %s', info.messageId, info.response);
+        });
+      });
+
+    });
   });
 });
 
 app.post('/unconfirmofcphoto', auth, function (req,res) {
-  connection.query('UPDATE offices SET office_publish = 2 WHERE office_id = '+req.body.office_id,
-  function (error, result, fields) {
+  connection.query('SELECT office_author FROM offices WHERE office_id ='+req.body.office_id, function (error, result, fields) {
     if (error) throw error;
-    // res.send({success: 1});
-
-    connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.userid, function (error,result,fields) {
+    var officeauthor = result[0].office_author;
+    connection.query('UPDATE offices SET office_publish = 2 WHERE office_id = '+req.body.office_id,
+    function (error, result, fields) {
       if (error) throw error;
-      var maildata = {};
-      var reasons = req.body.reasons ? req.body.reasons.join(', ') : "";
-      for (var i = 0; i < req.body.ucimgs.length; i++) {
-        req.body.ucimgs[i] = "http://рентазавр.рф/"+req.body.ucimgs[i];
-      }
-      var ucimgs = req.body.ucimgs.join(', ');
-      maildata.email = result[0].user_email;
-      maildata.officeid = req.body.office_id;
-      var mailOptions = {
-          from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
-          to: maildata.email, // list of receivers
-          subject: 'Объявление!', // Subject line
-          text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление отклонено, не походят фотографии('+ucimgs+').\n'+req.body.comment+'\n'+reasons, // plain text body
-          html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали <a href="http://рентазавр.рф/office-'+maildata.officeid+'">объявление</a> на ресурс рентазавр.рф, ваше объявление отклонено, не походят фотографии('+ucimgs+').</p><p>'+req.body.comment+'</p><p>'+reasons+'</p>' // html body
-      };
-      transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-              return console.log(error);
-              res.send({err: error});
-          }else{
-            res.send({err: false, message: info.messageId, response: info.response, success: 1});
-            // res.send(result);
-          }
-          console.log('Message %s sent: %s', info.messageId, info.response);
+      // res.send({success: 1});
+      connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + officeauthor, function (error,result,fields) {
+        if (error) throw error;
+        var maildata = {};
+        var reasons = req.body.reasons ? req.body.reasons.join(', ') : "";
+        for (var i = 0; i < req.body.ucimgs.length; i++) {
+          req.body.ucimgs[i] = "http://рентазавр.рф/"+req.body.ucimgs[i];
+        }
+        var ucimgs = req.body.ucimgs.join(', ');
+        maildata.email = result[0].user_email;
+        maildata.officeid = req.body.office_id;
+        var mailOptions = {
+            from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
+            to: maildata.email, // list of receivers
+            subject: 'Объявление!', // Subject line
+            text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали объявление http://рентазавр.рф/office-'+maildata.officeid+' на ресурс рентазавр.рф, ваше объявление отклонено, не походят фотографии('+ucimgs+').\n'+req.body.comment+'\n'+reasons, // plain text body
+            html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали <a href="http://рентазавр.рф/office-'+maildata.officeid+'">объявление</a> на ресурс рентазавр.рф, ваше объявление отклонено, не походят фотографии('+ucimgs+').</p><p>'+req.body.comment+'</p><p>'+reasons+'</p>' // html body
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return console.log(error);
+                res.send({err: error});
+            }else{
+              res.send({err: false, message: info.messageId, response: info.response, success: 1});
+              // res.send(result);
+            }
+            console.log('Message %s sent: %s', info.messageId, info.response);
+        });
       });
     });
-
   });
 });
 
