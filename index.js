@@ -471,7 +471,7 @@ app.post('/confirmoffice', auth, function (req,res) {
     // res.send({success: 1});
     // var resultimage = result;
 
-    connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + req.session.userid, function (error,result,fields) {
+    connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.userid, function (error,result,fields) {
       if (error) throw error;
       var maildata = {};
       maildata.email = result[0].user_email;
@@ -574,7 +574,7 @@ app.post('/unconfirmofcphoto', auth, function (req,res) {
     connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.userid, function (error,result,fields) {
       if (error) throw error;
       var maildata = {};
-      var reasons = req.body.reasons.join(', ');
+      var reasons = req.body.reasons ? req.body.reasons.join(', ') : "";
       for (var i = 0; i < req.body.ucimgs.length; i++) {
         req.body.ucimgs[i] = "http://рентазавр.рф/"+req.body.ucimgs[i];
       }
