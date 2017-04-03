@@ -492,7 +492,7 @@ app.post('/confirmoffice', auth, function (req,res) {
             // res.send(result);
           }
           console.log('Message %s sent: %s', info.messageId, info.response);
-      });
+      }); 
     });
 
   });

@@ -344,6 +344,7 @@ $(document).ready(function () {
       },
       url: '/confirmoffice',
       success: function (data, status, error) {
+        console.log(data, status, error);
         btn.closest(".item-room").find(".item-show-more").addClass('published');
         btn.closest(".item-room").find(".item-show-more").removeClass('disabled');
         btn.closest(".item-room").find('p.status').addClass('published');
