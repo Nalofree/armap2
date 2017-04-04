@@ -252,7 +252,7 @@ var filterSearch = $("#filter"),
     showSearch = $('.show-search');
 
 if ($(window).width() <= '768') {
-    filterSearch.hide();
+    // filterSearch.hide();
 }
 showSearch.click(function () {
     if (showSearch.hasClass('active')) {
