@@ -57,8 +57,9 @@ block content
           section
             button.btn(type='button', data-toggle='modal', data-target='#call-me') Заказать звонок
         // Общая стоимость и прочие характеристики с ебучими точками)
-        section#obj-summ
+        section#officedescription
           p= office.office_description
+        section#obj-summ          
           p
             span Общая стоимость
             span= (office.office_subprice*office.office_area).toFixed(2) + ' р.'
