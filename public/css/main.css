@@ -3031,8 +3031,8 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 #footer {
   /*Футер*/
   width: 100%;
-  height: 500px;
-  overflow: hidden;
+  /* height: 500px; */
+  /* overflow: hidden; */
   position: absolute;
 }
 
@@ -3399,7 +3399,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 
 /*Низ футера*/
 #footer-bottom {
-  height: 172px;
+  /* height: 172px; */
   padding: 40px 40px;
 }
 
@@ -3411,13 +3411,13 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 
 @media screen and (max-width: 480px) {
   #footer-bottom {
-    height: 130px;
+    /* height: 130px; */
   }
 }
 
 @media screen and (max-width: 375px) {
   #footer-bottom {
-    height: 120px;
+    /* height: 120px; */
   }
 }
 
@@ -4937,17 +4937,21 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  flex-wrap: wrap;
   -webkit-justify-content: space-between;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -webkit-align-items: flex-start;
+      -ms-flex-align: flex-start;
+          align-items: flex-start;
 }
 
 @media screen and (max-width: 768px) {
   #object #obj-description #obj-header {
     margin: 10px 0 20px;
+  }
+  #object #obj-description #obj-header section:nth-of-type(1) {
+    width: 100%;
   }
 }
 
@@ -4959,10 +4963,11 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 #object #obj-description #obj-header p {
-  font-size: 14px;
+  font-size: 12px;
   padding-left: 15px;
   background: url("../images/search/marker.png") no-repeat left;
   margin: 0;
+  margin-bottom: 20px;
 }
 
 #object #obj-description #obj-header .bookmark-trigger {
@@ -4972,10 +4977,12 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   border: 1px solid #cccccc;
   border-radius: 5px;
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   color: #1f1f1f;
-  padding: 7px 0 0 30px;
-  background: url("../images/object/star.png") no-repeat 10px;
+  padding: 7px 7px 7px 30px;
+  background: url("../images/object/star.png") no-repeat 9px center;
+  -webkit-background-size: 15px;
+  background-size: 15px;
 }
 
 @media screen and (max-width: 768px) {
@@ -5086,12 +5093,20 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  flex-wrap:  wrap;
   -webkit-justify-content: space-between;
       -ms-flex-pack: justify;
           justify-content: space-between;
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+@media screen and (max-width: 480px) {
+  #object #obj-description #obj-info section > div {
+    margin-bottom: 10px;
+    width: 100%;
+  }
 }
 
 #object #obj-description #obj-info section div:nth-of-type(1) p span {
@@ -5230,8 +5245,8 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   }
 }
 
-#object #obj-description #obj-summ p span:first-of-type:after {
-  content: '..................................................................';
+/* #object #obj-description #obj-summ p span:first-of-type:after {
+  content: ':';
   margin: 0 5px;
 }
 
@@ -5243,14 +5258,14 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 #object #obj-description #obj-summ p:first-of-type span:first-of-type:after {
-  content: '.................................................................';
+  content: ':';
 }
 
 @media screen and (max-width: 768px) {
   #object #obj-description #obj-summ p:first-of-type span:first-of-type:after {
     content: ':';
   }
-}
+} */
 
 #object #obj-description .obj-service {
   width: 100%;
@@ -5273,6 +5288,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   font-size: 15px;
   font-weight: 700;
   margin: 0;
+  margin-bottom: 1em;
 }
 
 #object #obj-description .obj-service div ul {
