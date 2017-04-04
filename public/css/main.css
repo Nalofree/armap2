@@ -2991,6 +2991,8 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   width: 721px;
   padding: 0 0 0 75px;
   border-bottom-right-radius: 5px;
+  display: inline-block;
+  position: absolute;
 }
 
 @media screen and (max-width: 768px) {
@@ -3550,7 +3552,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   width: 300px;
   height: 688px;
   background: transparent;
-  margin: 50px 75px 0px;
+  margin: 100px 75px 0px;
   border-radius: 5px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 }
@@ -9525,5 +9527,5 @@ ul#head-log-in li.username a {
 .grayimg {
   -webkit-filter: grayscale(1); /* Webkit браузеры */
           filter: gray; /* для IE6-9 */
-          filter: grayscale(1); /* W3C */  
+          filter: grayscale(1); /* W3C */
 }
