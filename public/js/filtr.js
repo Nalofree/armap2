@@ -45,8 +45,20 @@ if($("#filter").length) {
 		$(".filter-object-price input.max").val(parseInt(priceCaptionArr[1])+'р');
 	});
 
+	var r_minPrice = +$(".filter-object-price input.min").val();
+	var r_maxPrice = +$(".filter-object-price input.max").val();
+	var r_minSq = +$(".filter-object-square input.min").val();
+	var r_maxSq = +$(".filter-object-square input.max").val();
+
 	$(".filter-object-square input,.filter-object-price input").focus(function () {
+		$(this).attr('data-value',$(this).val());
 		$(this).val('');
+	});
+
+	$(".filter-object-square input,.filter-object-price input").blur(function () {
+		if($(this).val() == '') {
+			$(this).val($(this).attr('data-value'));
+		}
 	});
 
 	$(".filter-object-square input").change(function() {
