@@ -5688,7 +5688,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 
 #objects #obj-items.style-block .item {
   position: relative;
-  width: 340px;
+  width: calc(33% - 20px);
   /* height: 295px; */
   background: #fff;
   border-radius: 0 0 5px 5px;
@@ -5705,10 +5705,14 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 @media screen and (max-width: 768px) {
   #objects #obj-items.style-block .item {
     margin-right: 20px;
+    margin-bottom: 30px;
     width: calc(50% - 10px);
   }
   #objects #obj-items.style-block .item:nth-child(2n+2) {
     margin-right: 0;
+  }
+  #objects #obj-items.style-block .item:nth-child(3n+3) {
+    margin-right: 20px;
   }
 }
 
@@ -5717,11 +5721,8 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
     margin-right: 0;
     width: 100%;
   }
-}
-
-@media screen and (max-width: 768px) {
-  #objects #obj-items.style-block .item {
-    margin-bottom: 30px;
+  #objects #obj-items.style-block .item:nth-child(3n+3) {
+    margin-right: 0;
   }
 }
 
