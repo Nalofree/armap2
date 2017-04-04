@@ -74,6 +74,7 @@ $(document).ready(function () {
 
   $(".set-images").click(function (e) {
     e.preventDefault();
+    $('#editofcmainsubmit').click();
     if ($("input[name='mainPhoto']:checked").val()) {
       // alert($("input[name='mainPhoto']:checked").val());
       var mainimg = $("input[name='mainPhoto']:checked").val();
