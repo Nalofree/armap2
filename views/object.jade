@@ -5,7 +5,7 @@ block content
     #search.container
       // Сворачивание фильтра для мобилы на кнопку show-search
       article
-        a.show-search(href='#') Показать фильтр
+        a.show-search.active(href='#') Скрыть фильтр
         // Фильтр
         form(method="GET", action="/object-"+object.object_id)#filter.tab-pane.fade.active.in(role='tabpanel')
           h3 Назначение:

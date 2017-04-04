@@ -4472,9 +4472,8 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   color: #2c71e7;
 }
 
-#search-results.style-block #search-results .result .result-desc section p span {
-  display: inline-block;
-  width: 100%;
+#search-results.style-block .result .result-desc section p span {
+  display: block;
 }
 
 #search-results.style-line {
@@ -9326,6 +9325,7 @@ h1 a:hover, h1 a:focus {
   text-transform: none;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
   cursor: pointer;
 }
 
