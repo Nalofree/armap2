@@ -4956,6 +4956,8 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   -ms-filter: blur(5px);
   filter: blur(5px);
   z-index: -2;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 #object #obj-description #obj-slider .sp-slide img {
@@ -9484,6 +9486,10 @@ ul#head-log-in li.username a {
 }
 
 .mod-object-list-item .status.new.red-text {
+  color: #f00;
+}
+
+.kab-create-obj .kab-create-step-three .input-group span.red-text {
   color: #f00;
 }
 

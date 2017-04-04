@@ -410,4 +410,15 @@ $(document).ready(function () {
     $(this).closest("section").fadeOut();
   });
 
+  $("input#create-description").keyup(function () {
+    var descriptionValue = $(this).val();
+    var charsleft = 250-descriptionValue.length;
+    $(this).next("span").text("Описание (осталось "+charsleft+" символов)");
+    if (charsleft <= 0) {
+      $(this).next("span").addClass("red-text");
+    }else{
+      $(this).next("span").removeClass("red-text");
+    }
+  });
+
 });

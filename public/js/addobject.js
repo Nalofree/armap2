@@ -276,11 +276,12 @@ $(document).ready(function() {
         providers = $('input[name="providers"]:checked').index() >= 0 ? true : false,
         mainPhoto = $('input[name="mainPhoto"]:checked').index() >= 0 ? true : false,
         header = $('#create-header').val() != '' ? true : false,
+        description = $('#create-description').val() != '' ? true : false,
         square = $('#create-square').val() != '' ? true : false,
         price = $('#create-price').val() != '' ? true : false,
         tel = $('#create-tel').val() != '' ? true : false,
         height = $('#create-height').val() != '' ? true : false,
-        result = meanings & included & advanced & providers & mainPhoto & header & square & price & tel & height;
+        result = meanings & included & advanced & providers & mainPhoto & header & square & price & tel & height & description;
         if (result) {
           return true;
         }else{
@@ -322,6 +323,7 @@ $(document).ready(function() {
       officeData.cover = checkboxProcess('mainPhoto');
       officeData.images = images;
       officeData.header = $('#create-header').val();
+      officeData.description = $('#create-description').val();
       officeData.sqare =  $('#create-square').val();
       officeData.price = $('#create-price').val();
       officeData.phone = $('#create-tel').val();
@@ -329,25 +331,31 @@ $(document).ready(function() {
       officeData.create = now;
       officeData.object = objectData.Id;
       // console.log(officeData);
-      $('.kab-create-step-three').empty();
-      $.ajax({
-        url: '/addoffice',
-        type: 'post',
-        data: officeData,
-        success: function (data) {
-          console.log('success '+data);
-          // $('body,html').animate({"scrollTop":0},"slow");
-          $('.kab-create-step-complite').fadeIn();
-          // $('.close-layout').fadeIn();
-          $('.kab-create-step-three').fadeOut();
-          $('input').val('');
-          $('input:checkbox').removeAttr('checked');
-          $('select').prop('selectedIndex',0);
-        },
-        error: function (data) {
-          console.log('error '+data);
-        }
-      });
+
+      if (officeData.description.length <= 250) {
+        $('.kab-create-step-three').empty();
+        $.ajax({
+          url: '/addoffice',
+          type: 'post',
+          data: officeData,
+          success: function (data) {
+            console.log('success '+data);
+            // $('body,html').animate({"scrollTop":0},"slow");
+            $('.kab-create-step-complite').fadeIn();
+            // $('.close-layout').fadeIn();
+            $('.kab-create-step-three').fadeOut();
+            $('input').val('');
+            $('input:checkbox').removeAttr('checked');
+            $('select').prop('selectedIndex',0);
+          },
+          error: function (data) {
+            console.log('error '+data);
+          }
+        });
+      }else{
+        alert("Описание не должно превышать 250 символов");
+      }
+
     }
   });
 

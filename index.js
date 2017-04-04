@@ -1712,21 +1712,25 @@ app.post('/setobjectimage', function (req,res) {
 });
 
 app.post('/addoffice', auth, function(req,res) {
-  connection.query("SELCECT user_email FROM users left join roles on user_role = role_id WHERE role_name = 'moder'", function (error,result,fields) {
+  connection.query('SELECT user_email FROM users LEFT JOIN roles ON user_role = role_id WHERE role_name = "moder"', function (error,result,fields) {
     if (error) throw error;
     var addrlist = [];
-    for (var i = 0; i < result.length; i++) {
-      addrlist.push(result[i].user_email);
+    if (result) {
+      for (var i = 0; i < result.length; i++) {
+        addrlist.push(result[i].user_email);
+      }
+      var addrliststr = addrlist.join(',');
+    }else{
+      var addrliststr = "";
     }
-    var addrliststr = addrlist.join(',');
     connection.query('SELECT * FROM images WHERE image_id ='+req.body.cover[0],function (error,result,fields) {
       if (error) throw error;
       var cover = result[0].image_id;
       //console.log(cover);
       var images = req.body.images.join(',');
       // console.log(req.body);
-      connection.query('INSERT INTO offices (office_name, office_create, office_author, office_area, office_height, office_subprice, office_tacked, office_cover, office_publish, office_object, office_show, office_phone)\
-      VALUES ("'+req.body.header+'", "'+req.body.create+'", "'+res.userid+'", "'+req.body.sqare+'", "'+req.body.height+'", "'+req.body.price+'", 0, '+cover+', 0, "'+req.body.object+'", 1, "'+req.body.phone+'")',
+      connection.query('INSERT INTO offices (office_name, office_description, office_create, office_author, office_area, office_height, office_subprice, office_tacked, office_cover, office_publish, office_object, office_show, office_phone)\
+      VALUES ("'+req.body.header+'", "'+req.body.description+'", "'+req.body.create+'", "'+res.userid+'", "'+req.body.sqare+'", "'+req.body.height+'", "'+req.body.price+'", 0, '+cover+', 0, "'+req.body.object+'", 1, "'+req.body.phone+'")',
         function (error,result,fields) {
           if (error) throw error;
           var options = req.body.meanings.join(',') + ',' + req.body.included.join(',') + ',' + req.body.advanced.join(',') + ',' + req.body.providers.join(',');
