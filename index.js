@@ -961,30 +961,88 @@ app.get('/editofc-:officeid', auth, function (req, res) {
 });
 
 app.post('/editofcmain-:oficeid', function (req, res) {
-  connection.query('UPDATE offices SET office_name = "'+req.body.name+'", office_description = "'+req.body.description+'", office_object = "'+req.body.object+'", office_area = "'+req.body.area+'", office_height = "'+req.body.height+'", office_subprice = "'+req.body.subprice+'", office_totalptice = "'+req.body.totalprice+'", office_phone = "'+req.body.phone+'" WHERE office_id = '+req.params.oficeid+'', function (error, result, fields) {
+  connection.query('SELECT user_email FROM users LEFT JOIN roles ON user_role = role_id WHERE role_name = "moder"', function (error,result,fields) {
     if (error) throw error;
-    connection.query('SELECT * FROM offices WHERE office_id = '+req.params.oficeid+'', function (error, result, fields) {
+    var addrlist = [];
+    if (result) {
+      for (var i = 0; i < result.length; i++) {
+        addrlist.push(result[i].user_email);
+      }
+      var addrliststr = addrlist.join(',');
+    }else{
+      var addrliststr = "";
+    }
+    connection.query('UPDATE offices SET office_name = "'+req.body.name+'", office_description = "'+req.body.description+'", office_object = "'+req.body.object+'", office_area = "'+req.body.area+'", office_height = "'+req.body.height+'", office_subprice = "'+req.body.subprice+'", office_totalptice = "'+req.body.totalprice+'", office_phone = "'+req.body.phone+'" WHERE office_id = '+req.params.oficeid+'', function (error, result, fields) {
       if (error) throw error;
-      res.send({office: result[0]});
+      connection.query('SELECT * FROM offices WHERE office_id = '+req.params.oficeid+'', function (error, result, fields) {
+        if (error) throw error;
+        res.send({office: result[0]});
+      });
+    });
+    var mailOptions = {
+        from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
+        to: addrliststr, // list of receivers
+        subject: 'Отредактировано объявление', // Subject line
+        text: 'Отредактировано объявление'+"рентазавр.рф/ofiice-"+req.params.officeid, // plain text body
+        html: '<p>Отредактировано <a href=рентазавр.рф/ofiice-'+req.params.officeid+'>объявление</a></p>' // html body
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+            res.send({err: error});
+        }else{
+          res.send({name: req.body.name, opttype: req.body.opttype, optid: result.insertId});
+          // res.send({err: false, message: info.messageId, response: info.response});
+        }
+        console.log('Message %s sent: %s', info.messageId, info.response);
     });
   });
 });
 
 app.post('/editofcoptions-:officeid', function (req, res) {
-  // res.send(req.body);
-  if (req.body.val == 1) {
-    // res.send('add');
-    connection.query('INSERT INTO options_offices (link_option, link_office) VALUES ('+req.body.optionid+', '+req.params.officeid+')', function (error, result, fields) {
-      if (error) throw error;
-      res.send('add');
+  connection.query('SELECT user_email FROM users LEFT JOIN roles ON user_role = role_id WHERE role_name = "moder"', function (error,result,fields) {
+    if (error) throw error;
+    var addrlist = [];
+    if (result) {
+      for (var i = 0; i < result.length; i++) {
+        addrlist.push(result[i].user_email);
+      }
+      var addrliststr = addrlist.join(',');
+    }else{
+      var addrliststr = "";
+    }
+    // res.send(req.body);
+    if (req.body.val == 1) {
+      // res.send('add');
+      connection.query('INSERT INTO options_offices (link_option, link_office) VALUES ('+req.body.optionid+', '+req.params.officeid+')', function (error, result, fields) {
+        if (error) throw error;
+        res.send('add');
+      });
+    }else{
+      connection.query('DELETE from options_offices WHERE link_option='+req.body.optionid, function (error, result, fields) {
+        if (error) throw error;
+        res.send('remove');
+      });
+      // res.send('remove');
+    }
+    var mailOptions = {
+        from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
+        to: addrliststr, // list of receivers
+        subject: 'Отредактировано объявление', // Subject line
+        text: 'Отредактировано объявление'+"рентазавр.рф/ofiice-"+req.params.officeid, // plain text body
+        html: '<p>Отредактировано <a href=рентазавр.рф/ofiice-'+req.params.officeid+'>объявление</a></p>' // html body
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+            res.send({err: error});
+        }else{
+          res.send({name: req.body.name, opttype: req.body.opttype, optid: result.insertId});
+          // res.send({err: false, message: info.messageId, response: info.response});
+        }
+        console.log('Message %s sent: %s', info.messageId, info.response);
     });
-  }else{
-    connection.query('DELETE from options_offices WHERE link_option='+req.body.optionid, function (error, result, fields) {
-      if (error) throw error;
-      res.send('remove');
-    });
-    // res.send('remove');
-  }
+  });
 })
 
 app.get('/admin', auth, function (req, res) {

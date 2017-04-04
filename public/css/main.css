@@ -3685,13 +3685,13 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 
 @media screen and (max-width: 480px) {
  .tab-content {
-  
+
  }
 }
 
 @media screen and (max-width: 320px) {
   .tab-content {
-   
+
   }
 }
 
@@ -9662,4 +9662,8 @@ ul#head-log-in li.username a {
   -webkit-filter: grayscale(1); /* Webkit браузеры */
           filter: gray; /* для IE6-9 */
           filter: grayscale(1); /* W3C */
+}
+
+#editofcmainsubmit {
+  display: none;
 }
