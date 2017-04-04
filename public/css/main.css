@@ -3002,6 +3002,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 
 @media screen and (max-width: 768px) {
   #header #head-main-menu.main-page {
+    position: static;
     padding: 0 0 0 25px;
     width: 90%;
   }
@@ -3566,21 +3567,21 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 @media screen and (max-width: 768px) {
   #search-filter {
     width: 380px;
-    margin: 20px 0 50px;
+    height: 100vh;
+    margin: 0;
     box-shadow: none;
   }
 }
 
 @media screen and (max-width: 480px) {
   #search-filter {
-    margin: 20px 0 50px;
     width: 90%;
+    height: auto;
   }
 }
 
 @media screen and (max-width: 320px) {
   #search-filter {
-    margin: 20px 0 50px;
     width: 98%;
   }
 }
@@ -3671,9 +3672,27 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .tab-content {
   position: relative;
   width: 100%;
-  height: calc(100% - 113px);
+  height: calc(100% - 63px);
   background: #fff;
   z-index: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .tab-content {
+    height: calc(100% - 99px);
+  }
+}
+
+@media screen and (max-width: 480px) {
+ .tab-content {
+  
+ }
+}
+
+@media screen and (max-width: 320px) {
+  .tab-content {
+   
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -3928,18 +3947,19 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   background: transparent;
   font-size: 16px;
   color: #f5584e;
-
+  transition:  all .3s ease-in-out;
 }
 
 #filter section:last-of-type .btn:hover {
-  background: rgba(245,88, 78, .3);
+  background: #f5584e;
+  color: #fff;
 }
 
 /*Результаты*/
 #filter-result {
   position: relative;
   width: 300px;
-  height: 650px;
+  height: 100%;
   background: #fff;
   border-radius: 0 0 5px 5px;
   overflow: auto;
@@ -9436,8 +9456,11 @@ textarea {
 
 @media screen and (max-width: 480px) {
   #header #head-main-menu section .main-logo-text-name {
-    font-size: 36px;
+    font-size: 30px;
     line-height: 40px;
+  }
+  #header #head-main-menu section .main-logo-text-description {
+    font-size: 14px;
   }
 }
 
