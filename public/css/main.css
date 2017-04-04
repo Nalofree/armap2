@@ -3554,6 +3554,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   background: transparent;
   margin: 100px 75px 0px;
   border-radius: 5px;
+  /*position: */
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 }
 
@@ -9542,7 +9543,7 @@ ul#head-log-in li.username a {
   border: 10px solid transparent; /* Прозрачные границы */
   border-left: 10px solid #000; /* Добавляем треугольник */
 }
- 
+
 .grayimg {
   -webkit-filter: grayscale(1); /* Webkit браузеры */
           filter: gray; /* для IE6-9 */
