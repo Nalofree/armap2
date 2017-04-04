@@ -1,71 +1,72 @@
 extends layout
 block content
-  .container
-    .panel.panel-primary.admin-trig
-      .panel-heading
-        h4= "Объекты"
-      .panel-body
-        table.table
+  .r-admin-block
+    .container
+      .panel.r-panel-primary.admin-trig
+        .panel-heading
+          h4= "Объекты"
+        .panel-body
+          table.table
+            - for (var i = 0; i < objects.length; i++)
+              tr
+                td= objects[i].object_name
+                td= objects[i].object_adres
+                td
+                  .btn.btn-danger.delete-object(data-title=objects[i].object_id) Удалить навсегда со всеми помещениями
+            //- form(action="/admin/objtypes" method="POST")
+            //-   .form-group
+            //-   input.form-control(type='text', name='name', placeholder='holder', value=objtypes[i].objtype_name)
+            //-   .form-group
+            //-   input.form-control(type='hidden', name='id', placeholder='holder', value=objtypes[i].objtype_id)
+            //-   .form-group
+            //-   input.form-control(type='submit')
+      .panel.r-panel-primary.admin-trig
+        .panel-heading
+          h4= "Типы объектов"
+        .panel-body     
+          - for (var i = 0; i < objtypes.length; i++)
+            form(action="/admin/objtypes" method="POST")
+              .form-group
+              input.form-control(type='text', name='name', placeholder='holder', value=objtypes[i].objtype_name)
+              .form-group
+              input.form-control(type='hidden', name='id', placeholder='holder', value=objtypes[i].objtype_id)
+              .form-group
+              input.form-control(type='submit')
+      .panel.r-panel-primary.admin-trig
+        .panel-heading
+          h4= "Города"
+        .panel-body   
+          - for (var i = 0; i < citys.length; i++)
+            form(action="/admin/citys" method="POST")
+              .form-group
+              input.form-control(type='text', name='name', placeholder='holder', value=citys[i].city_name)
+              .form-group
+              input.form-control(type='hidden', name='id', placeholder='holder', value=citys[i].city_id)
+              .form-group
+              input.form-control(type='submit')
+      .panel.r-panel-primary.admin-trig
+        .panel-heading
+          h4= "Опции"
+        .panel-body   
+          - for (var i = 0; i < options.length; i++)
+            form(action="/admin/options" method="POST")
+              .form-group
+              input.form-control(type='text', name='name', placeholder='holder', value=options[i].option_name)
+              .form-group
+              input.form-control(type='hidden', name='id', placeholder='holder', value=options[i].option_id)
+              .form-group
+              input.form-control(type='submit')
+      .panel.r-panel-primary.admin-trig
+        .panel-heading
+          h4= "Объекты"
+        .panel-body   
           - for (var i = 0; i < objects.length; i++)
-            tr
-              td= objects[i].object_name
-              td= objects[i].object_adres
-              td
-                .btn.btn-danger.delete-object(data-title=objects[i].object_id) Удалить навсегда со всеми помещениями
-          //- form(action="/admin/objtypes" method="POST")
-          //-   .form-group
-          //-   input.form-control(type='text', name='name', placeholder='holder', value=objtypes[i].objtype_name)
-          //-   .form-group
-          //-   input.form-control(type='hidden', name='id', placeholder='holder', value=objtypes[i].objtype_id)
-          //-   .form-group
-          //-   input.form-control(type='submit')
-    .panel.panel-primary.admin-trig
-      .panel-heading
-        h4= "Типы объектов"
-      .panel-body     
-        - for (var i = 0; i < objtypes.length; i++)
-          form(action="/admin/objtypes" method="POST")
-            .form-group
-            input.form-control(type='text', name='name', placeholder='holder', value=objtypes[i].objtype_name)
-            .form-group
-            input.form-control(type='hidden', name='id', placeholder='holder', value=objtypes[i].objtype_id)
-            .form-group
-            input.form-control(type='submit')
-    .panel.panel-primary.admin-trig
-      .panel-heading
-        h4= "Города"
-      .panel-body   
-        - for (var i = 0; i < citys.length; i++)
-          form(action="/admin/citys" method="POST")
-            .form-group
-            input.form-control(type='text', name='name', placeholder='holder', value=citys[i].city_name)
-            .form-group
-            input.form-control(type='hidden', name='id', placeholder='holder', value=citys[i].city_id)
-            .form-group
-            input.form-control(type='submit')
-    .panel.panel-primary.admin-trig
-      .panel-heading
-        h4= "Опции"
-      .panel-body   
-        - for (var i = 0; i < options.length; i++)
-          form(action="/admin/options" method="POST")
-            .form-group
-            input.form-control(type='text', name='name', placeholder='holder', value=options[i].option_name)
-            .form-group
-            input.form-control(type='hidden', name='id', placeholder='holder', value=options[i].option_id)
-            .form-group
-            input.form-control(type='submit')
-    .panel.panel-primary.admin-trig
-      .panel-heading
-        h4= "Объекты"
-      .panel-body   
-        - for (var i = 0; i < objects.length; i++)
-          form(action="/admin/object" method="POST")
-            .form-group
-            input.form-control(type='text', name='name', placeholder='holder', value=objects[i].object_name)
-            .form-group
-            input.form-control(type='text', name='adres', placeholder='holder', value=objects[i].object_adres)
-            .form-group
-            input.form-control(type='hidden', name='id', placeholder='holder', value=objects[i].object_id)
-            .form-group
-            input.form-control(type='submit')
+            form(action="/admin/object" method="POST")
+              .form-group
+              input.form-control(type='text', name='name', placeholder='holder', value=objects[i].object_name)
+              .form-group
+              input.form-control(type='text', name='adres', placeholder='holder', value=objects[i].object_adres)
+              .form-group
+              input.form-control(type='hidden', name='id', placeholder='holder', value=objects[i].object_id)
+              .form-group
+              input.form-control(type='submit')

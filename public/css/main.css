@@ -9441,11 +9441,11 @@ h1 a:hover, h1 a:focus {
 .admin-trig .panel-heading h4{
   display: inline-block;
   cursor: pointer;
-  border-bottom: 2px solid transparent;
+  /* border-bottom: 2px solid transparent; */
 }
 
 .admin-trig .panel-heading:hover h4 {
-  border-bottom: 2px dashed #000;
+  /* border-bottom: 2px dashed #000; */
 }
 
 .result-img img, .last-object-img img {
@@ -9703,4 +9703,24 @@ ul#head-log-in li.username a {
 
 #editofcmainsubmit {
   display: none;
+}
+
+.r-admin-block {
+  padding: 40px 0;
+}
+
+.r-panel-primary {
+  border-color: #2c71e7;
+}
+
+.r-panel-primary .panel-heading {
+  color: #fff;
+  background-color: #2c71e7;
+  border-color: #2c71e7;
+  transition: all .3s ease-in-out;
+}
+
+.r-panel-primary .panel-heading:hover {
+  background-color: #4d8af3;
+  border-color: #4d8af3;
 }
