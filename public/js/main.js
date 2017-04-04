@@ -92,6 +92,13 @@ $('#obj-slider').sliderPro({
     }
 });
 
+$(document).ready(function () {
+  $(".sp-slide").each(function () {
+    var img = $(this).find("img").attr("src");
+    $(this).find('.slide-background').css("background-image","url("+img+")");
+  });
+});
+
 //Стили объектов
 var objects = $('.block-style'),
     styleBlock = $('.item-block'),
