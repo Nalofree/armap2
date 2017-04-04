@@ -3914,6 +3914,25 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   overflow: auto;
 }
 
+#filter-result::-webkit-scrollbar-track {
+  background-color: #c4e5ef;
+  border-radius: 5px;
+}
+#filter-result::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  background-color: #2c71e7;
+}
+#filter-result::-webkit-resizer {
+  background-image: url("");
+  background-repeat: no-repeat;
+  width: 7px;
+  height: 0px;
+}
+#filter-result::-webkit-scrollbar {
+  width: 4px;
+}
+
 @media screen and (max-width: 768px) {
   #filter-result {
     width: 100%;
