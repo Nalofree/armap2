@@ -21,8 +21,9 @@ block content
         section#obj-slider.slider-pro
           .sp-slides
             - for (var i = 0; i < images.length; i++)
-              .sp-slide
-                img(src='images/obj/'+images[i].image_filename)
+              .sp-slide                
+                .slide-background
+                img(src='images/obj/'+images[i].image_filename)                
           .sp-thumbnails
             - for (var i = 0; i < images.length; i++)
               .sp-thumbnail
