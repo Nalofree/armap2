@@ -4386,7 +4386,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   margin-right: 0;
 }
 
-@media screen and (max-width: 1025px) {
+@media screen and (max-width: 1125px) {
   #search-results .result {
     width: calc(50% - 10px);
   }
@@ -4470,6 +4470,11 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   font-size: 14px;
   font-weight: 700;
   color: #2c71e7;
+}
+
+#search-results.style-block #search-results .result .result-desc section p span {
+  display: inline-block;
+  width: 100%;
 }
 
 #search-results.style-line {
