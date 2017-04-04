@@ -4257,6 +4257,13 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   }
 }
 
+@media screen and (max-width: 480px) {
+  #search #filter {
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
 /*Блок результатов*/
 #search-result-block {
   width: 100%;
@@ -4270,7 +4277,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 @media screen and (max-width: 768px) {
   #search-result-block {
     margin: 20px auto;
-    width: 96%;
+    width: 100%;
     padding: 25px;
   }
 }
@@ -4359,22 +4366,46 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-justify-content: space-between;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
   -webkit-flex-wrap: wrap;
       -ms-flex-wrap: wrap;
           flex-wrap: wrap;
 }
 
 #search-results .result {
-  width: 241px;
-  height: 260px;
+  width: calc(33% - 11px);
+  /* height: 260px; */
   background: #fff;
   overflow: hidden;
   border-radius: 0 0 5px 5px;
   margin-bottom: 23px;
+  margin-right: 20px;
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
+}
+
+#search-results .result:nth-child(3n+3) {
+  margin-right: 0;
+}
+
+@media screen and (max-width: 1025px) {
+  #search-results .result {
+    width: calc(50% - 10px);
+  }
+  #search-results .result:nth-child(2n+2) {
+    margin-right: 0;
+  }
+  #search-results .result:nth-child(3n+3) {
+    margin-right: auto;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #search-results .result {
+    width: calc(100% - 20px);
+    margin: 0 auto 20px;
+  }
+  #search-results .result:nth-child(2n+2) {
+    margin-right: auto;
+  }
 }
 
 #search-results .result .result-img {
@@ -5706,13 +5737,13 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   #objects #obj-items.style-block .item {
     margin-right: 20px;
     margin-bottom: 30px;
-    width: calc(50% - 10px);
+    width: calc(50% - 12px);
   }
   #objects #obj-items.style-block .item:nth-child(2n+2) {
     margin-right: 0;
   }
   #objects #obj-items.style-block .item:nth-child(3n+3) {
-    margin-right: 20px;
+    margin-right: auto;
   }
 }
 
