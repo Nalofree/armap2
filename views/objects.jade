@@ -23,8 +23,9 @@ block content
             -for (var i = 0; i < objects.length; i++)
               section.item
                 .item-img
+                  - var cover = objects[i].object_cover ? 'uploads/'+objects[i].object_cover : 'images/object/1.png';
+                  .item-img__blur(style='background-image:url('+cover+')')
                   a(href='/object-'+objects[i].object_id)
-                    - var cover = objects[i].object_cover ? 'uploads/'+objects[i].object_cover : 'images/object/1.png';
                     img(src= cover, width = '100%')
                 section
                   .item-desc
