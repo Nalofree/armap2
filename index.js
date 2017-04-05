@@ -26,6 +26,9 @@ var storage = multer.diskStorage({
     exIndex = arr.length-1;
     ex = arr[exIndex];
     cb(null, 'upload-'+Date.now() + '.' + ex);
+  },
+  limits: {
+    fieldSize: 4
   }
 });
 
