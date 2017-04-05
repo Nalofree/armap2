@@ -201,8 +201,11 @@ $(document).ready(function() {
         $('#setimages').val('');
         $(".close-layout").hide();
       },
-      error: function (data) {
-        console.log(data);
+      error: function (data, status, error) {
+        console.log(data, status, error);
+        // if (true) {
+        //
+        // }
         $(".close-layout").hide();
       }
     });
