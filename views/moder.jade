@@ -11,7 +11,10 @@ block content
           //- select.kab-location
           //-   option(selected='') Иркутск
         .kab-settings
-          //- a.btn-setting(href='#') Настройки
+          - if (role == "admin")
+            a(href='/admin') Администратор
+            |  | 
+          a(href='/my') Личный кабинет
           a.btn-setting(href='/logout') Выйти
           div
               
@@ -402,7 +405,7 @@ block content
                             //-   a.reset-btn(href='#') Отменить изменения
                             .btns
                               a(href='#', class="banuser", data-title= userid) Заблокировать пользователя
-                              button.disable-btn(type='button', data-toggle='modal', data-target='#modal-rooms', data-title=objects[i].object_offices[m].office_id) Отклонить
+                              button.unconfirmoffice-show.disable-btn(type='button', data-toggle='modal', data-target='#modal-rooms', data-title=objects[i].object_offices[m].office_id) Отклонить
                               a.success-btn.confirmoffice(href='#', data-title=objects[i].object_offices[m].office_id) Опубликовать
                               
                           //- .item-room-block-five

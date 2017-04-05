@@ -449,11 +449,69 @@ app.get('/logout',function (req,res) {
   res.redirect('/');
 });
 
+
+app.get("/forgetpass", auth, function (req, res) {
+  res.render('forgetpass.jade',{
+    role: res.role,
+    username: res.userfullname,
+    userid: res.userid,
+    ishome: 0
+  });
+});
+
+app.post("/forgetpass", function (req, res) {
+  randWDclassic = function(n){
+    var s ='', abd ='abcdefghijklmnopqrstuvwxyz0123456789', aL = abd.length;
+    while(s.length < n)
+      s += abd[Math.random() * aL|0];
+    return s;
+  }
+  connection.query("SELECT * FROM users WHERE user_email = '"+req.body.email+"'", function (error, result, fields) {
+    if (error) throw error;
+    if (result[0]) {
+      // Готовим пароль, перезаписываем в базу хэш, отправляем в письме пользователю
+      var pass = randWDclassic(10);
+      var userid = result[0].user_id;
+      var hash = crypto.createHmac('sha256', pass)
+                         .update('I love cupcakes')
+                         .digest('hex');
+      connection.query("UPDATE users SET user_pass = '"+hash+"' WHERE user_id = "+userid, function (error, result, fields) {
+        if (error) throw error;
+
+        var maildata = {};
+        maildata.email = req.body.email;
+        var mailOptions = {
+            from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
+            to: maildata.email, // list of receivers
+            subject: 'Восстановаление пароля!', // Subject line
+            text: 'Здравствуйте,\n Ваш новый пароль: '+pass, // plain text body
+            html: '<p>Здравствуйте,\n</p><p>Ваш новый пароль: '+pass+'</p>' // html body
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return console.log(error);
+                res.send({err: error});
+            }else{
+              res.send({err: false, message: info.messageId, response: info.response, success: 1});
+              // res.send(result);
+            }
+            console.log('Message %s sent: %s', info.messageId, info.response);
+        });
+
+      });
+      // res.send({pass: randWDclassic(10)});
+    }else{
+      // Пишем юзеру, что пользователя с таким мылом нет
+      res.send({err: "Пользователя с таким адресом электронной почты не существует"})
+    }
+  });
+});
+
 app.post('/confirmobject', function (req,res) {
   var coords = req.body.objectcoords ? ", object_coords = '" + req.body.objectcoords + "'" : "";
   var cover = req.body.objectcover ? ", object_cover = " + req.body.objectcover + " " : "";
 
-  console.log("UPDATE objects SET object_publish = 1, object_name = '"+req.body.objectname+"', object_type = "+req.body.objecttype+", object_adres = '"+req.body.objectadres+"' "+coords+cover+" WHERE object_id = "+req.body.objectid);
+  // console.log("UPDATE objects SET object_publish = 1, object_name = '"+req.body.objectname+"', object_type = "+req.body.objecttype+", object_adres = '"+req.body.objectadres+"' "+coords+cover+" WHERE object_id = "+req.body.objectid);
   connection.query("UPDATE objects SET object_publish = 1, object_name = '"+req.body.objectname+"', object_type = "+req.body.objecttype+", object_adres = '"+req.body.objectadres+"' "+coords+cover+" WHERE object_id = "+req.body.objectid ,
   function (error, result, fields) {
     if (error) throw error;

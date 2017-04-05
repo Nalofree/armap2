@@ -1,0 +1,14 @@
+extends layout
+block content
+  .container
+    .content-block
+      h4 Восстановление пароля
+      hr
+      .col-md-6.col-md-offset-3
+        form#forgetpass(action="/forgetpass" method="POST")
+          .form-group
+            label(for='email') Введите адрес электронной почты
+            input.form-control(type='email', name='email' placeholder='Адрес электронной почты')
+          .form-group
+            input.btn.btn-primary(type='submit', name='getpass', value="Отправить")
+      .clearfix

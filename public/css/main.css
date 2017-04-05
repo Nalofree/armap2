@@ -8714,6 +8714,11 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   /*Появляется при успешной отправке*/
 }
 
+.modal-dialog.conditions {
+  max-width: 80%;
+  min-width: 40%;
+}
+
 .modal-dialog .modal-form {
   display: block;
 }
@@ -9746,6 +9751,20 @@ ul#head-log-in li.username a {
   display: none;
 }
 
+<<<<<<< HEAD
+.content-block {
+  display: block;
+  background-color: #fff;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+/*.content-block::after, .content-block::before {
+  content: " ";
+  clear: both;
+}*/
+=======
 .r-admin-block {
   padding: 40px 0;
 }
@@ -9765,3 +9784,4 @@ ul#head-log-in li.username a {
   background-color: #4d8af3;
   border-color: #4d8af3;
 }
+>>>>>>> 2b50c75162b485cafb4270d3342cd2865cb31a65

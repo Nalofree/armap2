@@ -10,7 +10,12 @@ block content
           a.nickname.pro(href='/my')= username
         .kab-settings
           a.btn-create-object.href(href='#my-objects') создать объявление
-          //-- a.btn-setting(href='#') Настройки
+          span= " "
+          - if (role == "admin")
+            a(href='/admin') Администратор
+            |  | 
+          - if (role == "moder" || role == "admin")
+            a(href='/moder') Модератор
           a.btn-setting(href='/logout') Выйти
       //- Вкладки
       article.kab-tab-panel

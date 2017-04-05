@@ -240,9 +240,10 @@ $(document).ready(function () {
 
   $(".unconfirmoffice-show").click(function () {
     var ofcid = $(this).attr("data-title");
+    console.log(ofcid);
     var oficename = $(this).closest(".item-room-more").find("#room-name").val();
-    $("#modal-rooms .unconfirmoffice").attr("data-title", ofcid);
-    $("#modal-rooms .modal-header p").text("Помещение - "+oficename);
+    $("#modal-rooms").find(".unconfirmoffice").attr("data-title", ofcid);
+    $("#modal-rooms").find(".modal-header p").text("Помещение - "+oficename);
     // alert(oficename);
   });
 

@@ -200,6 +200,8 @@ html(lang='ru')
                 //-   a.fb(href='#')
                 //-   a.ok(href='#')
                 button.regnow(type='button', data-toggle='modal', data-target='#header-register') Регистрация
+                hr
+                a(href="/forgetpass") Забыли пароль?
             // Появляется при успешком заполнении формы
             .modal-thanks
               .modal-thanks-header
@@ -303,6 +305,12 @@ html(lang='ru')
                     label
                       | Пароль
                       input(type='password', required='', id='reg_pass', name='reg_pass', placeholder=' от 8 до 60 латинских букв и цифр' )
+                  .checkbox
+                    label
+                      input(type="checkbox", name="nerieltor")
+                      | Я не риелтор
+                      p.help-block
+                        a.conditions-show(href="#", data-toggle='modal', data-target='#conditions') Пользовательское соглашение
                   input.btn-submit(type='submit', value='Зарегистрироваться')
               .modal-footer
                 //- span или
@@ -324,73 +332,73 @@ html(lang='ru')
                   span(aria-hidden='true')
                 h4 Спасибо!
                 p Заявка отправлена, на указаннуюв Вами почту отправлено письмо для подтверждения
-              .modal-thanks-recomended
-                article
-                  a(href='#')
-                    .result-img
-                      img(src='images/search/result-img.png')
-                    .result-desc
-                      h4 Офис № 241
-                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
-                      section
-                        .result-price
-                          p
-                            | Цена за м
-                            sup 2
-                            | : 
-                            br
-                            span 2000 р.
-                        .result-square
-                          p
-                            | Площадь: 
-                            br
-                            span
-                              | 50 м
-                              sup 2
-                article
-                  a(href='#')
-                    .result-img
-                      img(src='images/search/result-img.png')
-                    .result-desc
-                      h4 Офис № 241 Офис № 241 Офис № 241
-                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
-                      section
-                        .result-price
-                          p
-                            | Цена за м
-                            sup 2
-                            | : 
-                            br
-                            span 2000 р.
-                        .result-square
-                          p
-                            | Площадь: 
-                            br
-                            span
-                              | 50 м
-                              sup 2
-                article
-                  a(href='#')
-                    .result-img
-                      img(src='images/search/result-img.png')
-                    .result-desc
-                      h4 Офис № 241
-                      p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
-                      section
-                        .result-price
-                          p
-                            | Цена за м
-                            sup 2
-                            | : 
-                            br
-                            span 2000 р.
-                        .result-square
-                          p
-                            | Площадь: 
-                            br
-                            span
-                              | 50 м
-                              sup 2
+              //- .modal-thanks-recomended
+              //-   article
+              //-     a(href='#')
+              //-       .result-img
+              //-         img(src='images/search/result-img.png')
+              //-       .result-desc
+              //-         h4 Офис № 241
+              //-         p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+              //-         section
+              //-           .result-price
+              //-             p
+              //-               | Цена за м
+              //-               sup 2
+              //-               | : 
+              //-               br
+              //-               span 2000 р.
+              //-           .result-square
+              //-             p
+              //-               | Площадь: 
+              //-               br
+              //-               span
+              //-                 | 50 м
+              //-                 sup 2
+              //-   article
+              //-     a(href='#')
+              //-       .result-img
+              //-         img(src='images/search/result-img.png')
+              //-       .result-desc
+              //-         h4 Офис № 241 Офис № 241 Офис № 241
+              //-         p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+              //-         section
+              //-           .result-price
+              //-             p
+              //-               | Цена за м
+              //-               sup 2
+              //-               | : 
+              //-               br
+              //-               span 2000 р.
+              //-           .result-square
+              //-             p
+              //-               | Площадь: 
+              //-               br
+              //-               span
+              //-                 | 50 м
+              //-                 sup 2
+              //-   article
+              //-     a(href='#')
+              //-       .result-img
+              //-         img(src='images/search/result-img.png')
+              //-       .result-desc
+              //-         h4 Офис № 241
+              //-         p г. Иркутск, ТЦ “Рублёв” ул. Чехова д. 19
+              //-         section
+              //-           .result-price
+              //-             p
+              //-               | Цена за м
+              //-               sup 2
+              //-               | : 
+              //-               br
+              //-               span 2000 р.
+              //-           .result-square
+              //-             p
+              //-               | Площадь: 
+              //-               br
+              //-               span
+              //-                 | 50 м
+              //-                 sup 2
       // Окно обратного звонка в карточке объекта
       #call-me.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
         .modal-dialog
@@ -494,88 +502,15 @@ html(lang='ru')
               button.close(data-dismiss='modal', aria-label='close')
                 span(aria-hidden='true')
               h4 Спасибо за посещение!
-            //-   p Рекомендуем к просмотру
-            //- .modal-body
-            //-   section.bm-item
-            //-     .bm-item-img
-            //-       a(href='object.html')
-            //-         img(src='images/search/result-big.png')
-            //-     .bm-item-desc
-            //-       h3
-            //-         a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
-            //-       section
-            //-         .bm-item-price
-            //-           p
-            //-             | Цена за м
-            //-             sup 2
-            //-             | : 
-            //-             span 2000 р.
-            //-         .bm-item-square
-            //-           p
-            //-             | Площадь: 
-            //-             span
-            //-               | 50 м
-            //-               sup 2
-            //-   section.bm-item
-            //-     .bm-item-img
-            //-       a(href='object.html')
-            //-         img(src='images/search/result-big.png')
-            //-     .bm-item-desc
-            //-       h3
-            //-         a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
-            //-       section
-            //-         .bm-item-price
-            //-           p
-            //-             | Цена за м
-            //-             sup 2
-            //-             | : 
-            //-             span 2000 р.
-            //-         .bm-item-square
-            //-           p
-            //-             | Площадь: 
-            //-             span
-            //-               | 50 м
-            //-               sup 2
-            //-   section.bm-item
-            //-     .bm-item-img
-            //-       a(href='object.html')
-            //-         img(src='images/search/result-big.png')
-            //-     .bm-item-desc
-            //-       h3
-            //-         a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
-            //-       section
-            //-         .bm-item-price
-            //-           p
-            //-             | Цена за м
-            //-             sup 2
-            //-             | : 
-            //-             span 2000 р.
-            //-         .bm-item-square
-            //-           p
-            //-             | Площадь: 
-            //-             span
-            //-               | 50 м
-            //-               sup 2
-            //-   section.bm-item
-            //-     .bm-item-img
-            //-       a(href='object.html')
-            //-         img(src='images/search/result-big.png')
-            //-     .bm-item-desc
-            //-       h3
-            //-         a(href='object.html') Офис № 241, 2 этаж, вид на сад копия 3
-            //-       section
-            //-         .bm-item-price
-            //-           p
-            //-             | Цена за м
-            //-             sup 2
-            //-             | : 
-            //-             span 2000 р.
-            //-         .bm-item-square
-            //-           p
-            //-             | Площадь: 
-            //-             span
-            //-               | 50 м
-            //-               sup 2
+      #conditions.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+        .modal-dialog.conditions(role="document")
+          .modal-content
+            .modal-header
+              button.close(data-dismiss='modal', aria-label='close')
+                span(aria-hidden='true')
+              h4 Пользовательское соглашение
+            .modal-body
+              p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo, numquam. Repudiandae ipsam commodi reprehenderit et facilis, at eos, quae hic esse dolorem, facere aliquam tempora dolorum nisi animi. Eaque amet praesentium suscipit, ratione facere aut eveniet, reiciendis ab doloribus unde possimus? Maiores, sit ut! Vero fugit quam culpa. Illo odit molestias, repellendus aut nisi eum in, architecto culpa consectetur dolores aliquid nobis ducimus quo veniam eius! Nesciunt sint iure eligendi iusto! Nulla voluptates iste, doloremque. Incidunt, ratione odit minima sit asperiores est vitae iste labore. Voluptates libero, laudantium ipsam consectetur iste numquam quidem voluptate tempore quas ipsa at a quos culpa impedit cum vero et, dolores molestias nobis distinctio accusantium ut rem vitae? Facilis odit doloribus aliquid et ad enim, harum quam, pariatur repudiandae ex sunt rerum quo fugit tempora quos itaque velit laudantium quia repellat praesentium eos porro numquam, facere similique! Quo ex quia consequatur impedit voluptate alias dolorem eligendi dolores architecto ratione, doloremque fugiat facere ea, dolorum distinctio velit amet autem beatae eius ducimus consequuntur. Possimus placeat nam sint suscipit amet ipsa incidunt iusto dolorem ea fugiat aspernatur necessitatibus doloribus nihil, ratione aliquid nulla deserunt cumque fuga magni doloremque expedita, reiciendis veritatis. Mollitia commodi iusto, quidem sapiente et nesciunt molestias, repudiandae modi ipsam qui, repellat consectetur ipsum delectus molestiae beatae. Aspernatur alias, voluptate ut itaque labore. Dicta mollitia minima similique sapiente voluptas iste sunt suscipit sit praesentium incidunt tempora molestias illum nulla, ut fugiat maxime numquam ex amet ad adipisci. Nulla quod rem ea libero quidem tenetur omnis alias assumenda dolorum voluptatibus, eligendi ipsam excepturi perspiciatis ratione possimus, maiores quibusdam minima? Repellat aspernatur enim totam a itaque eum, necessitatibus maiores doloribus, odit dolore veniam error voluptatibus, consequuntur tempore doloremque incidunt minima recusandae consequatur. Adipisci ab, odit nesciunt temporibus natus quibusdam cumque hic maiores corporis, repellat doloremque culpa, necessitatibus!
       script(src="http://ip-jobs.staff-base.spb.ru/ip.cgi")
       script(src='js/jquery.maskedinput.js')
       //- script(src='js/animsition.min.js')
