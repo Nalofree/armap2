@@ -510,6 +510,59 @@ app.post("/forgetpass", function (req, res) {
   });
 });
 
+
+app.post("/setnewpass", function (req, res) {
+  // randWDclassic = function(n){
+  //   var s ='', abd ='abcdefghijklmnopqrstuvwxyz0123456789', aL = abd.length;
+  //   while(s.length < n)
+  //     s += abd[Math.random() * aL|0];
+  //   return s;
+  // }
+  var hash = crypto.createHmac('sha256', req.body.oldpass)
+                     .update('I love cupcakes')
+                     .digest('hex');
+  connection.query("SELECT * FROM users WHERE user_pass = '"+hash+"'", function (error, result, fields) {
+    if (error) throw error;
+    if (result[0]) {
+      // Готовим пароль, перезаписываем в базу хэш, отправляем в письме пользователю
+      var pass = req.body.newpass;
+      var userid = result[0].user_id;
+      var usermail = result[0].user_email;
+      var hash = crypto.createHmac('sha256', pass)
+                         .update('I love cupcakes')
+                         .digest('hex');
+      connection.query("UPDATE users SET user_pass = '"+hash+"' WHERE user_id = "+userid, function (error, result, fields) {
+        if (error) throw error;
+
+        var maildata = {};
+        maildata.email = usermail;
+        var mailOptions = {
+            from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
+            to: maildata.email, // list of receivers
+            subject: 'Замена пароля!', // Subject line
+            text: 'Здравствуйте,\n Ваш новый пароль: '+pass, // plain text body
+            html: '<p>Здравствуйте,\n</p><p>Ваш новый пароль: '+pass+'</p>' // html body
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return console.log(error);
+                res.send({err: error});
+            }else{
+              res.send({err: false, message: info.messageId, response: info.response, success: 1});
+              // res.send(result);
+            }
+            console.log('Message %s sent: %s', info.messageId, info.response);
+        });
+
+      });
+      // res.send({pass: randWDclassic(10)});
+    }else{
+      // Пишем юзеру, что пользователя с таким мылом нет
+      res.send({err: "Старый пароль неверен!"})
+    }
+  });
+});
+
 app.post('/confirmobject', function (req,res) {
   var coords = req.body.objectcoords ? ", object_coords = '" + req.body.objectcoords + "'" : "";
   var cover = req.body.objectcover ? ", object_cover = " + req.body.objectcover + " " : "";
