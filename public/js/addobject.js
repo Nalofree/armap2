@@ -201,8 +201,12 @@ $(document).ready(function() {
         $('#setimages').val('');
         $(".close-layout").hide();
       },
-      error: function (data) {
-        console.log(data);
+      error: function (data, status, error) {
+        // console.log(data, status, error);
+        console.log(status);
+        // if (true) {
+        //
+        // }
         $(".close-layout").hide();
       }
     });
@@ -281,7 +285,7 @@ $(document).ready(function() {
         price = $('#create-price').val() != '' ? true : false,
         tel = $('#create-tel').val() != '' ? true : false,
         height = $('#create-height').val() != '' ? true : false,
-        result = meanings & included & advanced & providers & mainPhoto & header & square & price & tel & height & description;
+        result = meanings & mainPhoto & header & square & price & tel & height & description;
         if (result) {
           return true;
         }else{
@@ -405,8 +409,11 @@ $(document).ready(function() {
         $('#setimages').val('');
         $(".close-layout").hide();
       },
-      error: function (data) {
-        console.log(data);
+      error: function (data, status, error) {
+        // console.log(data.status);
+        if (data.status == "413") {
+          alert("Файл слишком большой, размер файла не должен превышать 3МБ");
+        }
         $(".close-layout").hide();
       }
     });
