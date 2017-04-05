@@ -410,7 +410,10 @@ $(document).ready(function() {
         $(".close-layout").hide();
       },
       error: function (data, status, error) {
-        console.log(data, status, error);
+        // console.log(data.status);
+        if (data.status == "413") {
+          alert("Файл слишком большой, ращмер файла не должен превышать 3МБ");
+        }
         $(".close-layout").hide();
       }
     });
