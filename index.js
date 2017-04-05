@@ -1852,7 +1852,23 @@ app.post('/addoffice', auth, function(req,res) {
       VALUES ("'+req.body.header+'", "'+req.body.description+'", "'+req.body.create+'", "'+res.userid+'", "'+req.body.sqare+'", "'+req.body.height+'", "'+req.body.price+'", 0, '+cover+', 0, "'+req.body.object+'", 1, "'+req.body.phone+'")',
         function (error,result,fields) {
           if (error) throw error;
-          var options = req.body.meanings.join(',') + ',' + req.body.included.join(',') + ',' + req.body.advanced.join(',') + ',' + req.body.providers.join(',');
+          var options = [];
+          // zaebalo blyat' zahuiaru kak poydet
+          if (req.body.meanings) {
+            options.push(req.body.meanings.join(','))
+          }
+          if (req.body.included) {
+            options.push(req.body.included.join(','))
+          }
+          if (req.body.advanced) {
+            options.push(req.body.advanced.join(','))
+          }
+          if (req.body.providers) {
+            options.push(req.body.providers.join(','))
+          }
+          // var options = req.body.meanings.join(',') + ',' + req.body.included.join(',') + ',' + req.body.advanced.join(',') + ',' + req.body.providers.join(',');
+          var options = options.join(',');
+          console.log(options);
           options = options.split(',');
           var valString = [];
           var officeId = result.insertId;
@@ -1860,7 +1876,7 @@ app.post('/addoffice', auth, function(req,res) {
             valString.push('('+officeId+','+options[i]+')');
           };
           valString = valString.join(',');
-          //console.log(valString);
+          console.log(valString);
           connection.query('INSERT INTO options_offices (link_office,link_option)\
           VALUES '+valString+'',function (error,result,fields) {
             if (error) throw error;
