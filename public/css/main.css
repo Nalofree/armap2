@@ -2473,6 +2473,11 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 
 /*@import "bootstrap/utilities";
 @import "bootstrap/responsive-utilities";*/
+#content {
+  height: auto;
+  min-height: 400px;
+}
+
 @media screen and (max-width: 768px) {
   #content {
     height: auto;
@@ -3034,6 +3039,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   /* height: 500px; */
   /* overflow: hidden; */
   position: absolute;
+  box-shadow: 0 -3px 10px 0 rgba(0, 0, 0, 0.1);
 }
 
 @media screen and (max-width: 768px) {
@@ -3570,6 +3576,11 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
     height: 100vh;
     margin: 0;
     box-shadow: none;
+    transition: all .3s ease-in-out;
+    transform: translateX(calc(-100% - 50px));
+  }
+  #search-filter.show {
+    transform: translateX(0);
   }
 }
 
@@ -3779,7 +3790,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   background: #fff;
   padding: 20px 14px 10px;
   border-radius: 0 0 5px 5px;
-  z-index: 5;
+  z-index: 0;
 }
 
 @media screen and (max-width: 768px) {
@@ -3959,7 +3970,8 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 #filter-result {
   position: relative;
   width: 300px;
-  height: 100%;
+  min-height: 400px;
+  height: 70vh;
   background: #fff;
   border-radius: 0 0 5px 5px;
   overflow: auto;
@@ -3987,6 +3999,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 @media screen and (max-width: 768px) {
   #filter-result {
     width: 100%;
+    height: 100vh;
   }
 }
 
@@ -5762,9 +5775,37 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 #objects #obj-items.style-block .item .item-img {
+  position: relative;
   width: 100%;
-  max-height: 204px;
-  overflow: hidden;
+  height: 204px;
+  /* overflow: hidden; */
+}
+
+.item-img__blur {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  -webkit-background-size: cover;
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: blur(5px);
+}
+
+#objects #obj-items.style-block .item .item-img a {
+  position: absolute;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
+#objects #obj-items.style-block .item .item-img img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+  object-fit: contain;
+  -o-object-position: center;
+  object-position: center;
 }
 
 #objects #obj-items.style-block .item .item-desc {

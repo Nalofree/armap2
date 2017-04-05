@@ -57,7 +57,7 @@ $(document).ready(function () {
 $('#obj-slider').sliderPro({
     width: 640,
     height: 400,
-    orientation: 'vertical',
+    orientation: 'horizontal',
     thumbnailsPosition: 'right',
     arrows: true,
     fadeArrows: false,
@@ -246,20 +246,20 @@ var tabContent = $("#search-filter"),
     mobileTopTabs = $('.mobile-filter-show-btn');
 
 if ($(window).width() <= '768') {
-    tabContent.hide();
+    // tabContent.hide();
 }
 
 $('.show-filter').click(function () {
     mobileTopTabs.fadeOut(400);
     setTimeout(function () {
-        tabContent.animate({width: "show"}, 600);
+        tabContent.addClass('show');
     }, 500);
 });
 $('.close-filter').click(function () {
     setTimeout(function () {
         mobileTopTabs.fadeIn(400);
     }, 500);
-    tabContent.animate({width: "hide"}, 600);
+    tabContent.removeClass('show');
 });
 
 $('.mobile-filter-btn a').click(function () {

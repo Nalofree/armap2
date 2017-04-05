@@ -194,10 +194,10 @@ $(document).ready(function () {
                     </section>\
                   </div></a></article>';
                 $('#filter-result').append(officeItem);
-                $("#filter-result").addClass('active in');
-                $(".filter-result-btn").addClass('active');
-                $(".filter-btn").removeClass('active');
-                $("#filter").removeClass('active in');
+                // $("#filter-result").addClass('active in');
+                // $(".filter-result-btn").addClass('active');
+                // $(".filter-btn").removeClass('active');
+                // $("#filter").removeClass('active in');
               }
             // }
             console.log(data.objects);
