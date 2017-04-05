@@ -409,8 +409,8 @@ $(document).ready(function() {
         $('#setimages').val('');
         $(".close-layout").hide();
       },
-      error: function (data) {
-        console.log(data);
+      error: function (data, status, error) {
+        console.log(data, status, error);
         $(".close-layout").hide();
       }
     });
