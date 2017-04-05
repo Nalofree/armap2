@@ -202,7 +202,8 @@ $(document).ready(function() {
         $(".close-layout").hide();
       },
       error: function (data, status, error) {
-        console.log(data, status, error);
+        // console.log(data, status, error);
+        console.log(status);
         // if (true) {
         //
         // }
