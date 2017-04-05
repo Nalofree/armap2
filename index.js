@@ -468,7 +468,7 @@ app.post("/forgetpass", function (req, res) {
   }
   connection.query("SELECT * FROM users WHERE user_email = '"+req.body.email+"'", function (error, result, fields) {
     if (error) throw error;
-    if (result) {
+    if (result[0]) {
       // Готовим пароль, перезаписываем в базу хэш, отправляем в письме пользователю
       var pass = randWDclassic(10);
       var userid = result[0].user_id;
@@ -485,7 +485,7 @@ app.post("/forgetpass", function (req, res) {
             to: maildata.email, // list of receivers
             subject: 'Восстановаление пароля!', // Subject line
             text: 'Здравствуйте,\n Ваш новый пароль: '+pass, // plain text body
-            html: '<p>Здравствуйте,\n</p><p>Ваш новый пароль: '+pass+'</p>' // html body 
+            html: '<p>Здравствуйте,\n</p><p>Ваш новый пароль: '+pass+'</p>' // html body
         };
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
