@@ -11,7 +11,10 @@ block content
           //- select.kab-location
           //-   option(selected='') Иркутск
         .kab-settings
-          //- a.btn-setting(href='#') Настройки
+          - if (role == "admin")
+            a(href='/admin') Администратор
+            |  | 
+          a(href='/my') Личный кабинет
           a.btn-setting(href='/logout') Выйти
           div
               
