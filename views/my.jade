@@ -14,7 +14,7 @@ block content
           - if (role == "admin")
             a(href='/admin') Администратор
             |  | 
-          - if (role == "moder" || "admin")
+          - if (role == "moder" || role == "admin")
             a(href='/moder') Модератор
           a.btn-setting(href='/logout') Выйти
       //- Вкладки
