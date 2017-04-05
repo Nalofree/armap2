@@ -8618,6 +8618,11 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   /*Появляется при успешной отправке*/
 }
 
+.modal-dialog.conditions {
+  max-width: 80%;
+  min-width: 40%;
+}
+
 .modal-dialog .modal-form {
   display: block;
 }
@@ -9648,3 +9653,16 @@ ul#head-log-in li.username a {
 #editofcmainsubmit {
   display: none;
 }
+
+.content-block {
+  display: block;
+  background-color: #fff;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+/*.content-block::after, .content-block::before {
+  content: " ";
+  clear: both;
+}*/

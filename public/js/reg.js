@@ -9,7 +9,7 @@ $('button[data-target="#header-register"]').click(function () {
 
 $("#login-register .btn-submit").click(function (e) {
   e.preventDefault();
-  if ($("#reg_firstname").val() && $("#reg_lastname").val() && $("#reg_email").val() && $("#reg_pass").val() ) {
+  if ($("#reg_firstname").val() && $("#reg_lastname").val() && $("#reg_email").val() && $("#reg_pass").val() && $("input[name='nerieltor']") ) {
     var firstname = $("#reg_firstname").val(),
         lastname = $("#reg_lastname").val(),
         pass = $("#reg_pass").val(),

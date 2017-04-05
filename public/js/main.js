@@ -97,6 +97,30 @@ $(document).ready(function () {
     var img = $(this).find("img").attr("src");
     $(this).find('.slide-background').css("background-image","url("+img+")");
   });
+  $("#forgetpass").submit(function (e) {
+    e.preventDefault();
+    $(".close-layout").fadeIn();
+    var email = $("#forgetpass input[name='email']").val();
+    $.ajax({
+      url: "/forgetpass",
+      type: "POST",
+      data: {email: email},
+      success: function (data, status, error) {
+        // console.log(data, status, error);
+        if (data.err) {
+          alert(data.err);
+        }else{
+          alert("Новый пароль отправлен на вашу электронную почту!");
+          window.location.replace("/");
+        }
+        $(".close-layout").fadeOut();
+      },
+      error: function (data, status, error) {
+        console.log(data, status, error);
+        $(".close-layout").fadeOut();
+      }
+    });
+  });
 });
 
 //Стили объектов
