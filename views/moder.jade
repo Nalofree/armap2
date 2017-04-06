@@ -95,10 +95,9 @@ block content
                     //-   - if (objects[i].object_offices.office_publish === 0)
                     //-     - moderwait++
                       //- moderwait = objects[i].object_offices.office_publish === 0 ? moderwait+1 : moderwait
-                    h3
-                      a.nowrap-text(href='/object-'+objects[i].object_id)= objects[i].object_name
-                      - if (objects[i].object_nopublishofccount > 0)
-                        span.warning.active= objects[i].object_nopublishofccount
+                    a.nowrap-text(href='/object-'+objects[i].object_id)= objects[i].object_name
+                    - if (objects[i].object_nopublishofccount > 0)
+                      span.warning.object-badge.active= objects[i].object_nopublishofccount
                     //- p.status.new= (objects[i].object_publish === 0) ? "Новый объект" : objects[i].object_publish===1 ? "Подтвержден" : "Отклонен"
                     - if (objects[i].object_publish === 0)
                       p.status.new.orange-text= "Новый объект"
@@ -268,8 +267,7 @@ block content
                             //- p 21 июнь 2014
                             //- p в 21:03
                           .item-name
-                            h3
-                              a.nowrap-text(href='#')= objects[i].object_offices[m].office_name
+                            a.nowrap-text(href='#')= objects[i].object_offices[m].office_name
                             - if(objects[i].object_offices[m].office_publish > 0)
                               - if(objects[i].object_offices[m].office_publish > 1)
                                 p.status.disabled Отклонено

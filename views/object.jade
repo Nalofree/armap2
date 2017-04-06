@@ -65,6 +65,7 @@ block content
           - for (var i = 0; i < object.object_offices.length; i++)
             .result
               .result-img
+                .item-img__blur(style='background-image:url(images/obj/'+object.object_offices[i].image_filename+')')
                 a(href='/office-'+object.object_offices[i].office_id)
                   img(src='images/obj/'+object.object_offices[i].image_filename)
               .result-desc
