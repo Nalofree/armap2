@@ -589,7 +589,7 @@ app.post('/unconfirmobject', auth, function (req, res) {
       // res.send({success: 1});
       // console.log("res.userid: "+res.userid);
 
-      connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.objectauthor, function (error,result,fields) {
+      connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + objectauthor, function (error,result,fields) {
         // console.log("res.userid: "+res.userid);
         if (error) throw error;
         var maildata = {};
