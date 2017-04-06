@@ -48,7 +48,7 @@ var upload = multer({ storage: storage });
 
 var watermarkOptions = {
     'text' : 'rentozavr-rf',
-    //'resize' : '200%',
+    //'resize' : '200%', 
     //'override-image' : true,
     //'dstPath' : 'uploads/watermark.jpg'
 };
@@ -59,7 +59,7 @@ var connection = mysql.createConnection({
   password : 'HQCbezLWux',
   database : 'armap2_db',
   //charset: 'cp1251'
-  charset: 'UTF8_GENERAL_CI'
+  charset: 'UTF8_GENERAL_CI' 
 });
 
 connection.connect();

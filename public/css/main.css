@@ -2490,7 +2490,8 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 
 /*Класс для размещения текста в одну строку*/
 .nowrap-text {
-  width: 100%;
+  display: inline-block;
+  max-width: 100%;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -3586,14 +3587,8 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 
 @media screen and (max-width: 480px) {
   #search-filter {
-    width: 90%;
+    width: 100%;
     height: auto;
-  }
-}
-
-@media screen and (max-width: 320px) {
-  #search-filter {
-    width: 98%;
   }
 }
 
@@ -4422,13 +4417,26 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 #search-results .result .result-img {
+  position: relative;
   width: 100%;
   height: 160px;
   overflow: hidden;
 }
 
+#search-results .result .result-img a {
+  position: absolute;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
 #search-results .result .result-img img {
   width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+  object-fit: contain;
+  -o-object-position: center;
+  object-position: center;
 }
 
 #search-results .result .result-desc {
@@ -5864,9 +5872,26 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 #objects #obj-items.style-line .item .item-img {
+  position: relative;
   width: 100%;
   height: 204px;
   overflow: hidden;
+}
+
+#objects #obj-items.style-line .item .item-img a {
+  position: absolute;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
+#objects #obj-items.style-line .item .item-img img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+  object-fit: contain;
+  -o-object-position: center;
+  object-position: center;
 }
 
 #objects #obj-items.style-line .item .item-desc {
@@ -7334,6 +7359,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
+  flex-wrap:  wrap;
 }
 
 @media screen and (max-width: 480px) {
@@ -7499,6 +7525,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   padding: 0;
   margin: 0;
   list-style: none;
+  overflow-y: auto;
 }
 
 .kab-tab-panel ul li {
@@ -7580,6 +7607,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   margin: 50px auto;
   background: #fff;
   border-radius: 5px;
+  padding: 15px;
 }
 
 #moderation .tab-content {
@@ -7614,6 +7642,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
+  flex-wrap: wrap;
 }
 
 .mod-sorting .checkbox, .mod-sorting a {
@@ -7636,9 +7665,15 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
 }
 
+@media screen and (max-width: 768px) {
+  .mod-object-list {
+    /* overflow-y: auto; */
+  }
+}
+
 .mod-object-list-head {
   width: 100%;
-  padding: 20px 40px 10px;
+  padding: 20px 0 10px;
   background: #fff;
   border-bottom: 1px solid #d6d6d6;
   display: -webkit-flex;
@@ -7647,6 +7682,12 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+@media screen and (max-width: 480px) {
+  .mod-object-list-head {
+    display: none;
+  }
 }
 
 .mod-object-list-head a {
@@ -7670,16 +7711,52 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .head-time,
 .item-time {
   width: 130px;
+  padding: 0 15px;
+}
+
+@media screen and (max-width: 768px) {
+  .head-time,
+  .item-time {
+    width: 70px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .head-time,
+  .item-time {
+    width: 100%;
+  }
 }
 
 .head-object,
 .item-object {
-  width: 305px;
+  width: 40%;
+  padding: 0 15px;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 480px) {
+  .head-object,
+  .item-object {
+    width: calc(100% - 40px);
+  }
+}
+
+.object-badge {
+  vertical-align: text-top;
 }
 
 .head-quantity,
 .item-quantity {
-  width: 620px;
+  width: 40%;
+  padding: 0 15px;
+}
+
+@media screen and (max-width: 480px) {
+  .head-quantity,
+  .item-quantity {
+    width: 100%;
+  }
 }
 
 .mod-object-list-item {
@@ -7688,8 +7765,9 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 .mod-object-list-item .item-desc {
-  height: 64px;
-  padding: 0 40px;
+  position: relative;
+  min-height: 64px;
+  /* padding: 0 40px; */
   border: 1px solid transparent;
   border-bottom: 1px solid #d6d6d6;
   transition: all .3s linear;
@@ -7699,6 +7777,13 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
+  flex-wrap:  wrap;
+}
+
+@media screen and (max-width: 480px) {
+  .mod-object-list-item .item-desc {
+    padding: 5px 0;
+  }
 }
 
 .mod-object-list-item .item-time p {
@@ -7784,6 +7869,16 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .mod-object-list-item .item-more-show {
   position: relative;
   width: 48px;
+  padding: 0 15px;
+}
+
+@media screen and (max-width: 480px) {
+  .mod-object-list-item .item-more-show {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+  }
 }
 
 .mod-object-list-item .item-more-show .show-object-info {
@@ -7860,6 +7955,12 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   /*Статусы объектов*/
 }
 
+@media screen and (max-width: 480px) {
+  .mod-object-list-item .item-object-info {
+    padding: 10px;
+  }
+}
+
 .mod-object-list-item .item-object-info h2 {
   font-size: 16px;
   font-weight: 700;
@@ -7879,6 +7980,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
+  flex-wrap: wrap;
 }
 
 .mod-object-list-item .item-object-info .object-info-block .object-info-img {
@@ -7987,6 +8089,12 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   text-align: right;
 }
 
+@media screen and (max-width: 480px) {
+  .mod-object-list-item .item-object-info .object-status .object-info-submit {
+    text-align: left;
+  }
+}
+
 .mod-object-list-item .item-object-info .object-status .object-info-submit .change-solution-btn {
   padding: 6px 30px;
   background: #fff;
@@ -8088,11 +8196,30 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 /*Помещения*/
 .item-object-rooms-list {
   position: relative;
-  width: 1080px;
+  width: 100%;
   margin: 0 auto;
   box-shadow: 0px 3px 10px 1px rgba(0, 0, 0, 0.1);
   z-index: 5;
   border-radius: 0 0 5px 5px;
+}
+
+@media screen and (max-width: 768px) {
+  .item-object-rooms-list {
+    overflow-y: auto;
+  }
+}
+
+.item-object-rooms-list .item-room {
+  padding: 0 5px;
+  /* min-width: 720px; */
+}
+
+@media screen and (max-width: 480px) {
+  .item-object-rooms-list .item-room .btn {
+    width: calc(100% - 30px);
+    margin: 0 auto;
+    margin-bottom: 7px;
+  }
 }
 
 .item-object-rooms-list .item-desc.open {
@@ -8115,8 +8242,22 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 .item-object-rooms-list .item-name {
-  width: 230px;
-  padding-left: 20px;
+  min-width: 230px;
+  width: 30%;
+  padding: 0 15px;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 768px) {
+  .item-object-rooms-list .item-name {
+    width: calc(100% - 80px);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .item-object-rooms-list .item-name {
+    width: 100%;
+  }
 }
 
 .item-object-rooms-list .item-name a {
@@ -8127,6 +8268,19 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 
 .item-object-rooms-list .item-user {
   width: 360px;
+}
+
+@media screen and (max-width: 768px) {
+  .item-object-rooms-list .item-user {
+    padding: 7px 15px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .item-object-rooms-list .item-user {
+    padding: 7px 15px;
+    width: 100%;
+  }
 }
 
 .item-object-rooms-list .item-user p {
@@ -8140,7 +8294,6 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 .item-object-rooms-list .item-show-more {
-  width: 400px;
   text-align: right;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -8151,6 +8304,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
+  flex-wrap:  wrap;
 }
 
 .item-object-rooms-list .item-show-more.wait .disabled-history,
@@ -8237,6 +8391,13 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   -webkit-align-items: flex-start;
       -ms-flex-align: start;
           align-items: flex-start;
+  flex-wrap:  wrap;
+}
+
+@media screen and (max-width: 768px) {
+  .item-object-rooms-list .item-room-more .item-room-block-one {
+      margin-bottom: 30px;
+  }
 }
 
 .item-object-rooms-list .item-room-more .item-room-inputs {
@@ -8339,6 +8500,13 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   border-radius: 5px;
 }
 
+@media screen and (max-width: 480px) {
+  .item-object-rooms-list .item-room-more .item-room-block-three {
+    background: none;
+    padding: 0;
+  }
+}
+
 .item-object-rooms-list .item-room-more .item-room-block-three .item-three-head {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -8349,11 +8517,13 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
+  flex-wrap:  wrap;
 }
 
 .item-object-rooms-list .item-room-more .item-room-block-three .item-three-head h3 {
   font-size: 16px;
   color: #333333;
+  margin-bottom: 7px;
 }
 
 .item-object-rooms-list .item-room-more .item-room-block-three .item-three-images {
@@ -8400,6 +8570,29 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+@media screen and (max-width: 480px) {
+  .item-object-rooms-list .item-room-more .item-room-block-four .btns .banuser {
+    display: inline-block;
+    width: 100%;
+    margin: 0;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .item-object-rooms-list .item-room-more .item-room-block-four .btns .unconfirmoffice-show {
+    width: 100%;
+    margin-bottom: 7px;
+  }
+
+  .item-object-rooms-list .item-room-more .item-room-block-four .btns .confirmoffice{
+    width: 100%;
+    display: inline-block;
+    margin: 0;
+    margin-bottom: 7px;
+    text-align: center;
+  }
 }
 
 .item-object-rooms-list .item-room-more .item-room-block-four .reset-btn {
