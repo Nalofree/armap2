@@ -3472,7 +3472,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   font-size: 14px;
   color: #2c71e7;
   text-decoration: underline;
-  margin-right: 15px;
+  /*margin-right: 15px;*/
 }
 
 #footer-bottom a:hover {

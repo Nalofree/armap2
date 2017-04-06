@@ -1066,7 +1066,7 @@ app.get('/editofc-:officeid', auth, function (req, res) {
             connection.query('SELECT object_name, object_id FROM objects', function (error,result,fields) {
               if (error) throw error;
               objects = result;
-              res.render('editofc.jade', {office: office, images: images, meanings: meanings, includes: includes, advanceds: advanceds, providers: providers, linkedopts: linkedopts, objects: objects});
+              res.render('editofc.jade', {role: res.role, username: res.userfullname, userid: res.userid, office: office, images: images, meanings: meanings, includes: includes, advanceds: advanceds, providers: providers, linkedopts: linkedopts, objects: objects});
             });
           });
         });

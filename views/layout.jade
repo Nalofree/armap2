@@ -112,7 +112,7 @@ html(lang='ru')
                   a(href='/bookmarks')
                     | Закладки
                     // Количестов закладок в меню (появляется с классом active)
-                    span.active 6
+                    span
             //
               Главное меню для мобилыli с классом active должен соответствовать страницам
             nav#mobile-menu
@@ -170,6 +170,17 @@ html(lang='ru')
               h3 Хотите разместить своё объявление на сайте?
               p Количество бесплатных мест ограничено!
               a(href='#', data-toggle='modal', data-target='#header-login') Зарегистрироваться
+              hr
+              .col-md-6
+                a.conditions-show(href="#", data-toggle='modal', data-target='#conditions') Пользовательское соглашение
+                | &nbsp;&nbsp;
+                a.conditions-show(href="#", data-toggle='modal', data-target='#conditions') Политика конфиденциальности
+                | &nbsp;&nbsp;
+              .col-md-6.right-text
+                span
+                  | Сайт создан студией 
+                  a(href="http://t-code.ru/") True.Code
+                  | , Иркутск, 2017 &copy; Bсе права защищены            
       // modals
       // Окно входа в систему
       #header-login.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
@@ -308,7 +319,7 @@ html(lang='ru')
                   .checkbox
                     label
                       input(type="checkbox", name="nerieltor")
-                      | Я не риелтор
+                      | Согласен с правилами
                       p.help-block
                         a.conditions-show(href="#", data-toggle='modal', data-target='#conditions') Пользовательское соглашение
                   input.btn-submit(type='submit', value='Зарегистрироваться')

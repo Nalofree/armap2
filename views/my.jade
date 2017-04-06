@@ -240,85 +240,90 @@ block content
                 a.step-btn(href='#') Спасибо
           //- Объекты и помещения
           .kab-items
-            - for (var i = 0; i < objects.length; i++)
-              -if (objects[i].object_offices.length > 0)
-                article.kab-item
-                  section.kab-item-info
-                    .kab-item-img
-                      - var cover = objects[i].object_cover ? 'uploads/'+objects[i].object_cover : "images/search/result-big.png";
-                      img(src= cover, width = "100%")
-                    .kab-item-desc
-                      section.kab-item-header
-                        h4.nowrap-text= objects[i].object_name
-                        - var adres = objects[i].object_adres.split(',');
-                        - adres.splice(0,2);
-                        p.nowrap-text= adres
-                      section.kab-item-change
-                        .kab-item-edit
-                          //-- a(href='#', class='del-obj', data-title=objects[i].object_id) Удалить
-                          //-- span |
-                          //-- a(href='#', class='edit-obj', data-title=objects[i].object_id) Редактировать
-                        .kab-item-create
-                          a(href= ""+objects[i].object_id) + Добавить помещение
+            - if (objects.length > 0) 
+              - for (var i = 0; i < objects.length; i++)
+                -if (objects[i].object_offices.length > 0)
+                  article.kab-item
+                    section.kab-item-info
+                      .kab-item-img
+                        - var cover = objects[i].object_cover ? 'uploads/'+objects[i].object_cover : "images/search/result-big.png";
+                        img(src= cover, width = "100%")
+                      .kab-item-desc
+                        section.kab-item-header
+                          h4.nowrap-text= objects[i].object_name
+                          - var adres = objects[i].object_adres.split(',');
+                          - adres.splice(0,2);
+                          p.nowrap-text= adres
+                        section.kab-item-change
+                          .kab-item-edit
+                            //-- a(href='#', class='del-obj', data-title=objects[i].object_id) Удалить
+                            //-- span |
+                            //-- a(href='#', class='edit-obj', data-title=objects[i].object_id) Редактировать
+                          .kab-item-create
+                            a(href= ""+objects[i].object_id) + Добавить помещение
 
-                    .kab-item-last
-                      p Последнее измененное:
-                      a.last-object(href='/office-'+objects[i].object_offices[0].office_id)
-                        .last-object-img
-                          img(src='images/obj/'+objects[i].object_offices[0].image_filename)
-                        .last-object-desc
-                          h4= objects[i].object_offices[0].office_name
-                          p= objects[i].object_name
-                          section
-                            .last-object-price
-                              p
-                                | Цена за м
-                                sup 2
-                                | :
-                                br
-                                span= objects[i].object_offices[0].office_subprice +' р.'
-                            .last-object-square
-                              p
-                                | Площадь:
-                                br
-                                span= objects[i].object_offices[0].office_area +' м'
+                      .kab-item-last
+                        p Последнее измененное:
+                        a.last-object(href='/office-'+objects[i].object_offices[0].office_id)
+                          .last-object-img
+                            img(src='images/obj/'+objects[i].object_offices[0].image_filename)
+                          .last-object-desc
+                            h4= objects[i].object_offices[0].office_name
+                            p= objects[i].object_name
+                            section
+                              .last-object-price
+                                p
+                                  | Цена за м
                                   sup 2
-                    span.rooms-show
-                  //- Таблица помещений
-                  section.kab-item-table
-                    table
-                      tbody
-                        tr
-                          td
-                          td Имя
-                          td Статус
-                          td Площадь
-                          td Цена
-                          td
-                        - for (var j = 0; j < objects[i].object_offices.length; j++)
+                                  | :
+                                  br
+                                  span= objects[i].object_offices[0].office_subprice +' р.'
+                              .last-object-square
+                                p
+                                  | Площадь:
+                                  br
+                                  span= objects[i].object_offices[0].office_area +' м'
+                                    sup 2
+                      span.rooms-show
+                    //- Таблица помещений
+                    section.kab-item-table
+                      table
+                        tbody
                           tr
-                            td.table-date= objects[i].object_offices[j].office_create
-                            td.table-name
-                              a.nowrap-text(href='/office-'+objects[i].object_offices[j].office_id)= objects[i].object_offices[j].office_name
-                              - if (objects[i].object_offices[j].office_publish == 0)
-                                span.status.wait Ожидает модерации
-                              - else if (objects[i].object_offices[j].office_publish == 1)
-                                span.status.published Опубликовано
-                              - else
-                                span.status.disabled Отклонено
-                            td.table-time Осталось 7 дней
-                            td.table-square= objects[i].object_offices[j].office_area+'кв. м'
-                            td.table-price= (objects[i].object_offices[j].office_area*objects[i].object_offices[j].office_subprice).toFixed(2) + ' руб.'
-                            td.table-edit
-                              a.table-edit-menu-show(href='javascript: void(0);') Редактировать
-                              ul.table-edit-menu
-                                li
-                                  a(href='/editofc-'+objects[i].object_offices[j].office_id) Изменить
-                                //-- li
-                                //--   a(href='#') Снять с публикации
-                                li
-                                  a(href='#', class='del-ofc', data-title=objects[i].object_offices[j].office_id) Удалить
-              //- -else
+                            td
+                            td Имя
+                            td Статус
+                            td Площадь
+                            td Цена
+                            td
+                          -if (objects[i].object_offices.length > 0)
+                            - for (var j = 0; j < objects[i].object_offices.length; j++)
+                              tr
+                                td.table-date= objects[i].object_offices[j].office_create
+                                td.table-name
+                                  a.nowrap-text(href='/office-'+objects[i].object_offices[j].office_id)= objects[i].object_offices[j].office_name
+                                  - if (objects[i].object_offices[j].office_publish == 0)
+                                    span.status.wait Ожидает модерации
+                                  - else if (objects[i].object_offices[j].office_publish == 1)
+                                    span.status.published Опубликовано
+                                  - else
+                                    span.status.disabled Отклонено
+                                td.table-time Осталось 7 дней
+                                td.table-square= objects[i].object_offices[j].office_area+'кв. м'
+                                td.table-price= (objects[i].object_offices[j].office_area*objects[i].object_offices[j].office_subprice).toFixed(2) + ' руб.'
+                                td.table-edit
+                                  a.table-edit-menu-show(href='javascript: void(0);') Редактировать
+                                  ul.table-edit-menu
+                                    li
+                                      a(href='/editofc-'+objects[i].object_offices[j].office_id) Изменить
+                                    //-- li
+                                    //--   a(href='#') Снять с публикации
+                                    li
+                                      a(href='#', class='del-ofc', data-title=objects[i].object_offices[j].office_id) Удалить
+                          -else
+                            h4 Нет объявлений
+            -else
+              h4 Нет объявлений
               //-   //- Пустой объект имеет класс empty
               //-   article.kab-item.empty
               //-     section.kab-item-info
@@ -340,26 +345,29 @@ block content
               //-           a(href= ""+objects[i].object_id) + Добавить помещение
         //- Вкладка архив, здесь должны быть удаленные помещения и объекты
         article#kab-archive.fade
-          -if (archoffices)
-            - for (var m = 0; m < archoffices.length; m++)
-              .panel.archice-item
-                .panel-body
-                  .row
-                    .col-md-3.col-sm-3.col-xs-6
-                      img.img-responsive(src="/images/obj/"+archoffices[m].image_filename)
-                    .col-md-9.col-sm-9.col-xs-6
-                      p
-                        a(href="office-"+archoffices[m].office_id)= archoffices[m].office_name
-                      p= archoffices[m].office_create
-                      p
-                        a(href='/user-'+archoffices[m].office_author.user_id)= archoffices[m].office_author + ' ' + archoffices[m].office_author
-                      - if (archoffices[m].office_publish == 0)
-                        p= "Ожидает модерации"
-                      - else if (archoffices[m].office_publish == 1)
-                        p= "Опубликовано"
-                      - else
-                        p= "Отклонено"
-                      .btn.btn-primary.recuveofc(data-title=archoffices[m].office_id) Восстановить из архива
+          .container
+            -if (archoffices.length > 0)
+              - for (var m = 0; m < archoffices.length; m++)
+                .panel.archice-item
+                  .panel-body
+                    .row
+                      .col-md-3.col-sm-3.col-xs-6
+                        img.img-responsive(src="/images/obj/"+archoffices[m].image_filename)
+                      .col-md-9.col-sm-9.col-xs-6
+                        p
+                          a(href="office-"+archoffices[m].office_id)= archoffices[m].office_name
+                        p= archoffices[m].office_create
+                        p
+                          a(href='/user-'+archoffices[m].office_author.user_id)= archoffices[m].office_author + ' ' + archoffices[m].office_author
+                        - if (archoffices[m].office_publish == 0)
+                          p= "Ожидает модерации"
+                        - else if (archoffices[m].office_publish == 1)
+                          p= "Опубликовано"
+                        - else
+                          p= "Отклонено"
+                        .btn.btn-primary.recuveofc(data-title=archoffices[m].office_id) Восстановить из архива
+            -else
+              h4 Архив пуст           
         //- Вкладка подписки, здесь хз че;)
         article#kab-settings.fade
           //- | Сраные настройки сраного пользователя

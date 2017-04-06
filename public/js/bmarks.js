@@ -21,20 +21,35 @@ $(document).ready(function () {
         trigger.text('Удалить из закладок');
         trigger.removeClass('grayimg');
         // console.log(getCookie('bmarks'));
-        $("#main-menu ul li a span.active").text(bmarksArray.length);
+        if (bmarksArray.length > 0) {
+          $("#main-menu ul li a span").addClass("active");
+        }else{
+          $("#main-menu ul li a span").removeClass("active");
+        }
+        $("#main-menu ul li a span").text(bmarksArray.length);
         return true;
       }else{
         trigger.text('Добавить в закладки');
         trigger.addClass('grayimg');
         // console.log(getCookie('bmarks'));
-        $("#main-menu ul li a span.active").text(bmarksArray.length);
+        if (bmarksArray.length > 0) {
+          $("#main-menu ul li a span").addClass("active");
+        }else{
+          $("#main-menu ul li a span").removeClass("active");
+        }
+        $("#main-menu ul li a span").text(bmarksArray.length);
         return false;
       };
     }else{
       trigger.text('Добавить в закладки');
       trigger.addClass('grayimg');
       // console.log(getCookie('bmarks'));
-      $("#main-menu ul li a span.active").text(bmarksArray.length);
+      if (bmarksArray.length > 0) {
+        $("#main-menu ul li a span").addClass("active");
+      }else{
+        $("#main-menu ul li a span").removeClass("active");
+      }
+      $("#main-menu ul li a span").text(bmarksArray.length);
       return false;
     };
   };
