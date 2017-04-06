@@ -1264,7 +1264,7 @@ app.post('/my', function (req,res) {
 
 app.get('/object-:object_id', auth, function (req,res) {
   console.log(req.query);
-  connection.query('SELECT * FROM objects WHERE object_id = '+req.params.object_id+' AND object_show = 1 AND object_publish = 1', function (error,result,fields) {
+  connection.query('SELECT * FROM objects WHERE object_id = '+req.params.object_id+'', function (error,result,fields) {
     if (error) throw error;
     object = result[0];
     // console.log(result);
