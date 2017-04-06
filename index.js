@@ -592,26 +592,31 @@ app.post('/unconfirmobject', auth, function (req, res) {
       connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + objectauthor, function (error,result,fields) {
         // console.log("res.userid: "+res.userid);
         if (error) throw error;
-        var maildata = {};
-        maildata.email = result[0].user_email;
-        maildata.officeid = req.body.office_id;
-        var mailOptions = {
-            from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
-            to: maildata.email, // list of receivers
-            subject: 'Объявление!', // Subject line
-            text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление на ресурс рентазавр.рф, созданный вами объект отклонён, объявления в нем не опубликованы.\n'+req.body.comment, // plain text body
-            html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали новое объявление на ресурс рентазавр.рф, созданный вами объект отклонён, объявления в нем не опубликованы</p><p>'+req.body.comment+'</p>' // html body
-        };
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                return console.log(error);
-                res.send({err: error});
-            }else{
-              res.send({err: false, message: info.messageId, response: info.response, success: 1});
-              // res.send(result);
-            }
-            console.log('Message %s sent: %s', info.messageId, info.response);
-        });
+        if (result[0]) {
+          var maildata = {};
+          maildata.email = result[0].user_email;
+          maildata.officeid = req.body.office_id;
+          var mailOptions = {
+              from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
+              to: maildata.email, // list of receivers
+              subject: 'Объявление!', // Subject line
+              text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление на ресурс рентазавр.рф, созданный вами объект отклонён, объявления в нем не опубликованы.\n'+req.body.comment, // plain text body
+              html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали новое объявление на ресурс рентазавр.рф, созданный вами объект отклонён, объявления в нем не опубликованы</p><p>'+req.body.comment+'</p>' // html body
+          };
+          transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                  return console.log(error);
+                  res.send({err: error});
+              }else{
+                res.send({err: false, message: info.messageId, response: info.response, success: 1});
+                // res.send(result);
+              }
+              console.log('Message %s sent: %s', info.messageId, info.response);
+          });
+        }else{
+          res.send({err: false});
+        }
+
       });
 
     });
