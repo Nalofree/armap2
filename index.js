@@ -510,6 +510,59 @@ app.post("/forgetpass", function (req, res) {
   });
 });
 
+
+app.post("/setnewpass", function (req, res) {
+  // randWDclassic = function(n){
+  //   var s ='', abd ='abcdefghijklmnopqrstuvwxyz0123456789', aL = abd.length;
+  //   while(s.length < n)
+  //     s += abd[Math.random() * aL|0];
+  //   return s;
+  // }
+  var hash = crypto.createHmac('sha256', req.body.oldpass)
+                     .update('I love cupcakes')
+                     .digest('hex');
+  connection.query("SELECT * FROM users WHERE user_pass = '"+hash+"'", function (error, result, fields) {
+    if (error) throw error;
+    if (result[0]) {
+      // Готовим пароль, перезаписываем в базу хэш, отправляем в письме пользователю
+      var pass = req.body.newpass;
+      var userid = result[0].user_id;
+      var usermail = result[0].user_email;
+      var hash = crypto.createHmac('sha256', pass)
+                         .update('I love cupcakes')
+                         .digest('hex');
+      connection.query("UPDATE users SET user_pass = '"+hash+"' WHERE user_id = "+userid, function (error, result, fields) {
+        if (error) throw error;
+
+        var maildata = {};
+        maildata.email = usermail;
+        var mailOptions = {
+            from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
+            to: maildata.email, // list of receivers
+            subject: 'Замена пароля!', // Subject line
+            text: 'Здравствуйте,\n Ваш новый пароль: '+pass, // plain text body
+            html: '<p>Здравствуйте,\n</p><p>Ваш новый пароль: '+pass+'</p>' // html body
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return console.log(error);
+                res.send({err: error});
+            }else{
+              res.send({err: false, message: info.messageId, response: info.response, success: 1});
+              // res.send(result);
+            }
+            console.log('Message %s sent: %s', info.messageId, info.response);
+        });
+
+      });
+      // res.send({pass: randWDclassic(10)});
+    }else{
+      // Пишем юзеру, что пользователя с таким мылом нет
+      res.send({err: "Старый пароль неверен!"})
+    }
+  });
+});
+
 app.post('/confirmobject', function (req,res) {
   var coords = req.body.objectcoords ? ", object_coords = '" + req.body.objectcoords + "'" : "";
   var cover = req.body.objectcover ? ", object_cover = " + req.body.objectcover + " " : "";
@@ -527,7 +580,7 @@ app.post('/confirmobject', function (req,res) {
 });
 
 app.post('/unconfirmobject', auth, function (req, res) {
-  connection.query('SELECT object_author FROM objects WHERE object_id ='+req.body.object_id, function (error, result, fields) {
+  connection.query('SELECT object_author FROM objects WHERE object_id ='+req.body.objectid, function (error, result, fields) {
     if (error) throw error;
     var objectauthor = result[0].object_author;
     connection.query('UPDATE objects SET object_publish = 2, object_comment = "'+req.body.comment+'" WHERE object_id = '+req.body.objectid,
@@ -536,29 +589,34 @@ app.post('/unconfirmobject', auth, function (req, res) {
       // res.send({success: 1});
       // console.log("res.userid: "+res.userid);
 
-      connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + res.objectauthor, function (error,result,fields) {
+      connection.query('SELECT user_email, user_firstname, user_lastname FROM users WHERE user_id = ' + objectauthor, function (error,result,fields) {
         // console.log("res.userid: "+res.userid);
         if (error) throw error;
-        var maildata = {};
-        maildata.email = result[0].user_email;
-        maildata.officeid = req.body.office_id;
-        var mailOptions = {
-            from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
-            to: maildata.email, // list of receivers
-            subject: 'Объявление!', // Subject line
-            text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление на ресурс рентазавр.рф, созданный вами объект отклонён, объявления в нем не опубликованы.\n'+req.body.comment, // plain text body
-            html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали новое объявление на ресурс рентазавр.рф, созданный вами объект отклонён, объявления в нем не опубликованы</p><p>'+req.body.comment+'</p>' // html body
-        };
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                return console.log(error);
-                res.send({err: error});
-            }else{
-              res.send({err: false, message: info.messageId, response: info.response, success: 1});
-              // res.send(result);
-            }
-            console.log('Message %s sent: %s', info.messageId, info.response);
-        });
+        if (result[0]) {
+          var maildata = {};
+          maildata.email = result[0].user_email;
+          maildata.officeid = req.body.office_id;
+          var mailOptions = {
+              from: '"Rentazavr" <arenda.38@yandex.ru>', // sender address
+              to: maildata.email, // list of receivers
+              subject: 'Объявление!', // Subject line
+              text: 'Здравствуйте, ' + result[0].user_firstname + '.\n Вы подали новое объявление на ресурс рентазавр.рф, созданный вами объект отклонён, объявления в нем не опубликованы.\n'+req.body.comment, // plain text body
+              html: '<p>Здравствуйте, ' + result[0].user_firstname + '.\n</p><p>Вы подали новое объявление на ресурс рентазавр.рф, созданный вами объект отклонён, объявления в нем не опубликованы</p><p>'+req.body.comment+'</p>' // html body
+          };
+          transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                  return console.log(error);
+                  res.send({err: error});
+              }else{
+                res.send({err: false, message: info.messageId, response: info.response, success: 1});
+                // res.send(result);
+              }
+              console.log('Message %s sent: %s', info.messageId, info.response);
+          });
+        }else{
+          res.send({err: false});
+        }
+
       });
 
     });
@@ -1211,7 +1269,7 @@ app.post('/my', function (req,res) {
 
 app.get('/object-:object_id', auth, function (req,res) {
   console.log(req.query);
-  connection.query('SELECT * FROM objects WHERE object_id = '+req.params.object_id+' AND object_show = 1 AND object_publish = 1', function (error,result,fields) {
+  connection.query('SELECT * FROM objects WHERE object_id = '+req.params.object_id+'', function (error,result,fields) {
     if (error) throw error;
     object = result[0];
     // console.log(result);
@@ -1852,7 +1910,23 @@ app.post('/addoffice', auth, function(req,res) {
       VALUES ("'+req.body.header+'", "'+req.body.description+'", "'+req.body.create+'", "'+res.userid+'", "'+req.body.sqare+'", "'+req.body.height+'", "'+req.body.price+'", 0, '+cover+', 0, "'+req.body.object+'", 1, "'+req.body.phone+'")',
         function (error,result,fields) {
           if (error) throw error;
-          var options = req.body.meanings.join(',') + ',' + req.body.included.join(',') + ',' + req.body.advanced.join(',') + ',' + req.body.providers.join(',');
+          var options = [];
+          // zaebalo blyat' zahuiaru kak poydet
+          if (req.body.meanings) {
+            options.push(req.body.meanings.join(','))
+          }
+          if (req.body.included) {
+            options.push(req.body.included.join(','))
+          }
+          if (req.body.advanced) {
+            options.push(req.body.advanced.join(','))
+          }
+          if (req.body.providers) {
+            options.push(req.body.providers.join(','))
+          }
+          // var options = req.body.meanings.join(',') + ',' + req.body.included.join(',') + ',' + req.body.advanced.join(',') + ',' + req.body.providers.join(',');
+          var options = options.join(',');
+          console.log(options);
           options = options.split(',');
           var valString = [];
           var officeId = result.insertId;
@@ -1860,7 +1934,7 @@ app.post('/addoffice', auth, function(req,res) {
             valString.push('('+officeId+','+options[i]+')');
           };
           valString = valString.join(',');
-          //console.log(valString);
+          console.log(valString);
           connection.query('INSERT INTO options_offices (link_office,link_option)\
           VALUES '+valString+'',function (error,result,fields) {
             if (error) throw error;

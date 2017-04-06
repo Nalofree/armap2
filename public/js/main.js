@@ -101,26 +101,63 @@ $(document).ready(function () {
     e.preventDefault();
     $(".close-layout").fadeIn();
     var email = $("#forgetpass input[name='email']").val();
-    $.ajax({
-      url: "/forgetpass",
-      type: "POST",
-      data: {email: email},
-      success: function (data, status, error) {
-        // console.log(data, status, error);
-        if (data.err) {
-          alert(data.err);
-        }else{
-          alert("Новый пароль отправлен на вашу электронную почту!");
-          window.location.replace("/");
+    if ($("#forgetpass input[name='email']").val()) {
+      $.ajax({
+        url: "/forgetpass",
+        type: "POST",
+        data: {email: email},
+        success: function (data, status, error) {
+          // console.log(data, status, error);
+          if (data.err) {
+            alert(data.err);
+          }else{
+            alert("Новый пароль отправлен на вашу электронную почту!");
+            window.location.replace("/");
+          }
+          $(".close-layout").fadeOut();
+        },
+        error: function (data, status, error) {
+          console.log(data, status, error);
+          $(".close-layout").fadeOut();
         }
-        $(".close-layout").fadeOut();
-      },
-      error: function (data, status, error) {
-        console.log(data, status, error);
-        $(".close-layout").fadeOut();
-      }
-    });
+      });
+    }else{
+      alert("Заполните все поля!");
+    }
+
   });
+
+  $("#setnewpass").submit(function (e) {
+    e.preventDefault();
+    $(".close-layout").fadeIn();
+    var oldpass = $("#setnewpass input[name='oldpass']").val();
+    var newpass = $("#setnewpass input[name='newpass']").val();
+    if ($("#setnewpass input[name='oldpass']").val() && $("#setnewpass input[name='newpass']").val()) {
+      $.ajax({
+        url: "/setnewpass",
+        type: "POST",
+        data: {oldpass: oldpass, newpass: newpass},
+        success: function (data, status, error) {
+          // console.log(data, status, error);
+          if (data.err) {
+            alert(data.err);
+          }else{
+            alert("Пароль успешно изменен!");
+            window.location.replace("/my");
+          }
+          $(".close-layout").fadeOut();
+        },
+        error: function (data, status, error) {
+          console.log(data, status, error);
+          $(".close-layout").fadeOut();
+        }
+      });
+    }else{
+      alert("Заполните все поля!");
+    }
+
+  });
+
 });
 
 //Стили объектов

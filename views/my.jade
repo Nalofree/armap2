@@ -24,6 +24,8 @@ block content
             a(href='#my-objects', aria-controls='my-objects', role='tab', data-toggle='tab') Мои объекты
           li(role='presentation')
             a(href='#kab-archive', aria-controls='kab-archive', role='tab', data-toggle='tab') Архив
+          li(role='presentation')
+            a(href='#kab-settings', aria-controls='kab-settings', role='tab', data-toggle='tab') Настройки
           //-- li(role='presentation')
           //--   a(href='#kab-subscription', aria-controls='kab-subscription', role='tab', data-toggle='tab') Подписка
         //-- .kab-search
@@ -359,4 +361,14 @@ block content
                         p= "Отклонено"
                       .btn.btn-primary.recuveofc(data-title=archoffices[m].office_id) Восстановить из архива
         //- Вкладка подписки, здесь хз че;)
-        article#kab-subscription.fade
+        article#kab-settings.fade
+          //- | Сраные настройки сраного пользователя
+          .content-block
+            form#setnewpass(action="/setnewpass" method="POST")
+              .form-group
+                label(for='oldpass') Старый пароль
+                input.form-control(type='password', name='oldpass' placeholder='Старый пароль')
+              .form-group
+                label(for='newpass') Новый пароль
+                input.form-control(type='password', name='newpass' placeholder='Новый пароль')
+              input(type="submit", value="Сохранить")
