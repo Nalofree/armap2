@@ -580,7 +580,7 @@ app.post('/confirmobject', function (req,res) {
 });
 
 app.post('/unconfirmobject', auth, function (req, res) {
-  connection.query('SELECT object_author FROM objects WHERE object_id ='+req.body.object_id, function (error, result, fields) {
+  connection.query('SELECT object_author FROM objects WHERE object_id ='+req.body.objectid, function (error, result, fields) {
     if (error) throw error;
     var objectauthor = result[0].object_author;
     connection.query('UPDATE objects SET object_publish = 2, object_comment = "'+req.body.comment+'" WHERE object_id = '+req.body.objectid,
